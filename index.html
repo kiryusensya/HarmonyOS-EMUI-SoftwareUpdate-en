@@ -178,7 +178,7 @@
         }
         .modal-overlay.active .modal-container { transform: scale(1); }
         
-        /* ★ Siri Glow Effect (Border Only Version) ★ */
+        /* ★ Siri Glow Effect (Final Fix) ★ */
         @keyframes siri-glow-flow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -191,46 +191,52 @@
             display: flex;
             flex-direction: row;
             position: relative;
-            z-index: 1;
+            z-index: 1; /* スタッキングコンテキストを確立 */
             
-            /* 内部の背景色：ここで「枠の内側」を塗りつぶして裏のグラデーションを隠す */
-            background: rgba(20, 20, 20, 0.95) !important; 
-            border-radius: 24px;
-            
-            /* 既存のボーダーや影を消す */
+            /* 本体自体の背景は透明にする（擬似要素で制御するため） */
+            background: transparent !important;
             border: none !important;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
             overflow: visible !important;
+            border-radius: 24px;
         }
 
-        /* 外枠のグラデーションライン */
+        /* 1. 最背面：発光するグラデーション（枠線＆Glow） */
         .modal-container.wide-mode::before {
             content: '';
             position: absolute;
-            /* ここで枠の太さを決める（マイナス値が大きいほど太くなる） */
-            top: -3px; left: -3px; right: -3px; bottom: -3px;
+            /* 枠の太さと発光範囲をここで調整（マイナス値が大きいほど太い） */
+            inset: -3px; 
             border-radius: 26px; /* 本体より少し大きく */
             
-            /* Siriカラーのグラデーション */
+            /* Siriカラーの流体グラデーション */
             background: linear-gradient(
                 60deg,
                 #8407de, /* Purple */
                 #3b82f6, /* Blue */
                 #00f7ff, /* Cyan */
                 #099c16, /* Green */
-                #8407de, /* Purple Loop */
-                #3b82f6  /* Blue Loop */
+                #ff2a2a, /* Red accent */
+                #8407de  /* Loop */
             );
             background-size: 300% 300%;
-            animation: siri-glow-flow 3s linear infinite;
-            z-index: -1; /* 本体の後ろに配置 */
+            animation: siri-glow-flow 4s ease infinite;
             
-            /* filter: blur(...) の値を調整することで
-               「くっきりした枠」か「ふんわりした光」かを変えられます。
-               今回は「枠」に見えるよう小さめの値にしています。
-            */
-            filter: blur(4px);
+            z-index: -2; /* 一番後ろへ */
+            filter: blur(5px); /* 光を少しぼかしてネオン感を出す */
             opacity: 1;
+        }
+
+        /* 2. 中間面：コンテンツの背景（しっかりした黒） */
+        /* これがあることで、中身が透けて光ってしまうのを防ぎます */
+        .modal-container.wide-mode::after {
+            content: '';
+            position: absolute;
+            inset: 0; /* ピッタリ重なるように */
+            background: #141414; /* 濃い黒グレー */
+            border-radius: 24px;
+            z-index: -1; /* コンテンツより後ろ、発光より前 */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8); /* 内側に影を落として奥行きを出す */
         }
 
         .modal-close {
