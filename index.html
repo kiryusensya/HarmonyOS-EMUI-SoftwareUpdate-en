@@ -26,6 +26,8 @@
             --text-muted: rgba(255, 255, 255, 0.7);
             --neon-cyan: #00f7ff;
             --neon-green: #00ff9d;
+            /* エラー時の赤 */
+            --neon-red: #ff2a2a; 
         }
 
         /* 全要素に対して余白計算を統一 */
@@ -185,7 +187,7 @@
             color: white; font-size: 18px; text-align: center;
             letter-spacing: 0em; 
             font-family: "HarmonyOS Sans", sans-serif; 
-            outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+            outline: none; transition: all 0.3s;
             text-transform: uppercase;
         }
         /* 入力フォーカス時も紫に発光 */
@@ -213,6 +215,15 @@
             background: var(--primary-color); opacity: 0.8; cursor: wait; transform: none; 
             animation: none; /* 無効時は光らせない */
             box-shadow: none;
+        }
+
+        /* --- ★エラー時の赤発光クラス★ --- */
+        .error-glow {
+            border-color: var(--neon-red) !important;
+            box-shadow: 0 0 25px rgba(255, 42, 42, 0.8) !important;
+            animation: none !important; /* 呼吸アニメーション停止 */
+            background-color: rgba(255, 42, 42, 0.1) !important; /* 背景も薄い赤に */
+            color: #ffcccc !important; /* 文字も少し赤みがかった白に */
         }
         
         #successPhase { display: none; width: 100%; height: 100%; }
@@ -286,55 +297,50 @@
         #statusContainer { margin-top: 15px; font-size: 14px; }
         .error-msg { color: #ff6b6b; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-        /* --- ★近未来的なローディングスピナー★ --- */
+        /* --- 近未来的なローディングスピナー --- */
         .cyber-spinner {
             position: relative;
-            width: 26px; /* 少し大きくしてディテールを見やすく */
+            width: 26px;
             height: 26px;
             display: inline-block;
             margin-right: 12px;
             border-radius: 50%;
-            /* 中心のコアが脈動するアニメーション */
             animation: pulse-core 1.5s ease-in-out infinite alternate;
         }
 
-        /* 外側の高速回転するリング（ネオンシアン） */
+        /* 外側の高速回転リング */
         .cyber-spinner::before {
             content: '';
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             border: 2px solid transparent;
-            /* 上と下だけに色を付けてアーチ状にする */
             border-top-color: var(--neon-cyan);
             border-bottom-color: var(--neon-cyan);
             border-radius: 50%;
-            animation: spin-cyber 0.8s linear infinite; /* 高速回転 */
-            filter: drop-shadow(0 0 4px var(--neon-cyan)); /* 強い発光 */
+            animation: spin-cyber 0.8s linear infinite;
+            filter: drop-shadow(0 0 4px var(--neon-cyan));
         }
 
-        /* 内側のゆっくり逆回転するセグメントリング（白とメインカラー） */
+        /* 内側のゆっくり逆回転リング */
         .cyber-spinner::after {
             content: '';
             position: absolute;
-            top: 4px; left: 4px; /* 内側に配置 */
+            top: 4px; left: 4px;
             width: calc(100% - 8px);
             height: calc(100% - 8px);
             border: 2px solid transparent;
-            /* 部分的に色を変えてセグメント感を出す */
             border-top-color: #ffffff;
             border-right-color: var(--primary-color);
             border-radius: 50%;
-            animation: spin-cyber-reverse 1.8s linear infinite; /* ゆっくり逆回転 */
+            animation: spin-cyber-reverse 1.8s linear infinite;
             filter: drop-shadow(0 0 3px var(--primary-color));
         }
 
-        /* コアの脈動アニメーション定義 */
         @keyframes pulse-core {
             0% { box-shadow: 0 0 2px var(--primary-color), inset 0 0 2px var(--neon-cyan); }
             100% { box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 8px var(--primary-color); }
         }
-        /* 回転アニメーション（既存維持） */
         @keyframes spin-cyber { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes spin-cyber-reverse { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
 
@@ -637,6 +643,10 @@
         codeInput.disabled = false;
         confirmBtn.disabled = false;
         
+        // クラス初期化
+        codeInput.classList.remove('error-glow');
+        confirmBtn.classList.remove('error-glow');
+        
         const t = TRANSLATIONS[CURRENT_LANG];
         confirmBtn.textContent = t.modal_btn_auth;
         
@@ -693,6 +703,10 @@
         confirmBtn.disabled = true;
         confirmBtn.innerHTML = `<span class="cyber-spinner"></span> ${t.msg_verifying}<span class="loading-dots"></span>`;
         statusContainer.innerHTML = "";
+        
+        // エラーグローは一旦消す
+        codeInput.classList.remove('error-glow');
+        confirmBtn.classList.remove('error-glow');
 
         const requestUrl = `${GAS_API_URL}?key=${encodeURIComponent(code)}&lang=${CURRENT_LANG}`;
         try {
@@ -727,6 +741,7 @@
                 
                 lucide.createIcons();
             } else {
+                // --- エラー時の処理 ---
                 let errorMsg = t.msg_invalid;
                 if (data.message === "This code has already been used.") {
                     errorMsg = t.msg_used;
@@ -734,6 +749,14 @@
                 statusContainer.innerHTML = `<span class="error-msg"><i data-lucide="alert-circle" size="14"></i> ${errorMsg}</span>`;
                 lucide.createIcons();
                 shakeModal();
+                
+                // ★赤く光らせる (3秒)
+                codeInput.classList.add('error-glow');
+                confirmBtn.classList.add('error-glow');
+                setTimeout(() => {
+                    codeInput.classList.remove('error-glow');
+                    confirmBtn.classList.remove('error-glow');
+                }, 3000);
             }
         } catch (error) {
             console.error(error);
@@ -741,6 +764,14 @@
             confirmBtn.disabled = false; 
             confirmBtn.textContent = t.modal_btn_auth;
             statusContainer.innerHTML = `<span class="error-msg">${t.msg_error}</span>`;
+            
+            // ★通信エラー時も赤く光らせる
+            codeInput.classList.add('error-glow');
+            confirmBtn.classList.add('error-glow');
+            setTimeout(() => {
+                codeInput.classList.remove('error-glow');
+                confirmBtn.classList.remove('error-glow');
+            }, 3000);
         }
     });
 
