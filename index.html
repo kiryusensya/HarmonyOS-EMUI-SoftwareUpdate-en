@@ -26,7 +26,6 @@
         */
 
         /* 1. HarmonyOS Sans (Global / English / Numbers) */
-        /* 画像130に合わせて .woff に修正済み */
         @font-face {
             font-family: 'HarmonyOS Sans';
             src: url('./assets/fonts/HarmonyOS_Sans_Regular.woff') format('woff'); 
@@ -41,7 +40,6 @@
         }
 
         /* 2. HarmonyOS Sans SC (Simplified Chinese) */
-        /* 画像130に合わせて .woff に修正済み */
         @font-face {
             font-family: 'HarmonyOS Sans SC';
             src: url('./assets/fonts/HarmonyOS_SansSC_Regular.woff') format('woff'); 
@@ -97,44 +95,24 @@
            LANGUAGE-SPECIFIC FONT STACKS
            ========================================= */
         
-        /* ルール: 左側のフォントから優先して使われます。
-           "HarmonyOS Sans" を一番左に置くことで、そこに含まれる「数字・英語」は必ずHarmonyOS Sansになります。
-        */
-
-        /* 日本語 (ja): 数字英語=HarmonyOS, 日本語=Noto Sans JP */
-        html[lang="ja"] body,
-        html[lang="ja"] input,
-        html[lang="ja"] button,
-        html[lang="ja"] select,
-        html[lang="ja"] textarea {
+        /* 日本語 (ja) */
+        html[lang="ja"] body, html[lang="ja"] input, html[lang="ja"] button, html[lang="ja"] select, html[lang="ja"] textarea {
             font-family: "HarmonyOS Sans", "Noto Sans JP", sans-serif;
         }
-
-        /* 英語 (en): すべて HarmonyOS Sans */
-        html[lang="en"] body,
-        html[lang="en"] input,
-        html[lang="en"] button {
+        /* 英語 (en) */
+        html[lang="en"] body, html[lang="en"] input, html[lang="en"] button {
             font-family: "HarmonyOS Sans", sans-serif;
         }
-
-        /* 中国語 (zh): 数字英語=HarmonyOS, 漢字=HarmonyOS Sans SC */
-        html[lang="zh"] body,
-        html[lang="zh"] input,
-        html[lang="zh"] button {
+        /* 中国語 (zh) */
+        html[lang="zh"] body, html[lang="zh"] input, html[lang="zh"] button {
             font-family: "HarmonyOS Sans", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
         }
-
-        /* 韓国語 (ko): 数字英語=HarmonyOS, ハングル=Noto Sans KR */
-        html[lang="ko"] body,
-        html[lang="ko"] input,
-        html[lang="ko"] button {
+        /* 韓国語 (ko) */
+        html[lang="ko"] body, html[lang="ko"] input, html[lang="ko"] button {
             font-family: "HarmonyOS Sans", "Noto Sans KR", "Malgun Gothic", sans-serif;
         }
-
-        /* ロシア語 (ru): すべて HarmonyOS Sans (キリル文字対応) */
-        html[lang="ru"] body,
-        html[lang="ru"] input,
-        html[lang="ru"] button {
+        /* ロシア語 (ru) */
+        html[lang="ru"] body, html[lang="ru"] input, html[lang="ru"] button {
             font-family: "HarmonyOS Sans", sans-serif;
         }
 
@@ -286,24 +264,22 @@
         }
 
         /* 2. 青紫ミックスアニメーション (ホバー時 - メインボックス枠線用) */
-        /* 影は控えめに、枠線の色をより鮮やかに強調 */
         @keyframes anim-box-blue-purple {
             0% {
-                border-color: #0066ff; /* より鮮やかな青 */
+                border-color: #0066ff;
                 box-shadow: 0 0 15px rgba(0, 102, 255, 0.4), 0 0 5px rgba(0, 102, 255, 0.2);
             }
             50% {
-                border-color: #aa00ff; /* より鮮やかな紫 */
+                border-color: #aa00ff;
                 box-shadow: 0 0 25px rgba(170, 0, 255, 0.6), 0 0 10px rgba(170, 0, 255, 0.3);
             }
             100% {
-                border-color: #0066ff; /* より鮮やかな青 */
+                border-color: #0066ff;
                 box-shadow: 0 0 15px rgba(0, 102, 255, 0.4), 0 0 5px rgba(0, 102, 255, 0.2);
             }
         }
 
         /* 3. 青紫ミックスアニメーション (ホバー時 - バッジ & ボタン用) */
-        /* 影は控えめに、枠線の色をより鮮やかに強調 */
         @keyframes anim-badge-blue-purple {
             0% {
                 border-color: #0066ff;
@@ -820,39 +796,6 @@
         }
     };
 
-    // --- 初期言語設定 ---
-    function setInitialLanguage(lang) {
-        updateLanguage(lang);
-        document.getElementById('languageSwitcher').value = lang;
-        const overlay = document.getElementById('langSelectionOverlay');
-        overlay.style.opacity = '0';
-        overlay.style.visibility = 'hidden';
-    }
-
-    // --- 言語切り替えロジック ---
-    function updateLanguage(lang) {
-        CURRENT_LANG = lang;
-        
-        // ★HTMLのlang属性を更新してCSSをトリガーする (これが重要)
-        document.documentElement.lang = lang;
-
-        const t = TRANSLATIONS[lang];
-        if(!t) return;
-
-        document.querySelectorAll('[data-translate]').forEach(el => {
-            const key = el.getAttribute('data-translate');
-            if(t[key]) el.innerHTML = t[key];
-        });
-
-        if(t.modal_placeholder) {
-            codeInput.placeholder = t.modal_placeholder;
-        }
-    }
-
-    document.getElementById('languageSwitcher').addEventListener('change', (e) => {
-        updateLanguage(e.target.value);
-    });
-
     // --- DOM要素 ---
     const authModal = document.getElementById('authModal');
     const modalContainer = document.getElementById('modalContainer');
@@ -872,6 +815,65 @@
     const successDownloadBtn = document.getElementById('successDownloadBtn');
     const successLeftCol = document.getElementById('successLeftCol');
     const successImage = document.getElementById('successImage');
+
+    // --- ★言語設定とローカルストレージ連携 ---
+    
+    // ページ読み込み時に実行: 保存された言語があれば即反映してオーバーレイを消す
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('user_lang');
+        const overlay = document.getElementById('langSelectionOverlay');
+        const switcher = document.getElementById('languageSwitcher');
+
+        if (savedLang) {
+            // 保存済みの場合: 即時非表示にして言語セット
+            overlay.style.display = 'none'; 
+            switcher.value = savedLang;
+            updateLanguage(savedLang);
+        } else {
+            // 初回訪問時: オーバーレイを表示（CSSで制御されているが念のため）
+            // 何もしなくてOK
+        }
+    });
+
+    // 初回選択ボタンが押された時の処理
+    function setInitialLanguage(lang) {
+        localStorage.setItem('user_lang', lang); // 保存
+        
+        updateLanguage(lang);
+        document.getElementById('languageSwitcher').value = lang;
+        
+        const overlay = document.getElementById('langSelectionOverlay');
+        overlay.style.opacity = '0';
+        overlay.style.visibility = 'hidden';
+        setTimeout(() => { overlay.style.display = 'none'; }, 500);
+    }
+
+    // ヘッダーのセレクトボックス変更時の処理
+    document.getElementById('languageSwitcher').addEventListener('change', (e) => {
+        const lang = e.target.value;
+        localStorage.setItem('user_lang', lang); // 保存
+        updateLanguage(lang);
+    });
+
+    // 言語切り替えロジック
+    function updateLanguage(lang) {
+        CURRENT_LANG = lang;
+        
+        // HTMLのlang属性を更新
+        document.documentElement.lang = lang;
+
+        const t = TRANSLATIONS[lang];
+        if(!t) return;
+
+        document.querySelectorAll('[data-translate]').forEach(el => {
+            const key = el.getAttribute('data-translate');
+            if(t[key]) el.innerHTML = t[key];
+        });
+
+        if(t.modal_placeholder) {
+            codeInput.placeholder = t.modal_placeholder;
+        }
+    }
 
     // --- 認証モーダル操作 ---
     function openAuthModal() { authModal.classList.add('active'); resetAuthModal(); codeInput.focus(); }
