@@ -771,8 +771,8 @@
             border-radius: 16px;
             color: white;
             transition: 0.3s;
-            /* ★PC・スマホ共通の高さで統一 */
-            height: 200px; 
+            /* ★Closeボタンを消した分、高さを増やして縦長に (200px -> 280px) */
+            height: 280px; 
             text-align: center;
             width: 100%;
         }
@@ -780,7 +780,7 @@
         /* FontAwesomeアイコン */
         .support-item i { 
             font-size: 48px; 
-            margin-top: 10px;
+            margin-top: 20px; /* 上部の余白も少し調整 */
             margin-bottom: 10px; 
             /* 色はHTMLのstyleタグで本物の色を指定し、CSSでは変更しない */
             transition: transform 0.3s; 
@@ -804,14 +804,14 @@
 
         /* 問い合わせボタン (ボックス内) */
         .btn-inquiry-small {
-            margin-top: 10px;
+            margin-bottom: 20px; /* 下部の余白調整 */
             display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 30px;
             background: rgba(255,255,255,0.1);
             color: white;
             text-decoration: none;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
             border: 1px solid rgba(255,255,255,0.3);
             transition: all 0.2s;
@@ -893,9 +893,9 @@
                 grid-column: span 2; 
             }
             
-            /* ★高さ統一：スマホでも200px */
+            /* ★高さ統一：スマホでもPCと同じ高さ */
             .support-item { 
-                height: 200px; 
+                height: 280px; 
                 padding: 15px 5px; 
             }
             .support-item i { 
@@ -1175,8 +1175,7 @@
                 </div>
             </div>
 
-            <button id="supportCloseBtn" class="btn-confirm" data-translate="btn_close">閉じる</button>
-        </div>
+            </div>
     </div>
 
 <script>
@@ -1396,7 +1395,7 @@
     const supportModal = document.getElementById('supportModal');
     const btnOpenSupport = document.getElementById('btnOpenSupport');
     const supportCloseX = document.getElementById('supportCloseX');
-    const supportCloseBtn = document.getElementById('supportCloseBtn');
+    // Closeボタン削除に伴い、JavaScript側の参照も削除（または無視）
 
     function openSupportModal() {
         supportModal.classList.add('active');
@@ -1408,7 +1407,7 @@
 
     if(btnOpenSupport) btnOpenSupport.addEventListener('click', openSupportModal);
     if(supportCloseX) supportCloseX.addEventListener('click', closeSupportModal);
-    if(supportCloseBtn) supportCloseBtn.addEventListener('click', closeSupportModal);
+    // ボタン削除済みのためイベントリスナーも不要
     if(supportModal) supportModal.addEventListener('click', (e) => { if (e.target === supportModal) closeSupportModal(); });
 
 
