@@ -13,38 +13,51 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        /* --- フォント定義 (セルフホスティング) --- */
-        /* ※実際のファイルパスに合わせて書き換えてください */
+        /* =========================================
+           FONT DEFINITIONS & LICENSE NOTICE
+           ========================================= */
 
-        /* 1. HarmonyOS Sans (欧文・数字・ロシア語用) */
+        /* License Notice:
+           HarmonyOS Sans Fonts Software is licensed under HarmonyOS Sans Fonts License Agreement.
+           Copyright 2021 Huawei Device Co., Ltd.
+           
+           Required Notice:
+           This software uses HarmonyOS Sans Fonts.
+        */
+
+        /* 1. HarmonyOS Sans (Global / English / Numbers) */
         @font-face {
             font-family: 'HarmonyOS Sans';
-            src: url('./assets/fonts/HarmonyOS_Sans_Regular.woff2') format('woff2'); 
+            /* 画像のファイル名に合わせています */
+            src: url('./assets/fonts/HarmonyOS_Sans_Regular.ttf') format('truetype'); 
             font-weight: 400;
             font-style: normal;
         }
         @font-face {
             font-family: 'HarmonyOS Sans';
-            src: url('./assets/fonts/HarmonyOS_Sans_Bold.woff2') format('woff2'); 
+            src: url('./assets/fonts/HarmonyOS_Sans_Bold.ttf') format('truetype'); 
             font-weight: 700;
             font-style: normal;
         }
 
-        /* 2. HarmonyOS Sans SC (中国語用) */
+        /* 2. HarmonyOS Sans SC (Simplified Chinese) */
         @font-face {
             font-family: 'HarmonyOS Sans SC';
-            src: url('./assets/fonts/HarmonyOS_Sans_SC_Regular.woff2') format('woff2'); 
+            /* 画像のファイル名に合わせています (SansSC) */
+            src: url('./assets/fonts/HarmonyOS_SansSC_Regular.ttf') format('truetype'); 
             font-weight: 400;
             font-style: normal;
         }
         @font-face {
             font-family: 'HarmonyOS Sans SC';
-            src: url('./assets/fonts/HarmonyOS_Sans_SC_Bold.woff2') format('woff2'); 
+            src: url('./assets/fonts/HarmonyOS_SansSC_Bold.ttf') format('truetype'); 
             font-weight: 700;
             font-style: normal;
         }
 
-        /* --- デザイン設定 --- */
+        /* =========================================
+           DESIGN SETTINGS
+           ========================================= */
         :root {
             /* メインカラー：紫 */
             --primary-color: #8407de; 
@@ -71,8 +84,6 @@
         }
 
         body {
-            /* デフォルトフォント (JSで上書きされますが念のため) */
-            font-family: "HarmonyOS Sans", sans-serif;
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; flex-direction: column; align-items: center;
             color: var(--text-main);
@@ -82,14 +93,15 @@
             width: 100%;
         }
 
-        /* --- ★言語別フォント設定 (重要) --- */
+        /* =========================================
+           LANGUAGE-SPECIFIC FONT STACKS
+           ========================================= */
         
         /* ルール: 左側のフォントから優先して使われます。
            "HarmonyOS Sans" を一番左に置くことで、そこに含まれる「数字・英語」は必ずHarmonyOS Sansになります。
-           日本語や韓国語はHarmonyOS Sansに含まれていないため、自動的に次のフォント(Noto等)が使われます。
         */
 
-        /* 日本語 (ja) */
+        /* 日本語 (ja): 数字英語=HarmonyOS, 日本語=Noto Sans JP */
         html[lang="ja"] body,
         html[lang="ja"] input,
         html[lang="ja"] button,
@@ -98,28 +110,28 @@
             font-family: "HarmonyOS Sans", "Noto Sans JP", sans-serif;
         }
 
-        /* 英語 (en) */
+        /* 英語 (en): すべて HarmonyOS Sans */
         html[lang="en"] body,
         html[lang="en"] input,
         html[lang="en"] button {
             font-family: "HarmonyOS Sans", sans-serif;
         }
 
-        /* 中国語 (zh) - 数字はGlobal版、漢字はSC版 */
+        /* 中国語 (zh): 数字英語=HarmonyOS, 漢字=HarmonyOS Sans SC */
         html[lang="zh"] body,
         html[lang="zh"] input,
         html[lang="zh"] button {
             font-family: "HarmonyOS Sans", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
         }
 
-        /* 韓国語 (ko) */
+        /* 韓国語 (ko): 数字英語=HarmonyOS, ハングル=Noto Sans KR */
         html[lang="ko"] body,
         html[lang="ko"] input,
         html[lang="ko"] button {
             font-family: "HarmonyOS Sans", "Noto Sans KR", "Malgun Gothic", sans-serif;
         }
 
-        /* ロシア語 (ru) - HarmonyOS Sansはキリル文字対応 */
+        /* ロシア語 (ru): すべて HarmonyOS Sans (キリル文字対応) */
         html[lang="ru"] body,
         html[lang="ru"] input,
         html[lang="ru"] button {
@@ -821,7 +833,7 @@
     function updateLanguage(lang) {
         CURRENT_LANG = lang;
         
-        // ★HTMLのlang属性を更新してCSSをトリガーする
+        // ★HTMLのlang属性を更新してCSSをトリガーする (これが重要)
         document.documentElement.lang = lang;
 
         const t = TRANSLATIONS[lang];
