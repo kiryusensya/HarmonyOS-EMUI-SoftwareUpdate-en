@@ -102,13 +102,13 @@
         .card-title { font-size: 22px; font-weight: bold; margin: 0 0 10px 0; }
         .card-desc { font-size: 14px; color: var(--text-muted); margin: 0 0 25px 0; line-height: 1.6; }
         
-        /* ★ボタンの発光アニメーション定義★ */
+        /* ★通常ボタン用アニメーション★ */
         @keyframes pulse-primary {
             0% { box-shadow: 0 0 10px rgba(132, 7, 222, 0.5), 0 0 5px rgba(132, 7, 222, 0.3); }
             50% { box-shadow: 0 0 25px rgba(132, 7, 222, 0.8), 0 0 15px rgba(132, 7, 222, 0.5); }
             100% { box-shadow: 0 0 10px rgba(132, 7, 222, 0.5), 0 0 5px rgba(132, 7, 222, 0.3); }
         }
-        @keyframes pulse-blue {
+        @keyframes pulse-blue-fast {
             0% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), 0 0 10px rgba(59, 130, 246, 0.4); }
             50% { box-shadow: 0 0 35px rgba(59, 130, 246, 1.0), 0 0 20px rgba(59, 130, 246, 0.7); }
             100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), 0 0 10px rgba(59, 130, 246, 0.4); }
@@ -129,7 +129,7 @@
             background: var(--hover-blue); 
             transform: scale(1.05); 
             border-color: rgba(59, 130, 246, 0.8);
-            animation: pulse-blue 1.0s infinite ease-in-out; 
+            animation: pulse-blue-fast 1.0s infinite ease-in-out; 
         }
 
         footer { padding: 20px; font-size: 13px; color: var(--text-muted); text-align: center; width: 100%; }
@@ -172,7 +172,9 @@
         }
         .modal-overlay.active .modal-container { transform: scale(1); }
         
-        /* 成功時の緑色アニメーション（呼吸するように発光） */
+        /* ------------------------------------------------------------- */
+        /* ★通常時（緑色）のアニメーション定義 */
+        /* ------------------------------------------------------------- */
         @keyframes success-pulse {
             0% {
                 border-color: var(--success-green-light);
@@ -188,6 +190,56 @@
             }
         }
 
+        /* ------------------------------------------------------------- */
+        /* ★★★ 連動モード（青紫ミックス）のアニメーション定義 ★★★ */
+        /* ------------------------------------------------------------- */
+        
+        /* 1. 枠線と影用 (モーダル、ボタン用) - 青⇔紫の呼吸 */
+        @keyframes pulse-border-mixed {
+            0% {
+                border-color: #3b82f6; /* 青 */
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 0 5px rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                border-color: #8407de; /* 紫 */
+                box-shadow: 0 0 40px rgba(132, 7, 222, 0.8), 0 0 20px rgba(132, 7, 222, 0.5);
+            }
+            100% {
+                border-color: #3b82f6; /* 青 */
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 0 5px rgba(59, 130, 246, 0.2);
+            }
+        }
+
+        /* 2. バッジ用 (枠線＋文字色＋背景) - 青⇔紫 */
+        @keyframes pulse-badge-mixed {
+            0% {
+                border-color: #3b82f6;
+                color: #3b82f6;
+                background: rgba(59, 130, 246, 0.15);
+                text-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+            }
+            50% {
+                border-color: #8407de;
+                color: #8407de;
+                background: rgba(132, 7, 222, 0.15);
+                text-shadow: 0 0 8px rgba(132, 7, 222, 0.6);
+            }
+            100% {
+                border-color: #3b82f6;
+                color: #3b82f6;
+                background: rgba(59, 130, 246, 0.15);
+                text-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+            }
+        }
+        
+        /* 3. アイコン(SVG)用フィルター */
+        @keyframes pulse-svg-mixed {
+            0% { filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); }
+            50% { filter: drop-shadow(0 0 5px rgba(132, 7, 222, 0.8)); }
+            100% { filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); }
+        }
+
+
         .modal-container.wide-mode {
             max-width: 900px;
             padding: 0;
@@ -195,13 +247,15 @@
             flex-direction: row;
             overflow: hidden;
             border: 2px solid var(--success-green-light);
+            /* 通常時は緑アニメーション 3s */
             animation: success-pulse 3s infinite ease-in-out;
+            transition: border-color 0.3s ease;
         }
         
-        /* ★★★ 追加：ダウンロードボタンホバー時の青色連動モード ★★★ */
+        /* ★★★ 連動モード適用：モーダル外枠（確実に適用されるよう優先度調整） ★★★ */
         .modal-container.wide-mode.sync-blue-mode {
-            border-color: rgba(59, 130, 246, 0.8) !important;
-            animation: pulse-blue 1.0s infinite ease-in-out !important;
+            border-color: #3b82f6 !important;
+            animation: pulse-border-mixed 3s infinite ease-in-out !important;
         }
 
         .modal-close {
@@ -238,7 +292,7 @@
             background: var(--hover-blue); 
             transform: translateY(-2px); 
             border-color: rgba(59, 130, 246, 0.8);
-            animation: pulse-blue 1.0s infinite ease-in-out;
+            animation: pulse-blue-fast 1.0s infinite ease-in-out;
         }
         
         .btn-confirm:disabled { 
@@ -247,7 +301,7 @@
             box-shadow: none;
         }
 
-        /* --- エラー時の赤発光クラス（ボタン用：中身も赤く） --- */
+        /* --- エラー時の赤発光クラス --- */
         .btn-confirm.error-glow {
             border-color: var(--neon-red) !important;
             box-shadow: 0 0 25px rgba(255, 42, 42, 0.8) !important;
@@ -255,14 +309,10 @@
             background-color: rgba(255, 42, 42, 0.7) !important; 
             color: white !important; 
         }
-
-        /* --- エラー時の赤発光クラス（入力欄用：外枠のみ赤く） --- */
         .code-input.error-glow {
             border-color: var(--neon-red) !important;
             box-shadow: 0 0 25px rgba(255, 42, 42, 0.8) !important;
         }
-
-        /* --- エラー時のモーダル外枠発光クラス --- */
         .modal-error-border {
             border: 2px solid var(--neon-red) !important;
             box-shadow: 0 0 30px rgba(255, 42, 42, 0.8) !important;
@@ -285,26 +335,47 @@
             text-shadow: 0 0 8px rgba(0, 255, 157, 0.6); 
             font-family: inherit;
             white-space: nowrap;
+            /* 通常時は緑アニメーション 3s */
             animation: success-pulse 3s infinite ease-in-out;
+            transition: all 0.3s ease;
         }
-        .success-tag svg { filter: drop-shadow(0 0 5px rgba(0, 255, 157, 0.8)); flex-shrink: 0; }
+        .success-tag svg { filter: drop-shadow(0 0 5px rgba(0, 255, 157, 0.8)); flex-shrink: 0; transition: all 0.3s ease; }
 
-        /* ★★★ 追加：バッジも青く連動させる ★★★ */
+        /* ★★★ 連動モード適用：バッジ（枠線・文字色・アイコンが青紫変化） ★★★ */
         .modal-container.wide-mode.sync-blue-mode .success-tag {
-            border-color: rgba(59, 130, 246, 0.8) !important;
-            color: #60a5fa !important;
+            border-color: #3b82f6 !important;
+            color: #3b82f6 !important;
             background: rgba(59, 130, 246, 0.15) !important;
             text-shadow: 0 0 8px rgba(59, 130, 246, 0.6) !important;
-            animation: pulse-blue 1.0s infinite ease-in-out !important;
+            /* バッジ用ミックスアニメーション */
+            animation: pulse-badge-mixed 3s infinite ease-in-out !important;
         }
         .modal-container.wide-mode.sync-blue-mode .success-tag svg {
-             filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)) !important;
+             animation: pulse-svg-mixed 3s infinite ease-in-out !important;
         }
         
         .success-title-main { font-size: 28px; font-weight: bold; margin-bottom: 20px; line-height: 1.3; }
         .success-info-box { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; width: 100%; box-sizing: border-box; margin-bottom: 25px; }
         .success-label { font-size: 12px; color: var(--text-muted); }
-        .success-content { font-size: 18px; font-weight: bold; margin-top: 5px; color: #60a5fa; word-break: break-all; }
+        
+        /* ★コンテンツ名テキスト */
+        .success-content { 
+            font-size: 18px; font-weight: bold; margin-top: 5px; 
+            /* 通常時：緑色で光る */
+            color: var(--neon-green); 
+            word-break: break-all;
+            text-shadow: 0 0 5px rgba(0, 255, 157, 0.5); 
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        /* ★★★ 連動モード適用：コンテンツ名 ★★★ */
+        /* 青色(#3b82f6)にするが、光らせない（text-shadow: none） */
+        .modal-container.wide-mode.sync-blue-mode .success-content {
+            color: #3b82f6 !important;
+            text-shadow: none !important;
+            animation: none !important;
+        }
+
         .success-extra { font-size: 14px; margin-top: 10px; color: #ddd; white-space: pre-wrap; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;}
 
         .btn-group { display: flex; gap: 15px; width: 100%; flex-wrap: wrap; }
@@ -314,13 +385,15 @@
             flex: 2; text-decoration: none; text-align: center; min-width: 140px;
             background: #099c16 !important;
             border: 2px solid var(--success-green-light) !important;
+            /* 通常時は緑アニメーション 3s */
             animation: success-pulse 3s infinite ease-in-out !important;
         }
         #successDownloadBtn:hover {
             background: var(--hover-blue) !important;
-            border-color: rgba(59, 130, 246, 0.8) !important;
-            /* ホバー時は青色発光（少し速く） */
-            animation: pulse-blue 1.0s infinite ease-in-out !important;
+            border-color: #3b82f6 !important;
+            
+            /* ★★★ ホバー時：ボーダー用ミックスアニメーション 3s ★★★ */
+            animation: pulse-border-mixed 3s infinite ease-in-out !important;
             transform: translateY(-2px);
         }
 
