@@ -173,21 +173,17 @@
         .modal-overlay.active .modal-container { transform: scale(1); }
         
         /* 成功時の緑色アニメーション（呼吸するように発光） */
-        /* モーダル外枠、バッジ、ダウンロードボタンで共通利用 */
         @keyframes success-pulse {
             0% {
                 border-color: var(--success-green-light);
-                /* 息を吸う前：光は控えめ */
                 box-shadow: 0 0 15px rgba(9, 156, 22, 0.4), 0 0 5px rgba(9, 156, 22, 0.2);
             }
             50% {
-                /* 息を吸った時：明るい緑になり、光が大きく広がる */
                 border-color: var(--neon-green); 
                 box-shadow: 0 0 40px rgba(9, 156, 22, 0.8), 0 0 20px rgba(9, 156, 22, 0.5);
             }
             100% {
                 border-color: var(--success-green-light);
-                /* 元に戻る */
                 box-shadow: 0 0 15px rgba(9, 156, 22, 0.4), 0 0 5px rgba(9, 156, 22, 0.2);
             }
         }
@@ -198,9 +194,14 @@
             display: flex;
             flex-direction: row;
             overflow: hidden;
-            /* 共通アニメーション適用 */
             border: 2px solid var(--success-green-light);
             animation: success-pulse 3s infinite ease-in-out;
+        }
+        
+        /* ★★★ 追加：ダウンロードボタンホバー時の青色連動モード ★★★ */
+        .modal-container.wide-mode.sync-blue-mode {
+            border-color: rgba(59, 130, 246, 0.8) !important;
+            animation: pulse-blue 1.0s infinite ease-in-out !important;
         }
 
         .modal-close {
@@ -274,31 +275,31 @@
         .success-left img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
         .success-right { flex: 1.2; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left; }
 
-        /* ★成功バッジ（チェックマーク）のスタイル修正 */
+        /* ★成功バッジ（チェックマーク）のスタイル */
         .success-tag {
-            /* 背景: 透明度のある濃い緑で統一感 */
             background: rgba(9, 156, 22, 0.2);
-            
-            /* 枠線: 2pxで統一、初期色は定義された緑 */
             border: 2px solid var(--success-green-light);
-            
-            /* 文字色: 可読性のため明るいネオン色を維持 */
             color: var(--neon-green);
-
             padding: 8px 16px; border-radius: 30px; font-size: 14px; font-weight: bold; margin-bottom: 20px; 
             display: inline-flex; align-items: center; gap: 8px;
-            
-            /* 影: アニメーションで制御するため静的なbox-shadowは削除 */
-            
-            /* テキストの光彩のみ残す */
             text-shadow: 0 0 8px rgba(0, 255, 157, 0.6); 
             font-family: inherit;
             white-space: nowrap;
-            
-            /* 共通アニメーション適用（3秒周期で呼吸） */
             animation: success-pulse 3s infinite ease-in-out;
         }
         .success-tag svg { filter: drop-shadow(0 0 5px rgba(0, 255, 157, 0.8)); flex-shrink: 0; }
+
+        /* ★★★ 追加：バッジも青く連動させる ★★★ */
+        .modal-container.wide-mode.sync-blue-mode .success-tag {
+            border-color: rgba(59, 130, 246, 0.8) !important;
+            color: #60a5fa !important;
+            background: rgba(59, 130, 246, 0.15) !important;
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.6) !important;
+            animation: pulse-blue 1.0s infinite ease-in-out !important;
+        }
+        .modal-container.wide-mode.sync-blue-mode .success-tag svg {
+             filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)) !important;
+        }
         
         .success-title-main { font-size: 28px; font-weight: bold; margin-bottom: 20px; line-height: 1.3; }
         .success-info-box { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; width: 100%; box-sizing: border-box; margin-bottom: 25px; }
@@ -308,16 +309,11 @@
 
         .btn-group { display: flex; gap: 15px; width: 100%; flex-wrap: wrap; }
         
-        /* ★成功時のダウンロードボタン（モーダル・バッジと統一） */
+        /* ★成功時のダウンロードボタン */
         #successDownloadBtn { 
             flex: 2; text-decoration: none; text-align: center; min-width: 140px;
-            
             background: #099c16 !important;
-            
-            /* 枠線2px統一 */
             border: 2px solid var(--success-green-light) !important;
-            
-            /* 共通アニメーション適用 */
             animation: success-pulse 3s infinite ease-in-out !important;
         }
         #successDownloadBtn:hover {
@@ -865,6 +861,15 @@
             { transform: 'translateX(10px)' }, { transform: 'translateX(0)' }
         ], { duration: 300 });
     }
+
+    // --- ダウンロードボタンのホバー連動 (JS実装) ---
+    successDownloadBtn.addEventListener('mouseenter', () => {
+        modalContainer.classList.add('sync-blue-mode');
+    });
+    successDownloadBtn.addEventListener('mouseleave', () => {
+        modalContainer.classList.remove('sync-blue-mode');
+    });
+
 </script>
 </body>
 </html>
