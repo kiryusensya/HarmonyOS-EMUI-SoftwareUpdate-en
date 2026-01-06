@@ -113,12 +113,6 @@
             50% { box-shadow: 0 0 35px rgba(59, 130, 246, 1.0), 0 0 20px rgba(59, 130, 246, 0.7); }
             100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), 0 0 10px rgba(59, 130, 246, 0.4); }
         }
-        /* ★緑色の発光アニメーション（ダウンロードボタン用） */
-        @keyframes pulse-green-btn {
-            0% { box-shadow: 0 0 10px rgba(9, 156, 22, 0.5), 0 0 5px rgba(9, 156, 22, 0.3); }
-            50% { box-shadow: 0 0 25px rgba(9, 156, 22, 0.8), 0 0 15px rgba(9, 156, 22, 0.5); }
-            100% { box-shadow: 0 0 10px rgba(9, 156, 22, 0.5), 0 0 5px rgba(9, 156, 22, 0.3); }
-        }
 
         .btn-action {
             display: inline-flex; align-items: center; gap: 8px; padding: 12px 30px; border-radius: 50px;
@@ -179,7 +173,7 @@
         .modal-overlay.active .modal-container { transform: scale(1); }
         
         /* 成功時のモーダル（緑の発光ボーダー） */
-        /* 呼吸するように強弱をつける */
+        /* 呼吸するように強弱をつける（モーダルとボタンで共通利用） */
         @keyframes success-pulse {
             0% {
                 border-color: var(--success-green-light);
@@ -297,16 +291,23 @@
 
         .btn-group { display: flex; gap: 15px; width: 100%; flex-wrap: wrap; }
         
-        /* ★成功時のダウンロードボタン（緑色） */
+        /* ★成功時のダウンロードボタン（モーダルと統一） */
         #successDownloadBtn { 
             flex: 2; text-decoration: none; text-align: center; min-width: 140px;
+            
+            /* 背景色は維持 */
             background: #099c16 !important;
-            border: 1px solid #099c16 !important;
-            animation: pulse-green-btn 2s infinite ease-in-out !important;
+            
+            /* 枠線の太さをモーダルと同じ 2px に統一 */
+            border: 2px solid var(--success-green-light) !important;
+            
+            /* アニメーションを 'success-pulse' に変更し、時間も '3s' で同期 */
+            animation: success-pulse 3s infinite ease-in-out !important;
         }
         #successDownloadBtn:hover {
             background: var(--hover-blue) !important;
             border-color: rgba(59, 130, 246, 0.8) !important;
+            /* ホバー時は青色発光（少し速く） */
             animation: pulse-blue 1.0s infinite ease-in-out !important;
             transform: translateY(-2px);
         }
