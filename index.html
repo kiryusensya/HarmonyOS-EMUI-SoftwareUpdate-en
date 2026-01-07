@@ -1008,6 +1008,23 @@
             filter: drop-shadow(0 0 3px var(--primary-color));
         }
 
+        /* --- ★追加: サイトロック画面用CSS --- */
+        #siteLoginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000; /* 背景を真っ黒にしてサイトを隠す */
+            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1472&auto=format&fit=crop');
+            background-size: cover;
+            z-index: 10000; /* 言語選択(9999)より上に表示 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
         @keyframes pulse-core {
             0% { box-shadow: 0 0 2px var(--primary-color), inset 0 0 2px var(--neon-cyan); }
             100% { box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 8px var(--primary-color); }
@@ -1025,6 +1042,32 @@
     </style>
 </head>
 <body>
+　　<div id="siteLoginOverlay">
+        <div class="glass-panel modal-container" style="max-width: 400px;">
+            <div class="logo" style="justify-content:center; margin-bottom:20px;">
+                <i data-lucide="shield-check" size="32" style="color: #9347FF;"></i>
+            </div>
+            <h2 style="font-size: 22px; margin-bottom: 10px;">SYSTEM LOGIN</h2>
+            <p style="color:rgba(255,255,255,0.7); font-size:13px; margin-bottom: 20px;">
+                アクセス権限を確認します。<br>IDとパスワードを入力してください。
+            </p>
+            
+            <div style="text-align: left; margin-bottom: 15px;">
+                <label style="font-size: 12px; color: #ccc; margin-left: 5px;">User ID</label>
+                <input type="text" id="siteUser" class="code-input" placeholder="User Name" style="margin-top: 5px; text-align: left;">
+            </div>
+            
+            <div style="text-align: left; margin-bottom: 25px;">
+                <label style="font-size: 12px; color: #ccc; margin-left: 5px;">Password</label>
+                <input type="password" id="sitePass" class="code-input" placeholder="Password" style="margin-top: 5px; text-align: left;">
+            </div>
+
+            <button id="btnSiteLogin" class="btn-confirm">LOGIN</button>
+            <p id="loginErrorMsg" style="color: #ff2a2a; font-size: 13px; margin-top: 15px; display: none;">
+                <i data-lucide="alert-circle" size="12" style="vertical-align: middle;"></i> IDまたはパスワードが違います
+            </p>
+        </div>
+    </div>
 
     <div id="langSelectionOverlay">
         <div class="glass-panel lang-modal">
@@ -1555,6 +1598,57 @@
     successDownloadBtn.addEventListener('mouseleave', () => {
         modalContainer.classList.remove('sync-blue-mode');
     });
+
+    // --- ★追加: サイトログイン処理 ---
+    
+    // ▼ここに設定したいIDとパスワードを決めてください
+    const SITE_USER = "kiryu_sensya";
+    const SITE_PASS = "Rockstar CayoPer1700";
+
+    const siteLoginOverlay = document.getElementById('siteLoginOverlay');
+    const btnSiteLogin = document.getElementById('btnSiteLogin');
+    const siteUserInput = document.getElementById('siteUser');
+    const sitePassInput = document.getElementById('sitePass');
+    const loginErrorMsg = document.getElementById('loginErrorMsg');
+
+    // ログイン実行関数
+    function checkSiteLogin() {
+        const u = siteUserInput.value;
+        const p = sitePassInput.value;
+
+        if (u === SITE_USER && p === SITE_PASS) {
+            // 正解の場合：フェードアウトして消す
+            siteLoginOverlay.style.transition = "opacity 0.5s ease";
+            siteLoginOverlay.style.opacity = "0";
+            setTimeout(() => {
+                siteLoginOverlay.style.display = "none";
+            }, 500);
+            
+            // ログイン済みフラグを保存したい場合は以下を有効化
+            // sessionStorage.setItem('is_logged_in', 'true');
+        } else {
+            // 不正解の場合：エラー表示＆揺らす
+            loginErrorMsg.style.display = "block";
+            lucide.createIcons();
+            
+            // ボタンを赤く点滅
+            btnSiteLogin.classList.add('error-glow');
+            setTimeout(() => btnSiteLogin.classList.remove('error-glow'), 500);
+        }
+    }
+
+    // ボタンクリックで認証
+    btnSiteLogin.addEventListener('click', checkSiteLogin);
+
+    // エンターキーでも認証できるようにする
+    sitePassInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkSiteLogin();
+    });
+
+    // (オプション) 既にログイン済みなら表示しない場合は以下のコメントを外す
+    // if (sessionStorage.getItem('is_logged_in') === 'true') {
+    //     siteLoginOverlay.style.display = 'none';
+    // }
 
 </script>
 </body>
