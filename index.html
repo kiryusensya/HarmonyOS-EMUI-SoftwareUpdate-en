@@ -97,8 +97,10 @@
             flex-direction: column; 
             align-items: center;
             color: var(--text-main);
-            background-color: #000;
-            background-image: url('');
+            /* ★修正: 画像がない場合の背景色を黒に指定 */
+            background-color: #000000;
+            /* 画像指定（こちらが優先されます） */
+            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
             background-size: cover; 
             background-position: center; 
             background-attachment: fixed;
@@ -1227,7 +1229,7 @@
 <script>
     lucide.createIcons();
     // ▼ あなたのGASのURLに書き換えてください
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycby-euxYGL5-ov5Lb-Q_7HFcLvIgfTf354FQAqT0bOsTJFo7l3NDISmFS64dS8wr-DxScA/exec"; 
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwFVUjphTbnkGeGdMrAP3U8uN5kJSsYUjVS4yJhtlL41pRwW15paLkBMLWA7y4i2boNEQ/exec"; 
     let CURRENT_LANG = "ja"; 
 
     // --- 翻訳データ (ログイン画面用キーを追加) ---
@@ -1245,8 +1247,8 @@
             news_title: "最新情報", news_label: "変更ログ", news_content: "デザインがアップデートされました。<br>韓国語,ロシア語が追加されました。<br>1度限りのコードを発行しました。",
             support_modal_title: "何かお困りですか？ ", btn_inquiry: "利用不可",
             // ★ログイン画面用
-            login_title: "管理者ログイン", login_desc: "アクセスを確認します。<br>IDとパスワードを入力してください。",
-            login_label_user: "ユーザーID", login_label_pass: "パスワード",
+            login_title: "SYSTEM LOGIN", login_desc: "アクセス権限を確認します。<br>IDとパスワードを入力してください。",
+            login_label_user: "User ID", login_label_pass: "Password",
             login_ph_user: "ユーザー名", login_ph_pass: "パスワード",
             login_btn: "ログイン", login_error: "IDまたはパスワードが違います"
         },
@@ -1263,10 +1265,10 @@
             news_title: "Latest News", news_label: "Changelog", news_content: "The design has been updated.<br>Korean and Russian have been added.<br>A one-time code has been issued.",
             support_modal_title: "What can I help you with?", btn_inquiry: "Stay tuned",
             // ★Login Screen
-            login_title: "Enforcement Administer<br>LOGIN", login_desc: "Verifying access rights.<br>Please enter your ID and password.",
-            login_label_user: "Admin ID", login_label_pass: "Password",
-            login_ph_user: "Admin ID", login_ph_pass: "Password",
-            login_btn: "Authentication", login_error: "Invalid ID or Password"
+            login_title: "SYSTEM LOGIN", login_desc: "Verifying access rights.<br>Please enter your ID and password.",
+            login_label_user: "User ID", login_label_pass: "Password",
+            login_ph_user: "User Name", login_ph_pass: "Password",
+            login_btn: "LOGIN", login_error: "Invalid ID or Password"
         },
         zh: {
             card1_title: "激活", card1_desc: "使用代码<br>以解锁内容", card1_btn: "使用代码",
@@ -1281,10 +1283,10 @@
             news_title: "最新消息", news_label: "更新日志", news_content: "设计已更新。<br>新增韩语和俄语支持。<br>一次性码已生成。",
             support_modal_title: "有什么可以帮到您的吗？", btn_inquiry: "敬请期待",
             // ★Login Screen
-            login_title: "系统管理员", login_desc: "正在验证访问权限。<br>请输入身份证号和密码。",
-            login_label_user: "身份证号", login_label_pass: "密码",
-            login_ph_user: "身份证号", login_ph_pass: "密码",
-            login_btn: "认证", login_error: "身份证号或密码错误"
+            login_title: "系统登录", login_desc: "正在验证访问权限。<br>请输入ID和密码。",
+            login_label_user: "用户ID", login_label_pass: "密码",
+            login_ph_user: "用户名", login_ph_pass: "密码",
+            login_btn: "登录", login_error: "ID或密码错误"
         },
         ko: {
             card1_title: "활성화", card1_desc: "잠금 해제 코드<br>입력 콘텐츠", card1_btn: "사용 코드",
@@ -1299,10 +1301,10 @@
             news_title: "최신 정보", news_label: "변경 내역", news_content: "디자인이 업데이트되었습니다.<br>한국어와 러시아어가 추가되었습니다.<br>일회용 코드가 발급되었습니다.",
             support_modal_title: "뭘 도와드릴까요?", btn_inquiry: "기대해 주세요",
             // ★Login Screen
-            login_title: "시스템 로그인", login_desc: "접근 권한을 확인합니다.<br주민등록번호와 비밀번호를 입력해 주세요.",
-            login_label_user: "주민등록번호", login_label_pass: "비밀번호",
-            login_ph_user: "주민등록번호", login_ph_pass: "비밀번호",
-            login_btn: "인증", login_error: "ID 또는 비밀번호가 다릅니다"
+            login_title: "시스템 로그인", login_desc: "접근 권한을 확인합니다.<br>ID와 비밀번호를 입력해 주세요.",
+            login_label_user: "사용자 ID", login_label_pass: "비밀번호",
+            login_ph_user: "사용자명", login_ph_pass: "비밀번호",
+            login_btn: "로그인", login_error: "ID 또는 비밀번호가 다릅니다"
         },
         ru: {
             card1_title: "Активация", card1_desc: "Введите код для разблокировки<br>контента", card1_btn: "Код использования",
@@ -1320,7 +1322,7 @@
             login_title: "ВХОД В СИСТЕМУ", login_desc: "Проверка прав доступа.<br>Пожалуйста, введите ID и пароль.",
             login_label_user: "ID пользователя", login_label_pass: "Пароль",
             login_ph_user: "Имя пользователя", login_ph_pass: "Пароль",
-            login_btn: "Аутентификация", login_error: "Неверный ID или пароль"
+            login_btn: "ВОЙТИ", login_error: "Неверный ID или пароль"
         }
     };
 
