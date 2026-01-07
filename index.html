@@ -1173,6 +1173,22 @@
             filter: drop-shadow(0 0 3px var(--primary-color));
         }
 
+        @media (max-width: 480px) {
+            .login-card {
+                /* カードの横幅の余白を減らして文字スペースを確保 */
+                padding: 30px 15px !important;
+                width: 90%;
+            }
+
+            .login-title {
+                /* スマホでは文字サイズを小さくする (PCは24px) */
+                font-size: 18px !important;
+                
+                /* 強制的に改行させない指定 */
+                white-space: nowrap;
+            }
+        }
+
         @keyframes pulse-core {
             0% { box-shadow: 0 0 2px var(--primary-color), inset 0 0 2px var(--neon-cyan); }
             100% { box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 8px var(--primary-color); }
