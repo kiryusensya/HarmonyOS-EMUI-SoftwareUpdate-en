@@ -318,7 +318,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.85); 
             backdrop-filter: blur(15px);
-            z-index: 9999;
+            z-index: 10001; /* ログイン画面(10000)より手前に表示 */
             display: flex; 
             justify-content: center; 
             align-items: center;
@@ -352,8 +352,8 @@
             background-color: #000; /* 背景を真っ黒にしてサイトを隠す */
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1472&auto=format&fit=crop');
             background-size: cover;
-            z-index: 10000; /* 言語選択(9999)より上に表示 */
-            display: flex;
+            z-index: 10000; /* 言語選択(10001)の下、メイン画面より上に表示 */
+            display: none; /* ★初期状態は非表示（言語選択が終わってから表示） */
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -1056,24 +1056,24 @@
             <div class="logo" style="justify-content:center; margin-bottom:20px;">
                 <i data-lucide="shield-check" size="32" style="color: #9347FF;"></i>
             </div>
-            <h2 style="font-size: 22px; margin-bottom: 10px;">SYSTEM LOGIN</h2>
-            <p style="color:rgba(255,255,255,0.7); font-size:13px; margin-bottom: 20px;">
+            <h2 style="font-size: 22px; margin-bottom: 10px;" data-translate="login_title">SYSTEM LOGIN</h2>
+            <p style="color:rgba(255,255,255,0.7); font-size:13px; margin-bottom: 20px;" data-translate="login_desc">
                 アクセス権限を確認します。<br>IDとパスワードを入力してください。
             </p>
             
             <div style="text-align: left; margin-bottom: 15px;">
-                <label style="font-size: 12px; color: #ccc; margin-left: 5px;">User ID</label>
-                <input type="text" id="siteUser" class="code-input" placeholder="User Name" style="margin-top: 5px; text-align: left;">
+                <label style="font-size: 12px; color: #ccc; margin-left: 5px;" data-translate="login_label_user">User ID</label>
+                <input type="text" id="siteUser" class="code-input" data-translate-placeholder="login_ph_user" placeholder="User Name" style="margin-top: 5px; text-align: left;">
             </div>
             
             <div style="text-align: left; margin-bottom: 25px;">
-                <label style="font-size: 12px; color: #ccc; margin-left: 5px;">Password</label>
-                <input type="password" id="sitePass" class="code-input" placeholder="Password" style="margin-top: 5px; text-align: left;">
+                <label style="font-size: 12px; color: #ccc; margin-left: 5px;" data-translate="login_label_pass">Password</label>
+                <input type="password" id="sitePass" class="code-input" data-translate-placeholder="login_ph_pass" placeholder="Password" style="margin-top: 5px; text-align: left;">
             </div>
 
-            <button id="btnSiteLogin" class="btn-confirm">LOGIN</button>
+            <button id="btnSiteLogin" class="btn-confirm" data-translate="login_btn">LOGIN</button>
             <p id="loginErrorMsg" style="color: #ff2a2a; font-size: 13px; margin-top: 15px; display: none;">
-                <i data-lucide="alert-circle" size="12" style="vertical-align: middle;"></i> IDまたはパスワードが違います
+                <i data-lucide="alert-circle" size="12" style="vertical-align: middle;"></i> <span data-translate="login_error">IDまたはパスワードが違います</span>
             </p>
         </div>
     </div>
@@ -1153,7 +1153,6 @@
     <div id="authModal" class="modal-overlay">
         <div class="modal-container glass-panel" id="modalContainer">
             <div class="modal-close" id="modalCloseBtn"><i data-lucide="x"></i></div>
-
             <div id="inputPhase">
                 <h2 class="modal-title" data-translate="modal_title">アクティベーション</h2>
                 <p class="modal-sub" data-translate="modal_sub">コードを入力してください。</p>
@@ -1163,48 +1162,30 @@
                 <button id="btnConfirm" class="btn-confirm" data-translate="modal_btn_auth">認証する</button>
                 <div id="statusContainer"></div>
             </div>
-
             <div id="successPhase">
                 <div class="success-layout">
-                    <div class="success-left" id="successLeftCol">
-                        <img id="successImage" src="" alt="Result Image">
-                    </div>
-                    
+                    <div class="success-left" id="successLeftCol"><img id="successImage" src="" alt="Result Image"></div>
                     <div class="success-right">
-                        
-                        <div class="success-tag">
-                            <i data-lucide="circle-check-big" size="23"></i>
-                            <span data-translate="success_badge">コードが認証されました。</span>
-                        </div>
-                        
+                        <div class="success-tag"><i data-lucide="circle-check-big" size="23"></i><span data-translate="success_badge">コードが認証されました。</span></div>
                         <h2 class="success-title-main" data-translate="success_main_title">有効化されたコンテンツ</h2>
-                        
                         <div class="success-info-box">
                             <div class="success-label" data-translate="success_label_name">コンテンツ名称</div>
                             <div class="success-content" id="successTitle">Loading...</div>
                             <div class="success-extra" id="successExtraInfo"></div>
                         </div>
-
                         <div class="btn-group">
-                            <button id="modalCloseSub" data-translate="btn_close">
-                                閉じる
-                            </button>
-                            <a href="#" id="successDownloadBtn" class="btn-confirm" data-translate="btn_download">
-                                ダウンロード
-                            </a>
+                            <button id="modalCloseSub" data-translate="btn_close">閉じる</button>
+                            <a href="#" id="successDownloadBtn" class="btn-confirm" data-translate="btn_download">ダウンロード</a>
                         </div>
-
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <div id="newsModal" class="modal-overlay">
         <div class="modal-container glass-panel">
             <div class="modal-close" id="newsCloseX"><i data-lucide="x"></i></div>
-
             <h2 class="modal-title" style="margin-bottom: 30px;" data-translate="news_title">最新情報</h2>
             <div style="text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom: 30px;">
                 <h3 style="font-size: 18px; color: var(--neon-cyan); margin: 0 0 10px 0;">
@@ -1212,11 +1193,9 @@
                     <span data-translate="news_label">変更ログ</span>
                 </h3>
                 <p style="line-height: 1.6; margin: 0;" data-translate="news_content">
-                    韓国語,ロシア語が追加されました。
-                    1度限り使用可能なコードを発行しました。
+                    韓国語,ロシア語が追加されました。<br>1度限り使用可能なコードを発行しました。
                 </p>
             </div>
-
             <button id="newsCloseBtn" class="btn-confirm" data-translate="btn_close">閉じる</button>
         </div>
     </div>
@@ -1224,46 +1203,24 @@
     <div id="supportModal" class="modal-overlay">
         <div class="modal-container glass-panel wide-support-mode">
             <div class="modal-close" id="supportCloseX"><i data-lucide="x"></i></div>
-
             <h2 class="modal-title" style="margin-bottom: 20px;" data-translate="support_modal_title">サポート</h2>
-            
             <div class="support-grid">
-                <div class="support-item">
-                    <i class="fa-brands fa-playstation" style="color: #00439C;"></i>
-                    <span>PlayStation</span>
-                    <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a>
-                </div>
-                <div class="support-item">
-                    <i class="fa-brands fa-xbox" style="color: #107C10;"></i>
-                    <span>Xbox</span>
-                    <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a>
-                </div>
-                <div class="support-item">
-                    <i class="fa-brands fa-discord" style="color: #5865F2;"></i>
-                    <span>Discord</span>
-                    <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a>
-                </div>
-                <div class="support-item">
-                    <i class="fa-brands fa-github" style="color: #ffffff;"></i>
-                    <span>GitHub</span>
-                    <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a>
-                </div>
-                <div class="support-item">
-                    <i class="fa-brands fa-instagram" style="color: #E4405F;"></i>
-                    <span>Instagram</span>
-                    <a href="https://www.instagram.com/kiryu_sensya" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a>
-                </div>
+                <div class="support-item"><i class="fa-brands fa-playstation" style="color: #00439C;"></i><span>PlayStation</span><a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a></div>
+                <div class="support-item"><i class="fa-brands fa-xbox" style="color: #107C10;"></i><span>Xbox</span><a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a></div>
+                <div class="support-item"><i class="fa-brands fa-discord" style="color: #5865F2;"></i><span>Discord</span><a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a></div>
+                <div class="support-item"><i class="fa-brands fa-github" style="color: #ffffff;"></i><span>GitHub</span><a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a></div>
+                <div class="support-item"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i><span>Instagram</span><a href="https://www.instagram.com/kiryu_sensya" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a></div>
             </div>
-
-            </div>
+        </div>
     </div>
 
 <script>
     lucide.createIcons();
+    // ▼ あなたのGASのURLに書き換えてください
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycby-euxYGL5-ov5Lb-Q_7HFcLvIgfTf354FQAqT0bOsTJFo7l3NDISmFS64dS8wr-DxScA/exec"; 
     let CURRENT_LANG = "ja"; 
 
-    // --- 翻訳データ ---
+    // --- 翻訳データ (ログイン画面用キーを追加) ---
     const TRANSLATIONS = {
         ja: {
             card1_title: "アクティベーション", card1_desc: "コードを使用して<br>コンテンツをアンロック", card1_btn: "コードを使用",
@@ -1272,14 +1229,16 @@
             modal_title: "アクティベーション", modal_sub: "コードを入力してください。",
             modal_placeholder: "コードを入力", modal_btn_auth: "認証する",
             msg_verifying: "確認中",
-            msg_invalid: "このコードは無効です。", 
-            msg_used: "このコードは既に使用済みです。", 
-            msg_error: "通信エラーが発生しました。",
+            msg_invalid: "このコードは無効です。", msg_used: "このコードは既に使用済みです。", msg_error: "通信エラーが発生しました。",
             success_badge: "コードが認証されました。", success_main_title: "有効化されたコンテンツ",
             success_label_name: "コンテンツ名称", btn_close: "閉じる", btn_download: "ダウンロード",
             news_title: "最新情報", news_label: "変更ログ", news_content: "デザインがアップデートされました。<br>韓国語,ロシア語が追加されました。<br>1度限りのコードを発行しました。",
-            // Support Modal (キー追加)
-            support_modal_title: "何かお困りですか？ ", btn_inquiry: "利用不可"
+            support_modal_title: "何かお困りですか？ ", btn_inquiry: "利用不可",
+            // ★ログイン画面用
+            login_title: "SYSTEM LOGIN", login_desc: "アクセス権限を確認します。<br>IDとパスワードを入力してください。",
+            login_label_user: "User ID", login_label_pass: "Password",
+            login_ph_user: "ユーザー名", login_ph_pass: "パスワード",
+            login_btn: "ログイン", login_error: "IDまたはパスワードが違います"
         },
         en: {
             card1_title: "Activation", card1_desc: "Enter code to<br>unlock content", card1_btn: "Use Code",
@@ -1288,13 +1247,16 @@
             modal_title: "Activation", modal_sub: "Please enter your code.",
             modal_placeholder: "Enter Code", modal_btn_auth: "CHECK",
             msg_verifying: "Checking",
-            msg_invalid: "This code is invalid.",
-            msg_used: "This code has already been used.",
-            msg_error: "Connection error occurred.",
+            msg_invalid: "This code is invalid.", msg_used: "This code has already been used.", msg_error: "Connection error occurred.",
             success_badge: "The code has been activated.", success_main_title: "Activated content",
             success_label_name: "Content Name", btn_close: "Close", btn_download: "Download",
             news_title: "Latest News", news_label: "Changelog", news_content: "The design has been updated.<br>Korean and Russian have been added.<br>A one-time code has been issued.",
-            support_modal_title: "What can I help you with?", btn_inquiry: "Stay tuned"
+            support_modal_title: "What can I help you with?", btn_inquiry: "Stay tuned",
+            // ★Login Screen
+            login_title: "SYSTEM LOGIN", login_desc: "Verifying access rights.<br>Please enter your ID and password.",
+            login_label_user: "User ID", login_label_pass: "Password",
+            login_ph_user: "User Name", login_ph_pass: "Password",
+            login_btn: "LOGIN", login_error: "Invalid ID or Password"
         },
         zh: {
             card1_title: "激活", card1_desc: "使用代码<br>以解锁内容", card1_btn: "使用代码",
@@ -1303,13 +1265,16 @@
             modal_title: "激活", modal_sub: "请输入您的激活码",
             modal_placeholder: "输入代码", modal_btn_auth: "检查",
             msg_verifying: "正在检查",
-            msg_invalid: "该代码无效。",
-            msg_used: "该代码已被使用。",
-            msg_error: "发生通信错误",
+            msg_invalid: "该代码无效。", msg_used: "该代码已被使用。", msg_error: "发生通信错误",
             success_badge: "代码已激活。", success_main_title: "激活内容",
             success_label_name: "内容名称", btn_close: "关闭", btn_download: "下载",
             news_title: "最新消息", news_label: "更新日志", news_content: "设计已更新。<br>新增韩语和俄语支持。<br>一次性码已生成。",
-            support_modal_title: "有什么可以帮到您的吗？", btn_inquiry: "敬请期待"
+            support_modal_title: "有什么可以帮到您的吗？", btn_inquiry: "敬请期待",
+            // ★Login Screen
+            login_title: "系统登录", login_desc: "正在验证访问权限。<br>请输入ID和密码。",
+            login_label_user: "用户ID", login_label_pass: "密码",
+            login_ph_user: "用户名", login_ph_pass: "密码",
+            login_btn: "登录", login_error: "ID或密码错误"
         },
         ko: {
             card1_title: "활성화", card1_desc: "잠금 해제 코드<br>입력 콘텐츠", card1_btn: "사용 코드",
@@ -1318,13 +1283,16 @@
             modal_title: "활성화", modal_sub: "보유하신 활성화 코드를 입력해 주세요",
             modal_placeholder: "코드 입력", modal_btn_auth: "인증하기",
             msg_verifying: "확인 중",
-            msg_invalid: "유효하지 않은 코드입니다.",
-            msg_used: "이미 사용된 코드입니다.",
-            msg_error: "통신 오류가 발생했습니다",
+            msg_invalid: "유효하지 않은 코드입니다.", msg_used: "이미 사용된 코드입니다.", msg_error: "통신 오류가 발생했습니다",
             success_badge: "코드가 활성화되었습니다.", success_main_title: "활성화된 콘텐츠",
             success_label_name: "콘텐츠 명칭", btn_close: "닫기", btn_download: "다운로드",
             news_title: "최신 정보", news_label: "변경 내역", news_content: "디자인이 업데이트되었습니다.<br>한국어와 러시아어가 추가되었습니다.<br>일회용 코드가 발급되었습니다.",
-            support_modal_title: "뭘 도와드릴까요?", btn_inquiry: "기대해 주세요"
+            support_modal_title: "뭘 도와드릴까요?", btn_inquiry: "기대해 주세요",
+            // ★Login Screen
+            login_title: "시스템 로그인", login_desc: "접근 권한을 확인합니다.<br>ID와 비밀번호를 입력해 주세요.",
+            login_label_user: "사용자 ID", login_label_pass: "비밀번호",
+            login_ph_user: "사용자명", login_ph_pass: "비밀번호",
+            login_btn: "로그인", login_error: "ID 또는 비밀번호가 다릅니다"
         },
         ru: {
             card1_title: "Активация", card1_desc: "Введите код для разблокировки<br>контента", card1_btn: "Код использования",
@@ -1333,13 +1301,16 @@
             modal_title: "Активация", modal_sub: "Пожалуйста, введите ваш код активации",
             modal_placeholder: "Введите код", modal_btn_auth: "Войти",
             msg_verifying: "Проверка",
-            msg_invalid: "Неверный код.",
-            msg_used: "Код уже использован.",
-            msg_error: "Ошибка соединения",
+            msg_invalid: "Неверный код.", msg_used: "Код уже использован.", msg_error: "Ошибка соединения",
             success_badge: "Код активирован.", success_main_title: "Активированный контент",
             success_label_name: "Название", btn_close: "Закрыть", btn_download: "Скачать",
             news_title: "Новости", news_label: "Список изменений", news_content: "Дизайн был обновлен.<br>Добавлены корейский и русский языки.<br>Выдан одноразовый код.",
-            support_modal_title: "Чем я могу вам помочь?", btn_inquiry: "Недоступно"
+            support_modal_title: "Чем я могу вам помочь?", btn_inquiry: "Недоступно",
+            // ★Login Screen
+            login_title: "ВХОД В СИСТЕМУ", login_desc: "Проверка прав доступа.<br>Пожалуйста, введите ID и пароль.",
+            login_label_user: "ID пользователя", login_label_pass: "Пароль",
+            login_ph_user: "Имя пользователя", login_ph_pass: "Пароль",
+            login_btn: "ВОЙТИ", login_error: "Неверный ID или пароль"
         }
     };
 
@@ -1363,22 +1334,26 @@
     const successLeftCol = document.getElementById('successLeftCol');
     const successImage = document.getElementById('successImage');
 
-    // --- ★言語設定とローカルストレージ連携 ---
-    
-    // ページ読み込み時に実行: 保存された言語があれば即反映してオーバーレイを消す
+    const siteLoginOverlay = document.getElementById('siteLoginOverlay');
+    const langSelectionOverlay = document.getElementById('langSelectionOverlay');
+
+    // --- ★改修: 起動時のフロー制御 ---
     document.addEventListener('DOMContentLoaded', () => {
         const savedLang = localStorage.getItem('user_lang');
-        const overlay = document.getElementById('langSelectionOverlay');
         const switcher = document.getElementById('languageSwitcher');
 
         if (savedLang) {
-            // 保存済みの場合: 即時非表示にして言語セット
-            overlay.style.display = 'none'; 
+            // 保存された言語がある場合: 
+            // 1. 言語選択画面は即座に隠す
+            langSelectionOverlay.style.display = 'none'; 
             switcher.value = savedLang;
             updateLanguage(savedLang);
+            
+            // 2. ★代わりにログイン画面を表示する
+            siteLoginOverlay.style.display = 'flex';
         } else {
-            // 初回訪問時: オーバーレイを表示（CSSで制御されているが念のため）
-            // 何もしなくてOK
+            // 初回訪問時: 言語選択画面を表示したままにする
+            // ログイン画面はまだ表示しない
         }
     });
 
@@ -1389,10 +1364,20 @@
         updateLanguage(lang);
         document.getElementById('languageSwitcher').value = lang;
         
-        const overlay = document.getElementById('langSelectionOverlay');
-        overlay.style.opacity = '0';
-        overlay.style.visibility = 'hidden';
-        setTimeout(() => { overlay.style.display = 'none'; }, 500);
+        // 1. 言語選択画面をフェードアウトして消す
+        langSelectionOverlay.style.opacity = '0';
+        langSelectionOverlay.style.visibility = 'hidden';
+        setTimeout(() => { 
+            langSelectionOverlay.style.display = 'none'; 
+            
+            // 2. ★消えた直後に「ログイン画面」を表示する
+            siteLoginOverlay.style.display = 'flex';
+            // 少しアニメーションで表示
+            siteLoginOverlay.animate([
+                { opacity: 0 }, { opacity: 1 }
+            ], { duration: 500, fill: 'forwards' });
+            
+        }, 500);
     }
 
     // ヘッダーのセレクトボックス変更時の処理
@@ -1402,19 +1387,24 @@
         updateLanguage(lang);
     });
 
-    // 言語切り替えロジック
+    // 言語切り替えロジック (改修: placeholderの翻訳に対応)
     function updateLanguage(lang) {
         CURRENT_LANG = lang;
-        
-        // HTMLのlang属性を更新
         document.documentElement.lang = lang;
 
         const t = TRANSLATIONS[lang];
         if(!t) return;
 
+        // テキストの翻訳
         document.querySelectorAll('[data-translate]').forEach(el => {
             const key = el.getAttribute('data-translate');
             if(t[key]) el.innerHTML = t[key];
+        });
+
+        // プレースホルダー(入力欄の中の文字)の翻訳
+        document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-translate-placeholder');
+            if(t[key]) el.placeholder = t[key];
         });
 
         if(t.modal_placeholder) {
@@ -1434,7 +1424,6 @@
         codeInput.disabled = false;
         confirmBtn.disabled = false;
         
-        // クラス初期化
         modalContainer.classList.remove('modal-error-border');
         codeInput.classList.remove('error-glow');
         confirmBtn.classList.remove('error-glow');
@@ -1460,7 +1449,7 @@
 
     function openNewsModal() {
         newsModal.classList.add('active');
-        lucide.createIcons(); // アイコン再描画
+        lucide.createIcons(); 
     }
     function closeNewsModal() {
         newsModal.classList.remove('active');
@@ -1471,14 +1460,14 @@
     if(newsCloseBtn) newsCloseBtn.addEventListener('click', closeNewsModal);
     if(newsModal) newsModal.addEventListener('click', (e) => { if (e.target === newsModal) closeNewsModal(); });
 
-    // --- ★サポートモーダル操作 ---
+    // --- サポートモーダル操作 ---
     const supportModal = document.getElementById('supportModal');
     const btnOpenSupport = document.getElementById('btnOpenSupport');
     const supportCloseX = document.getElementById('supportCloseX');
     
     function openSupportModal() {
         supportModal.classList.add('active');
-        lucide.createIcons(); // アイコン再描画
+        lucide.createIcons(); 
     }
     function closeSupportModal() {
         supportModal.classList.remove('active');
@@ -1489,7 +1478,7 @@
     if(supportModal) supportModal.addEventListener('click', (e) => { if (e.target === supportModal) closeSupportModal(); });
 
 
-    // --- 入力フォーマット制御 (25文字以上で5文字区切り) ---
+    // --- 入力フォーマット制御 ---
     codeInput.addEventListener('input', (e) => {
         let val = codeInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
         let chunkSize = (val.length >= 25) ? 5 : 4;
@@ -1513,7 +1502,6 @@
         confirmBtn.innerHTML = `<span class="cyber-spinner"></span> ${t.msg_verifying}<span class="loading-dots"></span>`;
         statusContainer.innerHTML = "";
         
-        // エラーグローは一旦消す
         modalContainer.classList.remove('modal-error-border');
         codeInput.classList.remove('error-glow');
         confirmBtn.classList.remove('error-glow');
@@ -1530,7 +1518,6 @@
             if (data.success) {
                 modalContainer.classList.add('wide-mode');
                 inputPhase.style.display = 'none';
-                
                 successPhase.style.display = 'block';
                 successPhase.animate([
                     { opacity: 0, transform: 'translateY(10px)' },
@@ -1548,23 +1535,16 @@
                 } else {
                     successLeftCol.style.display = 'none';
                 }
-                
                 lucide.createIcons();
             } else {
-                // --- エラー時の処理 ---
                 let errorMsg = t.msg_invalid;
-                if (data.message === "This code has already been used.") {
-                    errorMsg = t.msg_used;
-                }
+                if (data.message === "This code has already been used.") errorMsg = t.msg_used;
                 statusContainer.innerHTML = `<span class="error-msg"><i data-lucide="alert-circle" size="14"></i> ${errorMsg}</span>`;
                 lucide.createIcons();
                 shakeModal();
-                
-                // ★赤く光らせる (3秒)
                 modalContainer.classList.add('modal-error-border');
                 codeInput.classList.add('error-glow');
                 confirmBtn.classList.add('error-glow');
-                
                 setTimeout(() => {
                     modalContainer.classList.remove('modal-error-border');
                     codeInput.classList.remove('error-glow');
@@ -1573,16 +1553,12 @@
             }
         } catch (error) {
             console.error(error);
-            codeInput.disabled = false; 
-            confirmBtn.disabled = false; 
+            codeInput.disabled = false; confirmBtn.disabled = false; 
             confirmBtn.textContent = t.modal_btn_auth;
             statusContainer.innerHTML = `<span class="error-msg">${t.msg_error}</span>`;
-            
-            // ★通信エラー時も赤く光らせる
             modalContainer.classList.add('modal-error-border');
             codeInput.classList.add('error-glow');
             confirmBtn.classList.add('error-glow');
-            
             setTimeout(() => {
                 modalContainer.classList.remove('modal-error-border');
                 codeInput.classList.remove('error-glow');
@@ -1598,73 +1574,51 @@
         ], { duration: 300 });
     }
 
-    // --- ダウンロードボタンのホバー連動 (JS実装) ---
-    successDownloadBtn.addEventListener('mouseenter', () => {
-        modalContainer.classList.add('sync-blue-mode');
-    });
-    successDownloadBtn.addEventListener('mouseleave', () => {
-        modalContainer.classList.remove('sync-blue-mode');
-    });
+    successDownloadBtn.addEventListener('mouseenter', () => { modalContainer.classList.add('sync-blue-mode'); });
+    successDownloadBtn.addEventListener('mouseleave', () => { modalContainer.classList.remove('sync-blue-mode'); });
 
-    // --- ★改修版: サイトログイン処理 (GAS連携) ---
-    
-    const siteLoginOverlay = document.getElementById('siteLoginOverlay');
+    // --- サイトログイン処理 (GAS連携) ---
     const btnSiteLogin = document.getElementById('btnSiteLogin');
     const siteUserInput = document.getElementById('siteUser');
     const sitePassInput = document.getElementById('sitePass');
     const loginErrorMsg = document.getElementById('loginErrorMsg');
 
-    // ログイン実行関数
     async function checkSiteLogin() {
         const u = siteUserInput.value;
         const p = sitePassInput.value;
-        
         if(!u || !p) return;
 
-        // ボタンをロード中にする
         btnSiteLogin.disabled = true;
         const originalText = btnSiteLogin.textContent;
         btnSiteLogin.innerHTML = `<span class="cyber-spinner"></span> Checking...`;
         loginErrorMsg.style.display = "none";
 
-        // GASに問い合わせる (type=login を送る)
         try {
-            // あなたのGASのURL (現在お使いのものと同じURL)
             const targetUrl = `${GAS_API_URL}?type=login&user=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`;
-            
             const response = await fetch(targetUrl);
             const data = await response.json();
 
             if (data.success) {
-                // 正解の場合
                 siteLoginOverlay.style.transition = "opacity 0.5s ease";
                 siteLoginOverlay.style.opacity = "0";
                 setTimeout(() => {
                     siteLoginOverlay.style.display = "none";
                 }, 500);
             } else {
-                // 不正解の場合
                 throw new Error("Invalid credentials");
             }
         } catch (error) {
-            // エラー表示
             loginErrorMsg.style.display = "block";
             lucide.createIcons();
-            
-            // ボタンを赤く点滅
             btnSiteLogin.classList.add('error-glow');
             setTimeout(() => btnSiteLogin.classList.remove('error-glow'), 500);
         } finally {
-            // ボタンを元に戻す
             btnSiteLogin.disabled = false;
             btnSiteLogin.textContent = originalText;
         }
     }
 
-    // ボタンクリックで認証
     btnSiteLogin.addEventListener('click', checkSiteLogin);
-
-    // エンターキーでも認証できるようにする
     sitePassInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') checkSiteLogin();
     });
