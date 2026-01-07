@@ -22,33 +22,31 @@ export default async function handler(req, res) {
     try {
       const gasUrl = process.env.GAS_API_URL;
       
-      // 【重要】データの受け取りと形式の統一
-      // VercelがすでにJSON解析している場合としていない場合の両方に対応
+      // データの整理（文字列ならオブジェクトに戻す）
       let bodyData = req.body;
       if (typeof bodyData === 'string') {
-        try {
-          bodyData = JSON.parse(bodyData);
-        } catch (e) {
-          // JSONパースに失敗したらそのまま使う
-        }
+        try { bodyData = JSON.parse(bodyData); } catch (e) {}
       }
 
-      // 【ここが修正点】GASが確実に読める「フォームデータ形式」に変換する
-      // (e.parameter で受け取るタイプのGASスクリプトに対応)
-      const params = new URLSearchParams();
+      // 【最強の修正点】
+      // 1. URLの後ろにデータをくっつける（e.parameter 対策）
+      const urlObj = new URL(gasUrl);
       if (bodyData && typeof bodyData === 'object') {
         Object.keys(bodyData).forEach(key => {
-          params.append(key, bodyData[key]);
+          urlObj.searchParams.append(key, bodyData[key]);
         });
       }
 
-      // GASへ送信
-      const response = await fetch(gasUrl, {
+      // 2. 封筒の中身にもデータを入れる（e.postData 対策）
+      const jsonBody = JSON.stringify(bodyData);
+
+      // GASへ送信（URLパラメータ付きのアドレスに、JSONを送る）
+      const response = await fetch(urlObj.toString(), {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded', // フォーム形式を指定
+          'Content-Type': 'application/json',
         },
-        body: params.toString()
+        body: jsonBody
       });
 
       const data = await response.json();
