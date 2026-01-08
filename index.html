@@ -1267,21 +1267,20 @@
             padding-left: 0;     /* 左端 */
         }
 
-        /* ★変更ログ（見出し）のデザイン */
         .news-heading {
             font-size: 16px;
-            color: var(--primary-color); /* メインカラー（紫） */
+            color: var(--hover-blue); /* ← 紫から青に変更 */
             margin: 0 0 15px 0;
             display: flex;
             align-items: center;
             gap: 6px;
             /* テキストのネオン発光効果 */
-            text-shadow: 0 0 8px rgba(132, 7, 222, 0.8);
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.8); /* ← 青色の発光に変更 */
         }
         
         /* アイコンのネオン発光効果 (SVG用) */
         .news-heading svg {
-            filter: drop-shadow(0 0 5px rgba(132, 7, 222, 0.8));
+            filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); /* ← 青色の発光に変更 */
         }
     </style>
 </head>
