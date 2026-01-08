@@ -1749,48 +1749,65 @@
     }
 
     // --- ★ニュース取得機能 (最終修正版) ---
+    // --- ★ニュース取得機能（アニメーション完全版） ---
     async function fetchNews() {
-        if (!newsList) return;
-        
-        // ローディング表示（紫のくるくる等は排除しテキストのみ）
-        const loadingText = TRANSLATIONS[CURRENT_LANG].news_content;
-        newsList.innerHTML = `
-            <div style="text-align:center; color:#888; padding:20px;">
-                ${loadingText}
-            </div>`;
-        
-        try {
-            const requestUrl = `${GAS_API_URL}?type=news&lang=${CURRENT_LANG}`;
-            const response = await fetch(requestUrl);
-            const data = await response.json();
+    if (!newsList) return;
 
-            newsList.innerHTML = ''; // クリア
+    // ▼ 翻訳されたローディング文のベース（末尾の ... を削除）
+    const baseText = TRANSLATIONS[CURRENT_LANG].news_content.replace(/\.+$/, "");
 
-            if (data.success && data.news && data.news.length > 0) {
-                data.news.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = 'news-item'; 
-                    
-                    // ★修正: バッジ表示(UPDATEなど)を削除し、日付と本文のみを表示
-                    // 日付を上に、本文を下に配置
-                    li.innerHTML = `
-                        <div class="news-date" lang="${CURRENT_LANG}">${item.date}</div>
-                        <div class="news-content-text">${item.content}</div>
-                    `;
-                    newsList.appendChild(li);
-                });
-            } else {
-                const noNewsMsg = (CURRENT_LANG === 'ja') ? 'お知らせはありません。' : 'No news available.';
-                newsList.innerHTML = `<div style="text-align:center; color:#888; padding:20px;">${noNewsMsg}</div>`;
-            }
-        } catch (error) {
-            console.error('News fetch error:', error);
-            const errorMsg = (CURRENT_LANG === 'ja') ? '読み込みに失敗しました。' : 'Failed to load news.';
-            newsList.innerHTML = `<div style="text-align:center; color:#ff6b6b; padding:20px;"><i data-lucide="alert-triangle" style="margin-bottom:5px;"></i><br>${errorMsg}</div>`;
-            lucide.createIcons();
+    // ▼ 最初のローディング表示
+    newsList.innerHTML = `
+        <div id="news-loading" style="text-align:center; color:#888; padding:20px;">
+            ${baseText}.
+        </div>
+    `;
+
+    const loadingEl = document.getElementById("news-loading");
+
+    // ▼ アニメーション開始
+    let dotCount = 1;
+    const loadingTimer = setInterval(() => {
+        dotCount = (dotCount % 3) + 1; // 1 → 2 → 3 → 1 → …
+        loadingEl.textContent = baseText + ".".repeat(dotCount);
+    }, 500);
+
+    try {
+        const requestUrl = `${GAS_API_URL}?type=news&lang=${CURRENT_LANG}`;
+        const response = await fetch(requestUrl);
+        const data = await response.json();
+
+        // ▼ アニメーション停止
+        clearInterval(loadingTimer);
+
+        // ▼ ニュースが空の場合
+        if (!data || data.length === 0) {
+            newsList.innerHTML = `
+                <li style="text-align:center; color:#888; padding:20px;">
+                    ${TRANSLATIONS[CURRENT_LANG].news_content}
+                </li>`;
+            return;
         }
-    }
 
+        // ▼ ニュースを表示
+        newsList.innerHTML = data.map(item => `
+            <li class="news-item">
+                <div class="news-title">${item.title}</div>
+                <div class="news-date">${item.date}</div>
+                <div class="news-body">${item.body}</div>
+            </li>
+        `).join("");
+
+    } catch (error) {
+        // ▼ エラー時もアニメーション停止
+        clearInterval(loadingTimer);
+
+        newsList.innerHTML = `
+            <li style="text-align:center; color:#888; padding:20px;">
+                Error loading news.
+            </li>`;
+    }
+}
 
     // --- 認証モーダル操作 ---
     function openAuthModal() { authModal.classList.add('active'); resetAuthModal(); codeInput.focus(); }
