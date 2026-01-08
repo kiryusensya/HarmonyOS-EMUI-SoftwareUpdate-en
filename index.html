@@ -123,7 +123,6 @@
 
         /* =========================================
            ★日付表示エリア専用フォント設定
-           数字はHarmonyOS、各言語文字はNoto等へフォールバック
            ========================================= */
         .news-date[lang="ja"] {
             font-family: 'HarmonyOS Sans', 'Noto Sans JP', sans-serif !important;
@@ -1203,11 +1202,12 @@
             background: rgba(0, 0, 0, 0.3) !important;
             padding: 20px;
             border-radius: 16px;
-            margin-bottom: 30px;
+            margin-bottom: 0; /* ★修正: ボタン削除により下マージン不要 */
             max-height: 400px;
             overflow-y: auto;
             /* 枠線は薄い白系で維持 */
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            padding-bottom: 10px; /* ★修正: 下余白を詰める */
         }
 
         .news-container::-webkit-scrollbar { width: 6px; }
@@ -1234,6 +1234,11 @@
             gap: 5px;
             position: relative;
             overflow: visible;
+        }
+
+        /* リスト最後のアイテムの下余白を削除 */
+        .news-item:last-child {
+            margin-bottom: 0;
         }
 
         /* ホバー時も何も表示させない */
@@ -1267,20 +1272,21 @@
             padding-left: 0;     /* 左端 */
         }
 
+        /* ★変更ログ（見出し）のデザイン */
         .news-heading {
             font-size: 16px;
-            color: var(--hover-blue); /* ← 紫から青に変更 */
+            color: var(--hover-blue); /* ← ★修正: 紫から青に変更 */
             margin: 0 0 15px 0;
             display: flex;
             align-items: center;
             gap: 6px;
             /* テキストのネオン発光効果 */
-            text-shadow: 0 0 8px rgba(59, 130, 246, 0.8); /* ← 青色の発光に変更 */
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.8); /* ← ★修正: 青色の発光 */
         }
         
         /* アイコンのネオン発光効果 (SVG用) */
         .news-heading svg {
-            filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); /* ← 青色の発光に変更 */
+            filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); /* ← ★修正: 青色の発光 */
         }
     </style>
 </head>
@@ -1434,8 +1440,7 @@
                 </ul>
             </div>
             
-            <button id="newsCloseBtn" class="btn-confirm" data-translate="btn_close">閉じる</button>
-        </div>
+            </div>
     </div>
 
     <div id="supportModal" class="modal-overlay">
@@ -1588,6 +1593,7 @@
 
     // News elements
     const newsList = document.getElementById('newsList');
+    // const newsCloseBtn = document.getElementById('newsCloseBtn'); // 削除
 
     // --- 起動時のフロー制御 ---
     document.addEventListener('DOMContentLoaded', () => {
@@ -1806,7 +1812,7 @@
     const newsModal = document.getElementById('newsModal');
     const btnOpenNews = document.getElementById('btnOpenNews');
     const newsCloseX = document.getElementById('newsCloseX');
-    const newsCloseBtn = document.getElementById('newsCloseBtn');
+    // const newsCloseBtn = document.getElementById('newsCloseBtn'); // 削除
 
     function openNewsModal() {
         newsModal.classList.add('active');
@@ -1818,7 +1824,7 @@
 
     if(btnOpenNews) btnOpenNews.addEventListener('click', openNewsModal);
     if(newsCloseX) newsCloseX.addEventListener('click', closeNewsModal);
-    if(newsCloseBtn) newsCloseBtn.addEventListener('click', closeNewsModal);
+    // if(newsCloseBtn) newsCloseBtn.addEventListener('click', closeNewsModal);
     if(newsModal) newsModal.addEventListener('click', (e) => { if (e.target === newsModal) closeNewsModal(); });
 
     // --- サポートモーダル操作 ---
