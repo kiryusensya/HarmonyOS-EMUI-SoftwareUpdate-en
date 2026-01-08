@@ -1730,7 +1730,7 @@
 
         document.querySelectorAll('[data-translate]').forEach(el => {
             const key = el.getAttribute('data-translate');
-            if(key !== 'news_content' && t[key]) el.innerHTML = t[key];
+            if(t[key]) el.innerHTML = t[key];
         });
 
         document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
