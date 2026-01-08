@@ -97,7 +97,7 @@
         }
 
         /* =========================================
-           LANGUAGE-SPECIFIC FONT STACKS
+           LANGUAGE-SPECIFIC FONT STACKS (Global)
            ========================================= */
         
         html[lang="ja"] body, html[lang="ja"] input, html[lang="ja"] button, html[lang="ja"] select, html[lang="ja"] textarea {
@@ -120,6 +120,25 @@
         .code-input {
             font-family: "HarmonyOS Sans", sans-serif !important;
         }
+
+        /* =========================================
+           ★日付表示エリア専用フォント設定 (New)
+           数字はHarmonyOS、各言語文字はNoto等へフォールバック
+           ========================================= */
+        .news-date[lang="ja"] {
+            font-family: 'HarmonyOS Sans', 'Noto Sans JP', sans-serif !important;
+        }
+        .news-date[lang="ko"] {
+            font-family: 'HarmonyOS Sans', 'Noto Sans KR', sans-serif !important;
+        }
+        .news-date[lang="zh"] {
+            font-family: 'HarmonyOS Sans', 'HarmonyOS Sans SC', sans-serif !important;
+        }
+        .news-date[lang="en"],
+        .news-date[lang="ru"] {
+            font-family: 'HarmonyOS Sans', sans-serif !important;
+        }
+
 
         body::before {
             content: ''; 
@@ -1288,7 +1307,7 @@
 
         .news-date {
             color: rgba(255, 255, 255, 0.6);
-            font-family: 'Outfit', sans-serif; /* 英数字用フォント */
+            /* font-familyは言語別にCSSで指定されます */
             letter-spacing: 0.5px;
         }
 
@@ -1499,7 +1518,7 @@
 <script>
     lucide.createIcons();
     // ▼ あなたのGASのURLに書き換えてください
-    const GAS_API_URL = "/api/proxy"; 
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyv..."; 
     let CURRENT_LANG = "ja"; 
 
     // --- 翻訳データ ---
@@ -1812,10 +1831,11 @@
                     li.className = 'news-item'; // CSSクラス適用
                     
                     // カード型デザインのHTMLを生成
+                    // ★ここがポイント: spanに lang="${CURRENT_LANG}" を追加してフォント適用
                     li.innerHTML = `
                         <div class="news-header">
                             <span class="news-badge badge-${badgeType}">${badgeLabel}</span>
-                            <span class="news-date">${item.date}</span>
+                            <span class="news-date" lang="${CURRENT_LANG}">${item.date}</span>
                         </div>
                         <div class="news-content-text">${item.content}</div>
                     `;
