@@ -1266,6 +1266,23 @@
             color: #f0f0f0;
             padding-left: 0;     /* 左端 */
         }
+
+        /* ★変更ログ（見出し）のデザイン */
+        .news-heading {
+            font-size: 16px;
+            color: var(--primary-color); /* メインカラー（紫） */
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            /* テキストのネオン発光効果 */
+            text-shadow: 0 0 8px rgba(132, 7, 222, 0.8);
+        }
+        
+        /* アイコンのネオン発光効果 (SVG用) */
+        .news-heading svg {
+            filter: drop-shadow(0 0 5px rgba(132, 7, 222, 0.8));
+        }
     </style>
 </head>
 <body>
@@ -1408,8 +1425,8 @@
             <h2 class="modal-title" style="margin-bottom: 20px;" data-translate="news_title">最新情報</h2>
             
             <div class="news-container">
-                <h3 style="font-size: 16px; color: var(--text-muted); margin: 0 0 15px 0; display:flex; align-items:center; gap:6px;">
-                    <i data-lucide="history" size="16"></i>
+                <h3 class="news-heading">
+                    <i data-lucide="download" size="16"></i>
                     <span data-translate="news_label">変更ログ</span>
                 </h3>
                 
@@ -1461,7 +1478,7 @@
             footer_admin: "システム管理者",
             login_title: "システム管理者ログイン", login_desc: "アクセス権限を確認します。<br>身分証明書番号とパスワードを入力してください。",
             login_label_user: "身分証明書番号 ", login_label_pass: "パスワード",
-            login_btn: "ログイン", login_btn_verifying: "確認中", // ← ★修正: "..."を削除
+            login_btn: "ログイン", login_btn_verifying: "確認中", 
             login_placeholder_user: "身分証明書番号", login_placeholder_pass: "パスワード"
         },
         en: {
@@ -1480,7 +1497,7 @@
             footer_admin: "Enforcement Administrator",
             login_title: "Enforcement Administrator<br>LOGIN", login_desc: "Verifying access privileges.<br>Please enter ID Number and Password.",
             login_label_user: "ID Number", login_label_pass: "Password",
-            login_btn: "Login", login_btn_verifying: "Verifying", // ← ★修正: "..."を削除
+            login_btn: "Login", login_btn_verifying: "Verifying", 
             login_placeholder_user: "ID Number", login_placeholder_pass: "Password"
         },
         zh: {
@@ -1499,7 +1516,7 @@
             footer_admin: "系统管理长",
             login_title: "系统管理员登录", login_desc: "正在检查访问权限。<br>请输入身份证号和密码。",
             login_label_user: "身份证号", login_label_pass: "密码",
-            login_btn: "登录", login_btn_verifying: "验证中", // ← ★修正: "..."を削除
+            login_btn: "登录", login_btn_verifying: "验证中", 
             login_placeholder_user: "身份证号", login_placeholder_pass: "密码"
         },
         ko: {
@@ -1518,7 +1535,7 @@
             footer_admin: "시스템 관리장",
             login_title: "시스템 관리장 로그인", login_desc: "접근 권한을 확인합니다.<br>신분 번호와 비밀번호를 입력하십시오.",
             login_label_user: "주민등록번호", login_label_pass: "비밀번호",
-            login_btn: "로그인", login_btn_verifying: "확인 중", // ← ★修正: "..."を削除
+            login_btn: "로그인", login_btn_verifying: "확인 중", 
             login_placeholder_user: "주민등록번호", login_placeholder_pass: "비밀번호"
         },
         ru: {
@@ -1537,7 +1554,7 @@
             footer_admin: "Администратор",
             login_title: "Администратор<br>Войти", login_desc: "Проверьте права доступа. Введите свой идентификационный номер и пароль.",
             login_label_user: "Имя пользователя", login_label_pass: "Пароль",
-            login_btn: "Войти", login_btn_verifying: "Проверка", // ← ★修正: "..."を削除
+            login_btn: "Войти", login_btn_verifying: "Проверка", 
             login_placeholder_user: "Имя пользователя", login_placeholder_pass: "Пароль"
         }
     };
