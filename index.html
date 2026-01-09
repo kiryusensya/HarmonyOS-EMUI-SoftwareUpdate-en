@@ -653,7 +653,7 @@
             background: rgba(0, 0, 0, 0.3); 
             border: 1px solid var(--glass-border); 
             border-radius: 12px; 
-            padding: 16px;
+            padding: 16px; 
             color: white; 
             font-size: 18px; 
             text-align: center; 
@@ -671,7 +671,7 @@
             width: 100%; 
             padding: 16px; 
             border-radius: 12px; 
-            background: var(--primary-color);
+            background: var(--primary-color); 
             color: white; 
             border: none; 
             font-size: 16px; 
@@ -691,7 +691,7 @@
         .btn-confirm:hover { 
             background: var(--hover-blue); 
             transform: translateY(-2px); 
-            border-color: rgba(59, 130, 246, 0.8);
+            border-color: rgba(59, 130, 246, 0.8); 
             animation: pulse-blue-fast 1.0s infinite ease-in-out; 
         }
         
@@ -774,7 +774,7 @@
             margin-bottom: 20px; 
             display: inline-flex; 
             align-items: center; 
-            gap: 8px; 
+            gap: 8px;
             text-shadow: 0 0 8px rgba(0, 255, 157, 0.6); 
             font-family: inherit;
             white-space: nowrap;
@@ -1413,7 +1413,7 @@
             <h2 class="modal-title" style="margin-bottom: 20px;" data-translate="news_title">最新情報</h2>
             
             <div class="news-container">
-                <h3 style="font-size: 16px; color: white; margin: 0 0 15px 0; display:flex; align-items:center; gap:6px;">
+                <h3 id="newsHeader" style="display: none; font-size: 16px; color: white; margin: 0 0 15px 0; align-items:center; gap:6px;">
                     <span style="color: #ff2a2a; font-size: 18px;">●</span>
                     <span data-translate="news_label">変更ログ</span>
                 </h3>
@@ -1588,6 +1588,7 @@
             switcher.value = savedLang;
             langSelectionOverlay.style.display = 'none';
 
+            // ★修正: ログイン済みかチェックし、未ログインならログイン画面へ（機能ON）
             if (isLoggedIn === 'true') {
                 showMainContent();
             } else {
@@ -1608,6 +1609,7 @@
         langSelectionOverlay.style.visibility = 'hidden';
         setTimeout(() => { 
             langSelectionOverlay.style.display = 'none'; 
+            // ★修正: 言語選択後はログイン画面へ遷移（機能ON）
             showLoginScreen();
         }, 500);
         
@@ -1720,10 +1722,16 @@
 
     // --- ★ニュース取得機能 (最終修正版) ---
     async function fetchNews() {
+        const newsList = document.getElementById('newsList');
+        const newsHeader = document.getElementById('newsHeader'); // ヘッダー要素を取得
+
         if (!newsList) return;
         
         const t = TRANSLATIONS[CURRENT_LANG];
         const loadingBase = t.news_loading || "Loading";
+
+        // ★変更: 取得開始時はヘッダーを非表示にする
+        if(newsHeader) newsHeader.style.display = 'none';
 
         // ローディング表示（言語ごとのテキスト + アニメーションドット）
         newsList.innerHTML = `
@@ -1739,6 +1747,9 @@
             newsList.innerHTML = ''; // クリア
 
             if (data.success && data.news && data.news.length > 0) {
+                // ★変更: データ取得成功時のみヘッダーを表示する（元のdisplay: flexに戻す）
+                if(newsHeader) newsHeader.style.display = 'flex';
+
                 data.news.forEach(item => {
                     const li = document.createElement('li');
                     li.className = 'news-item'; 
@@ -1751,6 +1762,7 @@
                     newsList.appendChild(li);
                 });
             } else {
+                // データがない場合もヘッダーは非表示のまま、またはメッセージだけ出す
                 const noNewsMsg = (CURRENT_LANG === 'ja') ? 'お知らせはありません。' : 'No news available.';
                 newsList.innerHTML = `<div style="text-align:center; color:#888; padding:20px;">${noNewsMsg}</div>`;
             }
