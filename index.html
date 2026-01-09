@@ -1201,7 +1201,8 @@
             text-align: left;
             /* 黒っぽい背景を維持 */
             background: rgba(0, 0, 0, 0.3) !important;
-            padding: 20px;
+            /* padding: 20px;  <-- ここを変更 */
+            padding: 20px 20px 10px 20px; /* 下の余白を減らす */
             border-radius: 16px;
             margin-bottom: 0 !important; /* ★変更: 下の余白をなくす */
             max-height: 400px;
@@ -1212,7 +1213,7 @@
 
         /* ニュースモーダル全体の余白調整 (閉じるボタン削除に伴い) */
         #newsModal .modal-container {
-            padding-bottom: 30px !important; /* コンテナの下部パディングを調整 */
+            padding-bottom: 20px !important; /* コンテナの下部パディングを30px->20pxへ調整 */
         }
 
         .news-container::-webkit-scrollbar { width: 6px; }
@@ -1239,6 +1240,11 @@
             gap: 5px;
             position: relative;
             overflow: visible;
+        }
+        
+        /* ★追加: 最後のアイテムの下マージンを削除して余白を詰める */
+        .news-item:last-child {
+            margin-bottom: 0 !important;
         }
 
         /* ホバー時も何も表示させない */
