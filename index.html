@@ -1514,23 +1514,56 @@
             login_placeholder_user: "身份证号", login_placeholder_pass: "密码"
         },
         ko: {
-            card1_title: "활성화", card1_desc: "잠금 해제 코드<br>입력 콘텐츠", card1_btn: "사용 코드",
-            card2_title: "뉴스", card2_desc: "이 사이트에 관한<br>최신 업데이트 정보", card2_btn: "확인",
-            card3_title: "지원", card3_desc: "코드가 유효하지 않은 경우<br>여기로 연락주십시오", card3_btn: "문의하기",
-            modal_title: "활성화", modal_sub: "보유하신 활성화 코드를 입력해 주세요",
-            modal_placeholder: "코드 입력", modal_btn_auth: "인증하기",
-            msg_verifying: "확인 중",
-            msg_invalid: "유효하지 않은 코드입니다.", msg_used: "이미 사용된 코드입니다.", msg_error: "통신 오류가 발생했습니다",
-            success_badge: "코드가 활성화되었습니다.", success_main_title: "활성화된 콘텐츠",
-            success_label_name: "콘텐츠 명칭", btn_close: "닫기", btn_download: "다운로드",
-            news_title: "최신 정보", news_label: "변경 내역", 
-            news_loading: "업데이트 확인 중",
-            support_modal_title: "뭘 도와드릴까요?", btn_inquiry: "기대해 주세요",
-            footer_admin: "시스템 관리장",
-            login_title: "시스템 관리장 로그인", login_desc: "접근 권한을 확인합니다.<br>신분 번호와 비밀번호를 입력하십시오.",
-            login_label_user: "주민등록번호", login_label_pass: "비밀번호",
-            login_btn: "로그인", login_btn_verifying: "확인 중",
-            login_placeholder_user: "주민등록번호", login_placeholder_pass: "비밀번호"
+            // --- メインメニュー & 登録 ---
+            card1_title: "등록", // 활성화(Activation) -> 등록(Registration)
+            card1_desc: "잠금해제 암호를<br>입력하십시오", 
+            card1_btn: "암호리용", 
+            card2_title: "새 소식", 
+            card2_desc: "이 홈페지에 대한<br>최신 갱신자료", // 사이트->홈페지, 업데이트->갱신
+            card2_btn: "열람", 
+            card3_title: "기술협조", // 지원->기술협조
+            card3_desc: "암호가 맞지 않을 경우<br>여기로 련락하십시오", // 연락->련락
+            card3_btn: "질문", 
+
+            // --- 登録モーダル ---
+            modal_title: "리용등록", 
+            modal_sub: "보유하신 등록암호를 입력하십시오", 
+            modal_placeholder: "암호입력", 
+            modal_btn_auth: "판정", // 인증(認証) -> 판정(判定)
+
+            // --- メッセージ ---
+            msg_verifying: "검토중입니다", 
+            msg_invalid: "무효한 암호입니다.", 
+            msg_used: "이미 리용된 암호입니다.", 
+            msg_error: "망 련결오류가 발생하였습니다.", // 통신오류 -> 망 련결오류
+
+            // --- 成功画面 ---
+            success_badge: "암호가 등록되였습니다.", // 되었습니다 -> 되였습니다 (北朝鮮綴り)
+            success_main_title: "등록된 자료", 
+            success_label_name: "자료명칭", 
+            btn_close: "닫기", 
+            btn_download: "적재", // 다운로드 -> 적재(積載/Load)
+
+            // --- ニュース & サポート ---
+            news_title: "최신보도", 
+            news_label: "갱신리력", 
+            news_loading: "갱신자료 확인중입니다", 
+            support_modal_title: "무엇을 도와드리면 되겠습니까?", 
+            btn_inquiry: "봉사대기", 
+            footer_admin: "체계관리원", // 시스템 관리자 -> 체계관리원
+
+            // --- ★管理者ログイン (新規追加部分) ---
+            login_title: "체계관리원 접속", // 로그인(Log-in) -> 접속(接続)
+            login_desc: "접근권한을 판정합니다.<br>신분번호와 통과암호를 입력하십시오.", 
+            // 権限確認->権限判定, ID->身分番号, パスワード->通過暗号
+            
+            login_label_user: "공민등록번호", // 주민등록번호(住民登録番号) -> 공민등록번호(公民登録番号:北朝鮮のID)
+            login_label_pass: "통과암호", // 비밀번호(秘密番号) -> 통과암호(通過暗号:北朝鮮のパスワード用語)
+            
+            login_btn: "접속", // ログイン -> 접속(接続) または 들어가기(入り)
+            login_btn_verifying: "검토중", 
+            login_placeholder_user: "공민등록번호", 
+            login_placeholder_pass: "통과암호"
         },
         ru: {
             card1_title: "Активация", card1_desc: "Введите код для разблокировки<br>контента", card1_btn: "Код использования",
