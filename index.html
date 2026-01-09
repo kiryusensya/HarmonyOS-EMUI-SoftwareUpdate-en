@@ -520,7 +520,7 @@
             max-width: 480px; 
             border-radius: 24px; 
             padding: 40px; 
-            text-align: center;
+            text-align: center; 
             position: relative; 
             transform: scale(0.9); 
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -650,16 +650,16 @@
         .code-input {
             width: 100%; 
             box-sizing: border-box; 
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3); 
             border: 1px solid var(--glass-border); 
             border-radius: 12px; 
             padding: 16px;
             color: white; 
             font-size: 18px; 
-            text-align: center;
+            text-align: center; 
             letter-spacing: 0em; 
             outline: none; 
-            transition: all 0.3s;
+            transition: all 0.3s; 
             text-transform: uppercase;
         }
         .code-input:focus { 
@@ -676,14 +676,14 @@
             border: none; 
             font-size: 16px; 
             font-weight: bold; 
-            cursor: pointer;
+            cursor: pointer; 
             transition: all 0.2s; 
             display: flex; 
             justify-content: center; 
-            align-items: center;
+            align-items: center; 
             min-height: 56px; 
             box-sizing: border-box; 
-            font-family: inherit;
+            font-family: inherit; 
             border: 1px solid rgba(255,255,255,0.2);
             animation: pulse-primary 2s infinite ease-in-out;
         }
@@ -774,7 +774,7 @@
             margin-bottom: 20px; 
             display: inline-flex; 
             align-items: center; 
-            gap: 8px;
+            gap: 8px; 
             text-shadow: 0 0 8px rgba(0, 255, 157, 0.6); 
             font-family: inherit;
             white-space: nowrap;
@@ -886,14 +886,14 @@
             border-radius: 12px; 
             font-size: 16px; 
             font-weight: bold; 
-            cursor: pointer;
+            cursor: pointer; 
             transition: all 0.2s; 
             display: flex; 
             justify-content: center; 
-            align-items: center;
+            align-items: center; 
             min-height: 56px; 
             box-sizing: border-box; 
-            font-family: inherit;
+            font-family: inherit; 
             min-width: 100px;
         }
         #modalCloseSub:hover { 
@@ -1203,11 +1203,16 @@
             background: rgba(0, 0, 0, 0.3) !important;
             padding: 20px;
             border-radius: 16px;
-            margin-bottom: 30px;
+            margin-bottom: 0 !important; /* ★変更: 下の余白をなくす */
             max-height: 400px;
             overflow-y: auto;
             /* 枠線は薄い白系で維持 */
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* ニュースモーダル全体の余白調整 (閉じるボタン削除に伴い) */
+        #newsModal .modal-container {
+            padding-bottom: 30px !important; /* コンテナの下部パディングを調整 */
         }
 
         .news-container::-webkit-scrollbar { width: 6px; }
@@ -1408,8 +1413,8 @@
             <h2 class="modal-title" style="margin-bottom: 20px;" data-translate="news_title">最新情報</h2>
             
             <div class="news-container">
-                <h3 style="font-size: 16px; color: var(--text-muted); margin: 0 0 15px 0; display:flex; align-items:center; gap:6px;">
-                    <i data-lucide="history" size="16"></i>
+                <h3 style="font-size: 16px; color: white; margin: 0 0 15px 0; display:flex; align-items:center; gap:6px;">
+                    <span style="color: #ff2a2a; font-size: 18px;">●</span>
                     <span data-translate="news_label">変更ログ</span>
                 </h3>
                 
@@ -1418,8 +1423,7 @@
                 </ul>
             </div>
             
-            <button id="newsCloseBtn" class="btn-confirm" data-translate="btn_close">閉じる</button>
-        </div>
+            </div>
     </div>
 
     <div id="supportModal" class="modal-overlay">
@@ -1455,13 +1459,13 @@
             success_badge: "コードが認証されました。", success_main_title: "有効化されたコンテンツ",
             success_label_name: "コンテンツ名称", btn_close: "閉じる", btn_download: "ダウンロード",
             news_title: "最新情報", news_label: "変更ログ", 
-            // news_contentは動的取得になるので削除しても良いですが、万が一のフォールバックとして残します
-            news_content: "ニュースを読み込んでいます...",
+            // ニュースローディング用テキスト
+            news_loading: "読み込み中",
             support_modal_title: "何かお困りですか？ ", btn_inquiry: "利用不可",
             footer_admin: "システム管理者",
             login_title: "システム管理者ログイン", login_desc: "アクセス権限を確認します。<br>身分証明書番号とパスワードを入力してください。",
             login_label_user: "身分証明書番号 ", login_label_pass: "パスワード",
-            login_btn: "ログイン", login_btn_verifying: "確認中", // ← ★修正: "..."を削除
+            login_btn: "ログイン", login_btn_verifying: "確認中",
             login_placeholder_user: "身分証明書番号", login_placeholder_pass: "パスワード"
         },
         en: {
@@ -1475,12 +1479,12 @@
             success_badge: "The code has been activated.", success_main_title: "Activated content",
             success_label_name: "Content Name", btn_close: "Close", btn_download: "Download",
             news_title: "Latest News", news_label: "Changelog", 
-            news_content: "Loading News...",
+            news_loading: "Loading",
             support_modal_title: "What can I help you with?", btn_inquiry: "Stay tuned",
             footer_admin: "Enforcement Administrator",
             login_title: "Enforcement Administrator<br>LOGIN", login_desc: "Verifying access privileges.<br>Please enter ID Number and Password.",
             login_label_user: "ID Number", login_label_pass: "Password",
-            login_btn: "Login", login_btn_verifying: "Verifying", // ← ★修正: "..."を削除
+            login_btn: "Login", login_btn_verifying: "Verifying",
             login_placeholder_user: "ID Number", login_placeholder_pass: "Password"
         },
         zh: {
@@ -1494,12 +1498,12 @@
             success_badge: "代码已激活。", success_main_title: "激活内容",
             success_label_name: "内容名称", btn_close: "关闭", btn_download: "下载",
             news_title: "最新消息", news_label: "更新日志", 
-            news_content: "正在加载新闻...",
+            news_loading: "正在加载",
             support_modal_title: "有什么可以帮到您的吗？", btn_inquiry: "敬请期待",
             footer_admin: "系统管理长",
             login_title: "系统管理员登录", login_desc: "正在检查访问权限。<br>请输入身份证号和密码。",
             login_label_user: "身份证号", login_label_pass: "密码",
-            login_btn: "登录", login_btn_verifying: "验证中", // ← ★修正: "..."を削除
+            login_btn: "登录", login_btn_verifying: "验证中",
             login_placeholder_user: "身份证号", login_placeholder_pass: "密码"
         },
         ko: {
@@ -1513,12 +1517,12 @@
             success_badge: "코드가 활성화되었습니다.", success_main_title: "활성화된 콘텐츠",
             success_label_name: "콘텐츠 명칭", btn_close: "닫기", btn_download: "다운로드",
             news_title: "최신 정보", news_label: "변경 내역", 
-            news_content: "뉴스를 불러오는 중...",
+            news_loading: "읽고 있습니다",
             support_modal_title: "뭘 도와드릴까요?", btn_inquiry: "기대해 주세요",
             footer_admin: "시스템 관리장",
             login_title: "시스템 관리장 로그인", login_desc: "접근 권한을 확인합니다.<br>신분 번호와 비밀번호를 입력하십시오.",
             login_label_user: "주민등록번호", login_label_pass: "비밀번호",
-            login_btn: "로그인", login_btn_verifying: "확인 중", // ← ★修正: "..."を削除
+            login_btn: "로그인", login_btn_verifying: "확인 중",
             login_placeholder_user: "주민등록번호", login_placeholder_pass: "비밀번호"
         },
         ru: {
@@ -1532,12 +1536,12 @@
             success_badge: "Код активирован.", success_main_title: "Активированный контент",
             success_label_name: "Название", btn_close: "Закрыть", btn_download: "Скачать",
             news_title: "Новости", news_label: "Список изменений", 
-            news_content: "Загрузка новостей...",
+            news_loading: "Загрузка",
             support_modal_title: "Чем я могу вам помочь?", btn_inquiry: "Недоступно",
             footer_admin: "Администратор",
             login_title: "Администратор<br>Войти", login_desc: "Проверьте права доступа. Введите свой идентификационный номер и пароль.",
             login_label_user: "Имя пользователя", login_label_pass: "Пароль",
-            login_btn: "Войти", login_btn_verifying: "Проверка", // ← ★修正: "..."を削除
+            login_btn: "Войти", login_btn_verifying: "Проверка",
             login_placeholder_user: "Имя пользователя", login_placeholder_pass: "Пароль"
         }
     };
@@ -1584,7 +1588,6 @@
             switcher.value = savedLang;
             langSelectionOverlay.style.display = 'none';
 
-            // ★修正: ログイン済みかチェックし、未ログインならログイン画面へ（機能ON）
             if (isLoggedIn === 'true') {
                 showMainContent();
             } else {
@@ -1605,7 +1608,6 @@
         langSelectionOverlay.style.visibility = 'hidden';
         setTimeout(() => { 
             langSelectionOverlay.style.display = 'none'; 
-            // ★修正: 言語選択後はログイン画面へ遷移（機能ON）
             showLoginScreen();
         }, 500);
         
@@ -1639,7 +1641,7 @@
         loginPass.disabled = true;
         btnLoginAction.disabled = true;
         
-        // ★修正: ボタン内のHTMLを更新。CSSアニメーション用の span を追加
+        // ローディングアニメーション（...）
         btnLoginAction.innerHTML = `
             <span class="cyber-spinner" style="width:16px; height:16px; margin-right:5px;"></span>
             ${t.login_btn_verifying}<span class="loading-dots"></span>
@@ -1720,11 +1722,13 @@
     async function fetchNews() {
         if (!newsList) return;
         
-        // ローディング表示（紫のくるくる等は排除しテキストのみ）
-        const loadingText = (CURRENT_LANG === 'ja') ? 'Loading...' : 'Loading...';
+        const t = TRANSLATIONS[CURRENT_LANG];
+        const loadingBase = t.news_loading || "Loading";
+
+        // ローディング表示（言語ごとのテキスト + アニメーションドット）
         newsList.innerHTML = `
             <div style="text-align:center; color:#888; padding:20px;">
-                ${loadingText}
+                ${loadingBase}<span class="loading-dots"></span>
             </div>`;
         
         try {
@@ -1739,7 +1743,6 @@
                     const li = document.createElement('li');
                     li.className = 'news-item'; 
                     
-                    // ★修正: バッジ表示(UPDATEなど)を削除し、日付と本文のみを表示
                     // 日付を上に、本文を下に配置
                     li.innerHTML = `
                         <div class="news-date" lang="${CURRENT_LANG}">${item.date}</div>
@@ -1790,7 +1793,7 @@
     const newsModal = document.getElementById('newsModal');
     const btnOpenNews = document.getElementById('btnOpenNews');
     const newsCloseX = document.getElementById('newsCloseX');
-    const newsCloseBtn = document.getElementById('newsCloseBtn');
+    // const newsCloseBtn = document.getElementById('newsCloseBtn'); // 削除したボタン
 
     function openNewsModal() {
         newsModal.classList.add('active');
@@ -1802,7 +1805,7 @@
 
     if(btnOpenNews) btnOpenNews.addEventListener('click', openNewsModal);
     if(newsCloseX) newsCloseX.addEventListener('click', closeNewsModal);
-    if(newsCloseBtn) newsCloseBtn.addEventListener('click', closeNewsModal);
+    // ボタン削除に伴いイベントリスナーも削除
     if(newsModal) newsModal.addEventListener('click', (e) => { if (e.target === newsModal) closeNewsModal(); });
 
     // --- サポートモーダル操作 ---
