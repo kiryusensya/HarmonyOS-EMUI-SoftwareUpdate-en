@@ -2045,16 +2045,22 @@
                     instaSuccessMessage.textContent = data.message;
                     
                     // GASから受け取ったステータスで色分け (OK=Green, NO=Red)
-                    if(data.statusType === 'OK') {
-                        instaSuccessMessage.className = 'status-ok';
-                    } else if(data.statusType === 'NO') {
+                    if(data.statusType === 'NO') {
+                        // NOの場合: 赤色 + ボタン非表示
                         instaSuccessMessage.className = 'status-no';
+                        instaSuccessButton.style.display = 'none';
                     } else {
-                        // デフォルト(指定なし)は白など
-                        instaSuccessMessage.className = '';
+                        // OK または デフォルト: 色設定
+                        if(data.statusType === 'OK') {
+                            instaSuccessMessage.className = 'status-ok';
+                        } else {
+                            instaSuccessMessage.className = '';
+                        }
+                        // ボタン表示
+                        instaSuccessButton.style.display = 'inline-flex';
+                        instaSuccessButton.textContent = data.buttonLabel;
                     }
 
-                    instaSuccessButton.textContent = data.buttonLabel;
                     // アニメーション
                     instaSuccessPhase.animate([ { opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' } ], { duration: 500 });
                 } else {
