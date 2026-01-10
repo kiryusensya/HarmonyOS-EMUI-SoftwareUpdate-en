@@ -1303,6 +1303,16 @@
                 /* 上15px, 右10px, 下10px, 左10px に縮小 (PCは20px) */
                 padding: 15px 10px 10px 10px !important;
             }
+            /* =========================================
+           ★PCニュース表示用 (読み込み完了後に幅を広げる)
+           ========================================= */
+        @media (min-width: 769px) {
+            /* JSでこのクラスがついた時だけ幅を広げる */
+            #newsModal .modal-container.news-wide-mode {
+                max-width: 900px !important; /* 480pxから900pxに拡大 */
+                width: 90%;
+                transition: max-width 0.4s ease; /* ヌルっと広がるアニメーション */
+            }
         }
     </style>
 </head>
@@ -1785,20 +1795,23 @@
         if (!btnLoginAction.disabled) btnLoginAction.textContent = t.login_btn;
     }
 
-    // --- ★ニュース取得機能 (最終修正版) ---
+   // --- ★ニュース取得機能 (幅調整機能付き) ---
     async function fetchNews() {
         const newsList = document.getElementById('newsList');
-        const newsHeader = document.getElementById('newsHeader'); // ヘッダー要素を取得
+        const newsHeader = document.getElementById('newsHeader'); 
+        // ★モーダルのコンテナを取得
+        const newsModalContainer = document.querySelector('#newsModal .modal-container');
 
         if (!newsList) return;
         
         const t = TRANSLATIONS[CURRENT_LANG];
         const loadingBase = t.news_loading || "Loading";
 
-        // ★変更: 取得開始時はヘッダーを非表示にする
+        // 1. 初期化：ヘッダー非表示 & 幅広モード解除（ローディング時は狭くする）
         if(newsHeader) newsHeader.style.display = 'none';
+        if(newsModalContainer) newsModalContainer.classList.remove('news-wide-mode');
 
-        // ローディング表示（言語ごとのテキスト + アニメーションドット）
+        // ローディング表示
         newsList.innerHTML = `
             <div style="text-align:center; color:#888; padding:20px;">
                 ${loadingBase}<span class="loading-dots"></span>
@@ -1812,14 +1825,14 @@
             newsList.innerHTML = ''; // クリア
 
             if (data.success && data.news && data.news.length > 0) {
-                // ★変更: データ取得成功時のみヘッダーを表示する（元のdisplay: flexに戻す）
+                // 2. 成功時：ヘッダー表示 & ★幅広モード適用（PCで1行表示にするため）
                 if(newsHeader) newsHeader.style.display = 'flex';
+                if(newsModalContainer) newsModalContainer.classList.add('news-wide-mode');
 
                 data.news.forEach(item => {
                     const li = document.createElement('li');
                     li.className = 'news-item'; 
                     
-                    // 日付を上に、本文を下に配置
                     li.innerHTML = `
                         <div class="news-date" lang="${CURRENT_LANG}">${item.date}</div>
                         <div class="news-content-text">${item.content}</div>
@@ -1827,7 +1840,6 @@
                     newsList.appendChild(li);
                 });
             } else {
-                // データがない場合もヘッダーは非表示のまま、またはメッセージだけ出す
                 const noNewsMsg = (CURRENT_LANG === 'ja') ? 'お知らせはありません。' : 'No news available.';
                 newsList.innerHTML = `<div style="text-align:center; color:#888; padding:20px;">${noNewsMsg}</div>`;
             }
@@ -1838,7 +1850,6 @@
             lucide.createIcons();
         }
     }
-
 
     // --- 認証モーダル操作 ---
     function openAuthModal() { authModal.classList.add('active'); resetAuthModal(); codeInput.focus(); }
