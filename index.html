@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>kityu-sensya</title>
+        <title>kiryu-sensya</title>
     <link rel="icon" href="https://static.wixstatic.com/media/2f0694_eb4d3063598a4cc5b6bd6b8e31cba915~mv2.png/v1/crop/x_248,y_0,w_1065,h_950/fill/w_816,h_728,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/1767545356653.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1503,11 +1503,31 @@
             <div class="modal-close" id="supportCloseX"><i data-lucide="x"></i></div>
             <h2 class="modal-title" style="margin-bottom: 20px;" data-translate="support_modal_title">サポート</h2>
             <div class="support-grid">
-                <div class="support-item"><i class="fa-brands fa-playstation" style="color: #00439C;"></i><span>PlayStation</span><a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a></div>
-                <div class="support-item"><i class="fa-brands fa-xbox" style="color: #107C10;"></i><span>Xbox</span><a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a></div>
-                <div class="support-item"><i class="fa-brands fa-discord" style="color: #5865F2;"></i><span>Discord</span><a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a></div>
-                <div class="support-item"><i class="fa-brands fa-github" style="color: #ffffff;"></i><span>GitHub</span><a href="#" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</a></div>
-                <div class="support-item"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i><span>Instagram</span><button id="btnOpenInstagram" class="btn-inquiry-small" data-translate="btn_inquiry">問い合わせ</button></div>
+                <div class="support-item">
+                    <i class="fa-brands fa-instagram" style="color: #E4405F;"></i>
+                    <span>Instagram</span>
+                    <button id="btnOpenInstagram" class="btn-inquiry-small" data-translate="btn_inquiry_insta">問い合わせ</button>
+                </div>
+                <div class="support-item">
+                    <i class="fa-brands fa-discord" style="color: #5865F2;"></i>
+                    <span>Discord</span>
+                    <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_discord">問い合わせ</a>
+                </div>
+                <div class="support-item">
+                    <i class="fa-solid fa-star" style="color: #fcaf17;"></i>
+                    <span>Rockstar Games</span>
+                    <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_rockstar">問い合わせ</a>
+                </div>
+                <div class="support-item">
+                    <i class="fa-brands fa-xbox" style="color: #107C10;"></i>
+                    <span>Xbox</span>
+                    <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_xbox">問い合わせ</a>
+                </div>
+                <div class="support-item">
+                    <i class="fa-brands fa-playstation" style="color: #00439C;"></i>
+                    <span>PlayStation</span>
+                    <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_ps">問い合わせ</a>
+                </div>
             </div>
         </div>
     </div>
@@ -1558,6 +1578,13 @@
             news_title: "最新情報", news_label: "変更ログ", 
             news_loading: "更新を確認中",
             support_modal_title: "何かお困りですか？ ", btn_inquiry: "利用不可",
+            // ★ 個別ボタンの翻訳キー (内容はデフォルトで同じですが、必要に応じて変更可)
+            btn_inquiry_insta: "問い合わせ",
+            btn_inquiry_discord: "問い合わせ",
+            btn_inquiry_rockstar: "問い合わせ",
+            btn_inquiry_xbox: "問い合わせ",
+            btn_inquiry_ps: "問い合わせ",
+            
             footer_admin: "システム管理者",
             login_title: "システム管理者ログイン", login_desc: "アクセス権限を確認します。<br>身分証明書番号とパスワードを入力してください。",
             login_label_user: "身分証明書番号 ", login_label_pass: "パスワード",
@@ -1585,6 +1612,13 @@
             news_title: "Latest News", news_label: "Changelog", 
             news_loading: "Checking for updates",
             support_modal_title: "What can I help you with?", btn_inquiry: "Stay tuned",
+            // Buttons
+            btn_inquiry_insta: "Contact Us",
+            btn_inquiry_discord: "Contact Us",
+            btn_inquiry_rockstar: "Contact Us",
+            btn_inquiry_xbox: "Contact Us",
+            btn_inquiry_ps: "Contact Us",
+
             footer_admin: "Enforcement Administrator",
             login_title: "Enforcement Administrator<br>LOGIN", login_desc: "Verifying access privileges.<br>Please enter ID Number and Password.",
             login_label_user: "ID Number", login_label_pass: "Password",
@@ -1595,7 +1629,7 @@
             insta_sub: "Please enter your User ID (@xxx)",
             insta_placeholder: "@username",
             insta_btn: "Verify",
-            insta_btn_verifying: "Checking...",
+            insta_btn_verifying: "Checking",
             insta_success_btn: "Open Instagram",
             insta_error_user: "User not found"
         },
@@ -1612,6 +1646,13 @@
             news_title: "最新消息", news_label: "更新日志", 
             news_loading: "正在检查更新",
             support_modal_title: "有什么可以帮到您的吗？", btn_inquiry: "敬请期待",
+            // Buttons
+            btn_inquiry_insta: "联系我们",
+            btn_inquiry_discord: "联系我们",
+            btn_inquiry_rockstar: "联系我们",
+            btn_inquiry_xbox: "联系我们",
+            btn_inquiry_ps: "联系我们",
+
             footer_admin: "系统管理长",
             login_title: "系统管理员登录", login_desc: "正在检查访问权限。<br>请输入身份证号和密码。",
             login_label_user: "身份证号", login_label_pass: "密码",
@@ -1636,6 +1677,13 @@
             success_badge: "암호가 등록되였습니다.", success_main_title: "등록된 자료", success_label_name: "자료명칭", btn_close: "닫기", btn_download: "적재", 
             news_title: "최신보도", news_label: "갱신리력", news_loading: "갱신자료 확인중입니다", 
             support_modal_title: "무엇을 도와드리면 되겠습니까?", btn_inquiry: "봉사대기", 
+            // Buttons
+            btn_inquiry_insta: "질문",
+            btn_inquiry_discord: "질문",
+            btn_inquiry_rockstar: "질문",
+            btn_inquiry_xbox: "질문",
+            btn_inquiry_ps: "질문",
+
             footer_admin: "체계관리원", login_title: "체계관리원 접속", login_desc: "접근권한을 판정합니다。<br>신분번호와 통과암호를 입력하십시오。", 
             login_label_user: "공민등록번호", login_label_pass: "통과암호", login_btn: "접속", login_btn_verifying: "검토중", 
             login_placeholder_user: "공민등록번호", login_placeholder_pass: "통과암호",
@@ -1660,6 +1708,13 @@
             success_label_name: "Название", btn_close: "Закрыть", btn_download: "Скачать",
             news_title: "Новости", news_label: "Список изменений", news_loading: "Проверка обновлений",
             support_modal_title: "Чем я могу вам помочь?", btn_inquiry: "Недоступно",
+            // Buttons
+            btn_inquiry_insta: "Связаться",
+            btn_inquiry_discord: "Связаться",
+            btn_inquiry_rockstar: "Связаться",
+            btn_inquiry_xbox: "Связаться",
+            btn_inquiry_ps: "Связаться",
+
             footer_admin: "Администратор",
             login_title: "Администратор<br>Войти", login_desc: "Проверьте права доступа.<br>Введите свой идентификационный номер и пароль.",
             login_label_user: "Имя пользователя", login_label_pass: "Пароль",
@@ -1670,7 +1725,7 @@
             insta_sub: "Введите ваш User ID (@xxx)",
             insta_placeholder: "@username",
             insta_btn: "Проверить",
-            insta_btn_verifying: "Проверка...",
+            insta_btn_verifying: "Проверка",
             insta_success_btn: "Открыть Instagram",
             insta_error_user: "Пользователь не найден"
         }
