@@ -2377,20 +2377,6 @@
 
     successDownloadBtn.addEventListener('mouseenter', () => { modalContainer.classList.add('sync-blue-mode'); });
     successDownloadBtn.addEventListener('mouseleave', () => { modalContainer.classList.remove('sync-blue-mode'); });
-
-    // --- 修正版：ドットの増殖を防ぐロジック ---
-setInterval(() => {
-    document.querySelectorAll(".loading-dots").forEach(el => {
-        // textContent の中身を直接判定して、3つならリセット、それ以外は1つ追加
-        let currentDots = el.textContent;
-        
-        if (currentDots === "...") {
-            el.textContent = "";    // 3つになったら空にする
-        } else {
-            el.textContent += ".";   // それ以外はドットを1つ足す
-        }
-    });
-}, 500);
     
 </script>
 </body>
