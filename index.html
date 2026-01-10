@@ -1745,7 +1745,7 @@
             insta_sub: "Для связи через Instagram<br class='mobile-only-br'>требуется проверка аккаунта.<br class='mobile-only-br'>Введите ваш User ID (@xxx)",
             insta_placeholder: "@username",
             insta_btn: "Проверить",
-            insta_btn_verifying: "Проверка...",
+            insta_btn_verifying: "Проверка",
             insta_success_btn: "Открыть Instagram",
             insta_error_user: "Пользователь не найден"
         }
@@ -2378,10 +2378,9 @@
     setInterval(() => {
     document.querySelectorAll(".loading-dots").forEach(el => {
         const dots = el.textContent.length;
-        el.textContent = dots >= 3 ? "." : ".".repeat(dots + 1);
+        el.textContent = ".".repeat((dots + 1) % 4);
     });
 }, 500);
-
 
 </script>
 </body>
