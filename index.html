@@ -1278,6 +1278,32 @@
             padding-left: 0;     /* 左端 */
             white-space: pre-wrap; /* ★この行を追加：改行コードを反映させる */
         }
+        /* =========================================
+           ★スマホ表示修正用 (追加コード)
+           ========================================= */
+        @media (max-width: 768px) {
+            /* 1. アクティベーション完了画面のタイトル「有効化されたコンテンツ」を小さくする */
+            .success-title-main {
+                font-size: 20px; /* PCの28pxから20pxへ縮小 */
+                line-height: 1.4;
+                margin-bottom: 15px;
+            }
+
+            /* 2. ニュースモーダルの余白（パディング）を小さくする */
+            
+            /* (A) 外側のガラスパネルの余白 */
+            #newsModal .modal-container {
+                /* 上下20px, 左右15px に縮小 (PCは40px) */
+                padding: 20px 15px !important; 
+                width: 95%; /* 横幅を画面いっぱいに近づける */
+            }
+
+            /* (B) 内側の黒い背景部分の余白 */
+            .news-container {
+                /* 上15px, 右10px, 下10px, 左10px に縮小 (PCは20px) */
+                padding: 15px 10px 10px 10px !important;
+            }
+        }
     </style>
 </head>
 <body>
