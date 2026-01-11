@@ -55,16 +55,11 @@
             background: var(--hover-blue); transform: scale(1.05);
         }
 
-       <header>
-        <a href="/" class="logo"><i data-lucide="user-round" style="color: #8407de;"></i>kiryu-sensya</a>
-        
-        <div class="status-badge" id="serviceStatus">
-            <span class="status-indicator"></span>
-            <span class="status-text">All Systems Operational</span>
-        </div>
-
-        <a href="/" class="btn-back"><i data-lucide="arrow-left"></i> Home</a>
-    </header>
+        /* ヘッダー */
+        header {
+            width: 100%; max-width: 1200px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+        }
+        .logo { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: white; text-decoration: none; }
 
         /* --- サービスステータス用スタイル --- */
         .status-badge {
@@ -79,7 +74,6 @@
             font-weight: 500;
             color: rgba(255, 255, 255, 0.9);
             transition: 0.3s;
-            /* 画面が狭いときは非表示にするか、小さくする設定 */
         }
         
         /* 点滅するドット */
@@ -92,7 +86,7 @@
             animation: pulse-status 2s infinite ease-in-out;
         }
 
-        /* 異常時の赤色用クラス (JSで切り替える場合用) */
+        /* 異常時の赤色用クラス */
         .status-badge.error .status-indicator {
             background-color: var(--neon-red);
             box-shadow: 0 0 8px var(--neon-red);
@@ -111,7 +105,7 @@
             100% { opacity: 1; box-shadow: 0 0 5px var(--neon-red); }
         }
 
-        /* スマホ対応: 画面が狭いときはテキストを消してドットだけにする */
+        /* スマホ対応 */
         @media (max-width: 600px) {
             .status-text { display: none; }
             .status-badge { padding: 8px; border-radius: 50%; }
@@ -130,7 +124,7 @@
         
         .page-title { font-size: 32px; font-weight: bold; margin-bottom: 30px; text-align: center; }
 
-        /* サポートグリッド (index.htmlのCSSをベースに調整) */
+        /* サポートグリッド */
         .support-grid {
             display: grid; gap: 20px; margin-bottom: 40px; width: 100%;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -167,7 +161,7 @@
             box-shadow: 0 0 10px rgba(132, 7, 222, 0.5);
         }
 
-        /* Instagramモーダル用 (index.htmlから移植) */
+        /* Instagramモーダル用 */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
@@ -202,6 +196,12 @@
 
     <header>
         <a href="/" class="logo"><i data-lucide="user-round" style="color: #8407de;"></i>kiryu-sensya</a>
+        
+        <div class="status-badge" id="serviceStatus">
+            <span class="status-indicator"></span>
+            <span class="status-text">All Systems Operational</span>
+        </div>
+
         <a href="/" class="btn-back"><i data-lucide="arrow-left"></i> Home</a>
     </header>
 
@@ -264,11 +264,11 @@
 
     <script>
         lucide.createIcons();
-        const GAS_API_URL = "/api/proxy"; // index.htmlと同じ設定にしてください
+        const GAS_API_URL = "/api/proxy";
         let CURRENT_LANG = localStorage.getItem('user_lang') || "ja";
         document.documentElement.lang = CURRENT_LANG;
 
-        // 簡易翻訳データ (index.htmlと同期させる)
+        // 簡易翻訳データ
         const TRANSLATIONS = {
             ja: {
                 support_page_title: "サポート",
@@ -282,7 +282,6 @@
                 insta_btn: "Verify", insta_btn_verifying: "Checking", insta_success_btn: "Open Instagram", insta_error_user: "User not found",
                 btn_inquiry_insta: "Contact Us", btn_inquiry_discord: "Contact Us", btn_inquiry_rockstar: "Contact Us", btn_inquiry_xbox: "Contact Us", btn_inquiry_ps: "Contact Us"
             }
-            // 必要に応じて他の言語も追加
         };
 
         // 言語適用関数
@@ -354,39 +353,38 @@
                 instaConfirm.disabled = false;
                 instaConfirm.textContent = "Verify";
             }
-
-            onst STATUS_API_URL = "/api/proxy";
-
-            async function updateServiceStatus() {
-    const badge = document.getElementById('serviceStatus');
-    const text = badge.querySelector('.status-text');
-
-    try {
-        const response = await fetch(STATUS_API_URL);
-        const data = await response.json();
-
-        if (data.status === "Operational") {
-            // 正常時
-            badge.classList.remove('error');
-            text.textContent = "All Systems Operational";
-        } else {
-            // メンテナンス・異常時
-            badge.classList.add('error');
-            text.textContent = "System Maintenance";
-        }
-    } catch (error) {
-        console.error("Status check failed:", error);
-        // 通信エラー時も一応エラー表示にする
-        badge.classList.add('error');
-        text.textContent = "Status Check Failed";
-    }
-}
-
-   // ページ読み込み時に実行
-updateServiceStatus() ;
-            // 1分ごとに自動更新したい場合は以下を追加
-         // setInterval(updateServiceStatus, 60000);
         });
+
+        // サービスステータスチェック機能
+        async function updateServiceStatus() {
+            const badge = document.getElementById('serviceStatus');
+            const text = badge.querySelector('.status-text');
+
+            try {
+                // query param: ?type=service_status を追加
+                const response = await fetch(`${GAS_API_URL}?type=service_status`);
+                const data = await response.json();
+
+                if (data.status === "Operational") {
+                    // 正常時
+                    badge.classList.remove('error');
+                    text.textContent = "All Systems Operational";
+                } else {
+                    // メンテナンス・異常時
+                    badge.classList.add('error');
+                    text.textContent = "System Maintenance";
+                }
+            } catch (error) {
+                console.error("Status check failed:", error);
+                // 通信エラー時も一応エラー表示にする
+                badge.classList.add('error');
+                text.textContent = "Status Check Failed";
+            }
+        }
+
+        // ページ読み込み時に実行
+        updateServiceStatus();
+
     </script>
 </body>
 </html>
