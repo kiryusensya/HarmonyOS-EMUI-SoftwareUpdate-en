@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Support - kiryu-sensya</title>
+    <title>kiryu-sensya Support</title>
     <link rel="icon" href="https://static.wixstatic.com/media/2f0694_eb4d3063598a4cc5b6bd6b8e31cba915~mv2.png/v1/crop/x_248,y_0,w_1065,h_950/fill/w_816,h_728,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/1767545356653.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,7 +116,7 @@
             display: flex; flex-direction: column; align-items: center; justify-content: space-between;
             padding: 30px 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
             border-radius: 24px; color: white; transition: 0.3s;
-            height: 320px; /* ステータス追加分高さを調整 */
+            height: 320px;
             text-align: center;
             min-width: 160px; scroll-snap-align: center;
         }
@@ -131,16 +131,16 @@
         }
         .support-item span { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
 
-        /* ▼ 新規追加: ユーザーIDのスタイル ▼ */
+        /* ユーザーID */
         .user-id {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.6);
-            font-family: monospace; /* IDっぽく等幅フォント */
+            font-weight: 500;
             margin-bottom: auto; /* 余白自動調整 */
             letter-spacing: 0.5px;
         }
 
-        /* ▼ 新規追加: 個別ステータス表示のスタイル ▼ */
+        /* 個別ステータス表示 */
         .platform-status {
             display: flex; align-items: center; justify-content: center;
             gap: 6px; font-size: 12px; margin-bottom: 15px; 
@@ -259,10 +259,10 @@
             <div class="support-item glass-panel">
                 <i class="fa-brands fa-discord" style="color: #5865F2;"></i>
                 <span>Discord</span>
-                <div class="user-id">kiryu_sensya</div>
+                <div class="user-id">kiryu_server</div>
                 <div class="platform-status" id="status-Discord">
                     <span class="status-dot-small"></span>
-                    <span class="status-val">Checking...</span>
+                    <span class="status-val">Loading...</span>
                 </div>
                 <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_discord">問い合わせ</a>
             </div>
@@ -273,7 +273,7 @@
                 <div class="user-id">kiryu10.vercel.app</div>
                 <div class="platform-status" id="status-System">
                     <span class="status-dot-small"></span>
-                    <span class="status-val">Checking...</span>
+                    <span class="status-val">Loading...</span>
                 </div>
                 <div class="no-btn-spacer"></div>
             </div>
@@ -281,10 +281,10 @@
             <div class="support-item glass-panel">
                 <i class="fa-brands fa-xbox" style="color: #107C10;"></i>
                 <span>Xbox</span>
-                <div class="user-id">kiryusensya</div>
+                <div class="user-id">Gamertag_Here</div>
                 <div class="platform-status" id="status-Xbox">
                     <span class="status-dot-small"></span>
-                    <span class="status-val">Checking...</span>
+                    <span class="status-val">Loading...</span>
                 </div>
                 <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_xbox">問い合わせ</a>
             </div>
@@ -292,10 +292,10 @@
             <div class="support-item glass-panel">
                 <i class="fa-brands fa-playstation" style="color: #0070D1;"></i>
                 <span>PlayStation</span>
-                <div class="user-id">kiryu-sensya</div>
+                <div class="user-id">PSN_ID_Here</div>
                 <div class="platform-status" id="status-PlayStation">
                     <span class="status-dot-small"></span>
-                    <span class="status-val">Checking...</span>
+                    <span class="status-val">Loading...</span>
                 </div>
                 <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_ps">問い合わせ</a>
             </div>
@@ -340,49 +340,74 @@
         
         // ★★★ ここにご自身のGASウェブアプリのURLを入力してください ★★★
         const GAS_API_URL = "api/proxy"; 
-        // 例: "https://script.google.com/macros/s/xxxxxxxxx/exec"
 
         let CURRENT_LANG = localStorage.getItem('user_lang') || "ja";
         document.documentElement.lang = CURRENT_LANG;
+        let currentStatusData = null; // 取得したステータスを保持する変数
 
-        // 翻訳データ
+        // 翻訳データ (UI用)
         const TRANSLATIONS = {
             ja: {
                 support_page_title: "サポート",
                 item_web: "Webサイト",
                 insta_title: "Instagram 問い合わせ", insta_sub: "Instagramで問い合わせするには<br>アカウント認証が必要です。",
                 insta_btn: "認証する", insta_btn_verifying: "確認中", insta_success_btn: "Instagramを開く", insta_error_user: "ユーザーが見つかりません",
-                btn_inquiry_insta: "問い合わせ", btn_inquiry_discord: "問い合わせ", btn_inquiry_xbox: "問い合わせ", btn_inquiry_ps: "問い合わせ"
+                btn_inquiry_insta: "問い合わせ", btn_inquiry_discord: "問い合わせ", btn_inquiry_xbox: "問い合わせ", btn_inquiry_ps: "問い合わせ",
+                status_header_ok: "全システム稼働中", status_header_error: "メンテナンス/障害"
             },
             en: {
                 support_page_title: "Support",
                 item_web: "Web Page",
                 insta_title: "Instagram Inquiry", insta_sub: "Account verification is required<br>to contact via Instagram.",
                 insta_btn: "Verify", insta_btn_verifying: "Checking", insta_success_btn: "Open Instagram", insta_error_user: "User not found",
-                btn_inquiry_insta: "Contact Us", btn_inquiry_discord: "Contact Us", btn_inquiry_xbox: "Contact Us", btn_inquiry_ps: "Contact Us"
+                btn_inquiry_insta: "Contact Us", btn_inquiry_discord: "Contact Us", btn_inquiry_xbox: "Contact Us", btn_inquiry_ps: "Contact Us",
+                status_header_ok: "All Systems Operational", status_header_error: "System Maintenance"
             },
             zh: {
                 support_page_title: "支持",
                 item_web: "网站",
                 insta_title: "Instagram 咨询", insta_sub: "在Instagram上进行咨询时，<br>需要进行账号认证。",
                 insta_btn: "验证", insta_btn_verifying: "正在验证", insta_success_btn: "打开 Instagram", insta_error_user: "未找到用户",
-                btn_inquiry_insta: "联系我们", btn_inquiry_discord: "联系我们", btn_inquiry_xbox: "联系我们", btn_inquiry_ps: "联系我们"
+                btn_inquiry_insta: "联系我们", btn_inquiry_discord: "联系我们", btn_inquiry_xbox: "联系我们", btn_inquiry_ps: "联系我们",
+                status_header_ok: "所有系统运行正常", status_header_error: "系统维护中"
             },
             ko: {
                 support_page_title: "기술협조",
                 item_web: "웹 사이트",
                 insta_title: "Instagram 문의", insta_sub: "Instagram에서 문의하려면<br>계정 인증이 필요합니다.",
                 insta_btn: "확인", insta_btn_verifying: "검토중", insta_success_btn: "인스타그램 열기", insta_error_user: "사용자를 찾을 수 없습니다",
-                btn_inquiry_insta: "질문", btn_inquiry_discord: "질문", btn_inquiry_xbox: "질문", btn_inquiry_ps: "질문"
+                btn_inquiry_insta: "질문", btn_inquiry_discord: "질문", btn_inquiry_xbox: "질문", btn_inquiry_ps: "질문",
+                status_header_ok: "모든 시스템 정상 가동", status_header_error: "시스템 유지 보수"
             },
             ru: {
                 support_page_title: "Поддержка",
                 item_web: "Веб-сайт",
                 insta_title: "Instagram Запрос", insta_sub: "Для связи через Instagram<br>требуется проверка аккаунта.",
                 insta_btn: "Проверить", insta_btn_verifying: "Проверка", insta_success_btn: "Открыть Instagram", insta_error_user: "Пользователь не найден",
-                btn_inquiry_insta: "Связаться", btn_inquiry_discord: "Связаться", btn_inquiry_xbox: "Связаться", btn_inquiry_ps: "Связаться"
+                btn_inquiry_insta: "Связаться", btn_inquiry_discord: "Связаться", btn_inquiry_xbox: "Связаться", btn_inquiry_ps: "Связаться",
+                status_header_ok: "Все системы работают", status_header_error: "Техническое обслуживание"
             }
         };
+
+        // ★ ステータス翻訳辞書 ★
+        // スプレッドシートの英語キー(左)を、各言語(右)に変換します
+        const STATUS_TRANSLATIONS = {
+            "Operational": { ja: "稼働中", en: "Operational", zh: "运行中", ko: "가동 중", ru: "Работает" },
+            "Available":   { ja: "受付中", en: "Available",   zh: "可咨询",   ko: "접수 중", ru: "Доступно" },
+            "Busy":        { ja: "混雑",   en: "Busy",        zh: "繁忙",   ko: "혼잡",   ru: "Занят" },
+            "Offline":     { ja: "停止中", en: "Offline",     zh: "离线",   ko: "오프라인", ru: "Оффлайн" },
+            "Maintenance": { ja: "メンテ中", en: "Maintenance", zh: "维护中", ko: "점검 중", ru: "Обслуж." },
+            "Slow":        { ja: "遅延",   en: "Slow",        zh: "延迟",   ko: "지연",   ru: "Медленно" }
+        };
+
+        function getTranslatedStatus(statusKey) {
+            // ステータスが辞書にあれば翻訳、なければそのまま返す
+            const map = STATUS_TRANSLATIONS[statusKey];
+            if (map) {
+                return map[CURRENT_LANG] || map['en'];
+            }
+            return statusKey; // 辞書にない場合は原文を表示
+        }
 
         // 言語適用関数
         function applyLanguage() {
@@ -393,6 +418,9 @@
             });
             const switcher = document.getElementById('languageSwitcher');
             if(switcher) switcher.value = CURRENT_LANG;
+
+            // 言語切り替え時にステータスも再描画
+            renderServiceStatus();
         }
 
         // 初期言語適用
@@ -471,70 +499,78 @@
             }
         });
 
-        // サービスステータスチェック機能 (全体 + 個別ID下)
-        async function updateServiceStatus() {
+        // ステータス描画関数 (データ取得後や言語切り替え時に呼ぶ)
+        function renderServiceStatus() {
             const badge = document.getElementById('serviceStatus');
             const text = badge.querySelector('.status-text');
+            const t = TRANSLATIONS[CURRENT_LANG] || TRANSLATIONS['en'];
 
+            if (!currentStatusData || !currentStatusData.statuses) {
+                // データ未取得 or エラー時はそのまま
+                return;
+            }
+
+            const statuses = currentStatusData.statuses;
+
+            // 1. 全体ステータス (System)
+            const sysStatus = statuses["System"] || "Operational";
+            if (sysStatus === "Operational" || sysStatus === "Available") {
+                badge.classList.remove('error');
+                text.textContent = t.status_header_ok;
+            } else {
+                badge.classList.add('error');
+                text.textContent = t.status_header_error + ` (${getTranslatedStatus(sysStatus)})`; 
+            }
+
+            // 2. 個別ステータス反映
+            const updatePlatform = (id, rawStatus) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const dot = el.querySelector('.status-dot-small');
+                const val = el.querySelector('.status-val');
+                
+                // ★ここで翻訳を適用
+                val.textContent = getTranslatedStatus(rawStatus);
+                
+                dot.className = 'status-dot-small';
+                const s = String(rawStatus).toLowerCase();
+                if (s === 'available' || s === 'online' || s === 'operational') {
+                    dot.classList.add('status-green');
+                } else if (s === 'busy' || s === 'slow') {
+                    dot.classList.add('status-yellow');
+                } else {
+                    dot.classList.add('status-red'); 
+                }
+            };
+
+            updatePlatform('status-System', statuses["System"] || "Unknown");
+            updatePlatform('status-Instagram', statuses["Instagram"] || "Offline");
+            updatePlatform('status-Discord', statuses["Discord"] || "Offline");
+            updatePlatform('status-Xbox', statuses["Xbox"] || "Offline");
+            updatePlatform('status-PlayStation', statuses["PlayStation"] || "Offline");
+        }
+
+        // サービスステータスデータ取得
+        async function fetchServiceStatus() {
             try {
-                // GASからステータス一覧を取得
                 const response = await fetch(`${GAS_API_URL}?type=service_status`);
                 const data = await response.json();
 
-                if (data.success && data.statuses) {
-                    const statuses = data.statuses;
-
-                    // 1. ヘッダーの全体ステータス (System) の反映
-                    const sysStatus = statuses["System"] || "Operational";
-                    if (sysStatus === "Operational" || sysStatus === "Available") {
-                        badge.classList.remove('error');
-                        text.textContent = "All Systems Operational";
-                    } else {
-                        badge.classList.add('error');
-                        text.textContent = sysStatus; 
-                    }
-
-                    // 2. 個別ステータスの反映関数
-                    const updatePlatform = (id, status) => {
-                        const el = document.getElementById(id);
-                        if (!el) return;
-                        const dot = el.querySelector('.status-dot-small');
-                        const val = el.querySelector('.status-val');
-                        
-                        // テキスト更新
-                        val.textContent = status;
-
-                        // 色クラスのリセット
-                        dot.className = 'status-dot-small';
-
-                        // ステータスに応じた色分けロジック
-                        const s = String(status).toLowerCase();
-                        if (s === 'available' || s === 'online' || s === 'operational') {
-                            dot.classList.add('status-green');
-                        } else if (s === 'busy' || s === 'slow') {
-                            dot.classList.add('status-yellow');
-                        } else {
-                            dot.classList.add('status-red'); // Offline, Maintenanceなど
-                        }
-                    };
-
-                    // 各プラットフォームへ反映 (HTMLのIDとスプレッドシートのA列名を一致させる)
-                    updatePlatform('status-System', statuses["System"] || "Unknown");
-                    updatePlatform('status-Instagram', statuses["Instagram"] || "Offline");
-                    updatePlatform('status-Discord', statuses["Discord"] || "Offline");
-                    updatePlatform('status-Xbox', statuses["Xbox"] || "Offline");
-                    updatePlatform('status-PlayStation', statuses["PlayStation"] || "Offline");
-
+                if (data.success) {
+                    currentStatusData = data; // データを保存
+                    renderServiceStatus();    // 描画を実行
                 }
             } catch (error) {
                 console.error("Status check failed:", error);
+                const badge = document.getElementById('serviceStatus');
+                const text = badge.querySelector('.status-text');
                 badge.classList.add('error');
                 text.textContent = "Status Check Failed";
             }
         }
 
         // ページ読み込み時に実行
-        updateServiceStatus();
+        fetchServiceStatus();
 
     </script>
 </body>
