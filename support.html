@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>kiryu-sensya Support</title>
+    <title>Support - kiryu-sensya</title>
     <link rel="icon" href="https://static.wixstatic.com/media/2f0694_eb4d3063598a4cc5b6bd6b8e31cba915~mv2.png/v1/crop/x_248,y_0,w_1065,h_950/fill/w_816,h_728,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/1767545356653.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -157,6 +157,21 @@
         .status-red { background-color: var(--neon-red); box-shadow: 0 0 6px var(--neon-red); }
         .status-yellow { background-color: #ffcc00; box-shadow: 0 0 6px #ffcc00; }
 
+        /* ローディングアニメーション (. -> .. -> ...) */
+        .loading-animate::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+            display: inline-block;
+            width: 12px; 
+            text-align: left;
+        }
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
         .btn-inquiry-small {
             margin-top: 5px; display: inline-block; padding: 10px 20px; border-radius: 30px;
             background: rgba(255,255,255,0.1); color: white; text-decoration: none;
@@ -241,7 +256,7 @@
     </header>
 
     <div class="container">
-        <h2 class="page-title" data-translate="support_page_title">サポート</h2>
+        <h2 class="page-title" data-translate="support_page_title">Support</h2>
         
         <div class="support-grid">
             
@@ -251,7 +266,7 @@
                 <div class="user-id">@_.k__yu.10</div>
                 <div class="platform-status" id="status-Instagram">
                     <span class="status-dot-small"></span>
-                    <span class="status-val">Loading...</span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
                 <button id="btnOpenInstagram" class="btn-inquiry-small" data-translate="btn_inquiry_insta">問い合わせ</button>
             </div>
@@ -259,12 +274,12 @@
             <div class="support-item glass-panel">
                 <i class="fa-brands fa-discord" style="color: #5865F2;"></i>
                 <span>Discord</span>
-                <div class="user-id">kiryu_server</div>
+                <div class="user-id">kiryu_sensya</div>
                 <div class="platform-status" id="status-Discord">
                     <span class="status-dot-small"></span>
-                    <span class="status-val">Loading...</span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_discord">問い合わせ</a>
+                <a href="https://discord.gg/rVAJp56V" class="btn-inquiry-small" data-translate="btn_inquiry_discord">問い合わせ</a>
             </div>
 
             <div class="support-item glass-panel">
@@ -273,7 +288,7 @@
                 <div class="user-id">kiryu10.vercel.app</div>
                 <div class="platform-status" id="status-System">
                     <span class="status-dot-small"></span>
-                    <span class="status-val">Loading...</span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
                 <div class="no-btn-spacer"></div>
             </div>
@@ -281,23 +296,23 @@
             <div class="support-item glass-panel">
                 <i class="fa-brands fa-xbox" style="color: #107C10;"></i>
                 <span>Xbox</span>
-                <div class="user-id">Gamertag_Here</div>
+                <div class="user-id">kiryusensya</div>
                 <div class="platform-status" id="status-Xbox">
                     <span class="status-dot-small"></span>
-                    <span class="status-val">Loading...</span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_xbox">問い合わせ</a>
+                <a href="https://www.xbox.com/ja-JP/play/user/kiryusensya" class="btn-inquiry-small" data-translate="btn_inquiry_xbox">問い合わせ</a>
             </div>
 
             <div class="support-item glass-panel">
                 <i class="fa-brands fa-playstation" style="color: #0070D1;"></i>
                 <span>PlayStation</span>
-                <div class="user-id">PSN_ID_Here</div>
+                <div class="user-id">kiryu-sensya</div>
                 <div class="platform-status" id="status-PlayStation">
                     <span class="status-dot-small"></span>
-                    <span class="status-val">Loading...</span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_ps">問い合わせ</a>
+                <a href="https://profile.playstation.com/kiryu-sensya" class="btn-inquiry-small" data-translate="btn_inquiry_ps">問い合わせ</a>
             </div>
 
         </div>
@@ -343,7 +358,8 @@
 
         let CURRENT_LANG = localStorage.getItem('user_lang') || "ja";
         document.documentElement.lang = CURRENT_LANG;
-        let currentStatusData = null; // 取得したステータスを保持する変数
+        let currentStatusData = null; // ステータスデータ保持
+        let lastFetchTime = null;     // データ取得時刻保持
 
         // 翻訳データ (UI用)
         const TRANSLATIONS = {
@@ -353,7 +369,8 @@
                 insta_title: "Instagram 問い合わせ", insta_sub: "Instagramで問い合わせするには<br>アカウント認証が必要です。",
                 insta_btn: "認証する", insta_btn_verifying: "確認中", insta_success_btn: "Instagramを開く", insta_error_user: "ユーザーが見つかりません",
                 btn_inquiry_insta: "問い合わせ", btn_inquiry_discord: "問い合わせ", btn_inquiry_xbox: "問い合わせ", btn_inquiry_ps: "問い合わせ",
-                status_header_ok: "全システム稼働中", status_header_error: "メンテナンス/障害"
+                status_loading: "確認中",
+                header_last_updated: "最終更新: " // ← ヘッダー用
             },
             en: {
                 support_page_title: "Support",
@@ -361,7 +378,8 @@
                 insta_title: "Instagram Inquiry", insta_sub: "Account verification is required<br>to contact via Instagram.",
                 insta_btn: "Verify", insta_btn_verifying: "Checking", insta_success_btn: "Open Instagram", insta_error_user: "User not found",
                 btn_inquiry_insta: "Contact Us", btn_inquiry_discord: "Contact Us", btn_inquiry_xbox: "Contact Us", btn_inquiry_ps: "Contact Us",
-                status_header_ok: "All Systems Operational", status_header_error: "System Maintenance"
+                status_loading: "Checking",
+                header_last_updated: "Last Updated: " // ← ヘッダー用
             },
             zh: {
                 support_page_title: "支持",
@@ -369,7 +387,8 @@
                 insta_title: "Instagram 咨询", insta_sub: "在Instagram上进行咨询时，<br>需要进行账号认证。",
                 insta_btn: "验证", insta_btn_verifying: "正在验证", insta_success_btn: "打开 Instagram", insta_error_user: "未找到用户",
                 btn_inquiry_insta: "联系我们", btn_inquiry_discord: "联系我们", btn_inquiry_xbox: "联系我们", btn_inquiry_ps: "联系我们",
-                status_header_ok: "所有系统运行正常", status_header_error: "系统维护中"
+                status_loading: "正在检查",
+                header_last_updated: "最后检查: " // ← ヘッダー用
             },
             ko: {
                 support_page_title: "기술협조",
@@ -377,7 +396,8 @@
                 insta_title: "Instagram 문의", insta_sub: "Instagram에서 문의하려면<br>계정 인증이 필요합니다.",
                 insta_btn: "확인", insta_btn_verifying: "검토중", insta_success_btn: "인스타그램 열기", insta_error_user: "사용자를 찾을 수 없습니다",
                 btn_inquiry_insta: "질문", btn_inquiry_discord: "질문", btn_inquiry_xbox: "질문", btn_inquiry_ps: "질문",
-                status_header_ok: "모든 시스템 정상 가동", status_header_error: "시스템 유지 보수"
+                status_loading: "확인 중",
+                header_last_updated: "최종 확인: " // ← ヘッダー用
             },
             ru: {
                 support_page_title: "Поддержка",
@@ -385,28 +405,38 @@
                 insta_title: "Instagram Запрос", insta_sub: "Для связи через Instagram<br>требуется проверка аккаунта.",
                 insta_btn: "Проверить", insta_btn_verifying: "Проверка", insta_success_btn: "Открыть Instagram", insta_error_user: "Пользователь не найден",
                 btn_inquiry_insta: "Связаться", btn_inquiry_discord: "Связаться", btn_inquiry_xbox: "Связаться", btn_inquiry_ps: "Связаться",
-                status_header_ok: "Все системы работают", status_header_error: "Техническое обслуживание"
+                status_loading: "Загрузка",
+                header_last_updated: "Обновлено: " // ← ヘッダー用
             }
         };
 
         // ★ ステータス翻訳辞書 ★
-        // スプレッドシートの英語キー(左)を、各言語(右)に変換します
         const STATUS_TRANSLATIONS = {
-            "Operational": { ja: "稼働中", en: "Operational", zh: "运行中", ko: "가동 중", ru: "Работает" },
-            "Available":   { ja: "受付中", en: "Available",   zh: "可咨询",   ko: "접수 중", ru: "Доступно" },
-            "Busy":        { ja: "混雑",   en: "Busy",        zh: "繁忙",   ko: "혼잡",   ru: "Занят" },
-            "Offline":     { ja: "停止中", en: "Offline",     zh: "离线",   ko: "오프라인", ru: "Оффлайн" },
-            "Maintenance": { ja: "メンテ中", en: "Maintenance", zh: "维护中", ko: "점검 중", ru: "Обслуж." },
+            "Operational": { ja: "稼働中", en: "Operational", zh: "运行中", ko: "운용상의", ru: "Работает" },
+            "Available":   { ja: "利用可能", en: "Available",   zh: "可用",   ko: "사용 가능", ru: "Доступно" },
+            "Busy":        { ja: "制限中",   en: "Restricted",        zh: "限制中",   ko: "제한됨",   ru: "Ограниченный" },
+            "Offline":     { ja: "停止中", en: "Stopped",     zh: "停止中",   ko: "정지 중", ru: "Вне эксплуатации" },
+            "Maintenance": { ja: "メンテナンス中", en: "Maintenance", zh: "维护中", ko: "점검 중", ru: "Обслуж." },
             "Slow":        { ja: "遅延",   en: "Slow",        zh: "延迟",   ko: "지연",   ru: "Медленно" }
         };
 
         function getTranslatedStatus(statusKey) {
-            // ステータスが辞書にあれば翻訳、なければそのまま返す
             const map = STATUS_TRANSLATIONS[statusKey];
             if (map) {
                 return map[CURRENT_LANG] || map['en'];
             }
-            return statusKey; // 辞書にない場合は原文を表示
+            return statusKey; 
+        }
+
+        // 日付フォーマット関数
+        function getFormattedDate(date) {
+            if (!date) return "";
+            const y = date.getFullYear();
+            const m = ("0" + (date.getMonth() + 1)).slice(-2);
+            const d = ("0" + date.getDate()).slice(-2);
+            const H = ("0" + date.getHours()).slice(-2);
+            const M = ("0" + date.getMinutes()).slice(-2);
+            return `${y}/${m}/${d} ${H}:${M}`;
         }
 
         // 言語適用関数
@@ -419,11 +449,11 @@
             const switcher = document.getElementById('languageSwitcher');
             if(switcher) switcher.value = CURRENT_LANG;
 
-            // 言語切り替え時にステータスも再描画
-            renderServiceStatus();
+            if(currentStatusData) {
+                renderServiceStatus();
+            }
         }
 
-        // 初期言語適用
         applyLanguage();
 
         // 言語切り替えイベント
@@ -499,27 +529,31 @@
             }
         });
 
-        // ステータス描画関数 (データ取得後や言語切り替え時に呼ぶ)
+        // ステータス描画関数
         function renderServiceStatus() {
             const badge = document.getElementById('serviceStatus');
             const text = badge.querySelector('.status-text');
             const t = TRANSLATIONS[CURRENT_LANG] || TRANSLATIONS['en'];
 
-            if (!currentStatusData || !currentStatusData.statuses) {
-                // データ未取得 or エラー時はそのまま
-                return;
-            }
+            if (!currentStatusData || !currentStatusData.statuses) return;
 
             const statuses = currentStatusData.statuses;
 
-            // 1. 全体ステータス (System)
+            // 1. 全体ステータス (ヘッダー)
             const sysStatus = statuses["System"] || "Operational";
+            
+            // 色判定
             if (sysStatus === "Operational" || sysStatus === "Available") {
                 badge.classList.remove('error');
-                text.textContent = t.status_header_ok;
             } else {
                 badge.classList.add('error');
-                text.textContent = t.status_header_error + ` (${getTranslatedStatus(sysStatus)})`; 
+            }
+
+            // テキスト判定（最終更新日時を表示）
+            if (lastFetchTime) {
+                text.textContent = t.header_last_updated + getFormattedDate(lastFetchTime);
+            } else {
+                text.textContent = "Checked just now";
             }
 
             // 2. 個別ステータス反映
@@ -529,7 +563,9 @@
                 const dot = el.querySelector('.status-dot-small');
                 const val = el.querySelector('.status-val');
                 
-                // ★ここで翻訳を適用
+                val.classList.remove('loading-animate');
+                val.removeAttribute('data-translate'); 
+
                 val.textContent = getTranslatedStatus(rawStatus);
                 
                 dot.className = 'status-dot-small';
@@ -557,8 +593,9 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    currentStatusData = data; // データを保存
-                    renderServiceStatus();    // 描画を実行
+                    currentStatusData = data;
+                    lastFetchTime = new Date(); // データ取得時刻を記録
+                    renderServiceStatus();
                 }
             } catch (error) {
                 console.error("Status check failed:", error);
@@ -569,7 +606,6 @@
             }
         }
 
-        // ページ読み込み時に実行
         fetchServiceStatus();
 
     </script>
