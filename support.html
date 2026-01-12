@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Support - kiryu-sensya</title>
+    <title>Support-kiryu-sensya</title>
     <link rel="icon" href="https://static.wixstatic.com/media/2f0694_eb4d3063598a4cc5b6bd6b8e31cba915~mv2.png/v1/crop/x_248,y_0,w_1065,h_950/fill/w_816,h_728,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/1767545356653.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,8 +55,8 @@
         }
         .btn-action, .btn-confirm {
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 12px 30px; border-radius: 50px; background: var(--primary-color);
-            color: white; text-decoration: none; font-weight: bold; font-size: 15px;
+            padding: 10px 24px; border-radius: 50px; background: var(--primary-color);
+            color: white; text-decoration: none; font-weight: bold; font-size: 14px;
             border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: 0.3s;
             font-family: inherit;
         }
@@ -66,17 +66,17 @@
 
         /* ヘッダー設定 */
         header {
-            width: 100%; max-width: 1200px; padding: 20px; 
+            width: 100%; max-width: 1200px; padding: 15px 20px; 
             display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 10px;
+            margin-bottom: 5px; 
         }
-        .logo { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: white; text-decoration: none; }
+        .logo { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: white; text-decoration: none; }
 
         /* サービスステータス (ヘッダー用) */
         .status-badge {
-            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            display: flex; align-items: center; gap: 8px; padding: 6px 14px;
             background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px; font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px; font-size: 12px; font-weight: 500; color: rgba(255, 255, 255, 0.9);
             transition: 0.3s;
         }
         .status-indicator {
@@ -93,7 +93,7 @@
         
         .btn-back {
             background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-            color: white; padding: 8px 20px; border-radius: 20px; text-decoration: none; font-size: 14px;
+            color: white; padding: 6px 16px; border-radius: 20px; text-decoration: none; font-size: 13px;
             display: flex; align-items: center; gap: 5px; transition: 0.3s;
         }
         .btn-back:hover { background: rgba(255,255,255,0.2); }
@@ -102,23 +102,24 @@
         .container { 
             width: 100%; max-width: 1000px; padding: 0 20px; 
             flex: 1; display: flex; flex-direction: column; align-items: center;
-            justify-content: center; padding-bottom: 80px; 
+            justify-content: center; 
+            padding-bottom: 20px; 
         }
         
-        .page-title { font-size: 32px; font-weight: bold; margin-bottom: 30px; text-align: center; }
+        .page-title { font-size: 28px; font-weight: bold; margin-bottom: 20px; text-align: center; }
 
         /* サポートグリッド */
         .support-grid {
-            display: grid; gap: 20px; margin-bottom: 40px; width: 100%;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            display: grid; gap: 15px; margin-bottom: 20px; width: 100%;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
         .support-item {
             display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-            padding: 30px 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
-            border-radius: 24px; color: white; transition: 0.3s;
-            height: 320px;
+            padding: 20px 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            border-radius: 20px; color: white; transition: 0.3s;
+            height: 260px;
             text-align: center;
-            min-width: 160px; scroll-snap-align: center;
+            min-width: 150px; scroll-snap-align: center;
         }
         .support-item:hover {
             background: rgba(255,255,255,0.15); transform: translateY(-5px);
@@ -126,36 +127,36 @@
         }
         /* アイコン画像 */
         .support-item i, .support-item img { 
-            font-size: 48px; margin-bottom: 10px; 
-            width: 48px; height: 48px; object-fit: contain; 
+            font-size: 40px; margin-bottom: 8px; 
+            width: 40px; height: 40px; object-fit: contain; 
         }
-        .support-item span { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+        .support-item span { font-size: 15px; font-weight: bold; margin-bottom: 4px; }
 
         /* ユーザーID */
         .user-id {
-            font-size: 13px;
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.6);
             font-weight: 500;
-            margin-bottom: auto; /* 余白自動調整 */
+            margin-bottom: auto; 
             letter-spacing: 0.5px;
         }
 
         /* 個別ステータス表示 */
         .platform-status {
             display: flex; align-items: center; justify-content: center;
-            gap: 6px; font-size: 12px; margin-bottom: 15px; 
-            padding: 6px 14px; border-radius: 20px;
+            gap: 5px; font-size: 11px; margin-bottom: 10px; 
+            padding: 4px 12px; border-radius: 15px;
             background: rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.1);
         }
         .status-dot-small {
-            width: 8px; height: 8px; border-radius: 50%;
-            background-color: #555; /* デフォルトグレー */
+            width: 6px; height: 6px; border-radius: 50%;
+            background-color: #555; 
         }
         /* ステータスの色定義 */
-        .status-green { background-color: var(--neon-green); box-shadow: 0 0 6px var(--neon-green); }
-        .status-red { background-color: var(--neon-red); box-shadow: 0 0 6px var(--neon-red); }
-        .status-yellow { background-color: #ffcc00; box-shadow: 0 0 6px #ffcc00; }
+        .status-green { background-color: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+        .status-red { background-color: var(--neon-red); box-shadow: 0 0 5px var(--neon-red); }
+        .status-yellow { background-color: #ffcc00; box-shadow: 0 0 5px #ffcc00; }
 
         /* ローディングアニメーション (. -> .. -> ...) */
         .loading-animate::after {
@@ -173,10 +174,10 @@
         }
 
         .btn-inquiry-small {
-            margin-top: 5px; display: inline-block; padding: 10px 20px; border-radius: 30px;
+            margin-top: 5px; display: inline-block; padding: 8px 18px; border-radius: 30px;
             background: rgba(255,255,255,0.1); color: white; text-decoration: none;
-            font-size: 13px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3);
-            transition: all 0.2s; width: 100%; max-width: 120px; cursor: pointer; text-align: center;
+            font-size: 12px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.2s; width: 100%; max-width: 110px; cursor: pointer; text-align: center;
         }
         .btn-inquiry-small:hover {
             background: var(--primary-color); border-color: var(--primary-color);
@@ -184,7 +185,7 @@
         }
         
         /* ボタンなし用スペーサー */
-        .no-btn-spacer { height: 40px; width: 100%; }
+        .no-btn-spacer { height: 35px; width: 100%; }
 
         /* Instagramモーダル */
         .modal-overlay {
@@ -213,17 +214,17 @@
 
         /* フッター */
         footer { 
-            width: 100%; padding: 20px; color: var(--text-muted); 
-            text-align: center; font-size: 13px; position: relative;
-            display: flex; justify-content: center; align-items: center; min-height: 80px;
+            width: 100%; padding: 15px; color: var(--text-muted); 
+            text-align: center; font-size: 12px; position: relative;
+            display: flex; justify-content: center; align-items: center; min-height: 60px; 
         }
 
         /* 言語選択メニュー */
         .lang-select {
             background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: white;
-            padding: 10px 20px; border-radius: 30px; outline: none; cursor: pointer;
-            font-family: inherit; font-size: 14px; font-weight: bold; transition: background 0.3s;
-            position: absolute; right: 20px; bottom: 20px;
+            padding: 8px 16px; border-radius: 30px; outline: none; cursor: pointer;
+            font-family: inherit; font-size: 13px; font-weight: bold; transition: background 0.3s;
+            position: absolute; right: 20px; bottom: 15px;
         }
         .lang-select:hover { background: rgba(255,255,255,0.1); }
         .lang-select option { background-color: #000; color: white; }
@@ -249,21 +250,21 @@
         
         <div class="status-badge" id="serviceStatus">
             <span class="status-indicator"></span>
-            <span class="status-text">Checking Status...</span>
+            <span class="status-text loading-animate" data-translate="status_checking">Checking Status</span>
         </div>
 
-        <a href="/" class="btn-back"><i data-lucide="arrow-left"></i> Home</a>
+        <a href="/" class="btn-back"><i data-lucide="arrow-left"></i>Home</a>
     </header>
 
     <div class="container">
-        <h2 class="page-title" data-translate="support_page_title">Support</h2>
+        <h2 class="page-title" data-translate="support_page_title">サポート</h2>
         
         <div class="support-grid">
             
             <div class="support-item glass-panel">
                 <i class="fa-brands fa-instagram" style="color: #E1306C;"></i>
                 <span>Instagram</span>
-                <div class="user-id">@_.k__yu.10</div>
+                <div class="user-id">_.k__yu.10</div>
                 <div class="platform-status" id="status-Instagram">
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
@@ -344,7 +345,7 @@
             
             <div id="instaSuccessPhase" style="display:none;">
                 <div id="instaResultAccount" style="display:none;"></div>
-                <a href="https://www.instagram.com/kiryu_sensya" target="_blank" id="instaSuccessButton" class="btn-confirm" style="text-decoration:none; width:100%; display:inline-flex;" data-translate="insta_success_btn">Open Instagram</a>
+                <a href="https://www.instagram.com/_.k__yu.10" target="_blank" id="instaSuccessButton" class="btn-confirm" style="text-decoration:none; width:100%; display:inline-flex;" data-translate="insta_success_btn">Open Instagram</a>
                 <p id="instaSuccessMessage" class="status-ok"></p>
             </div>
         </div>
@@ -358,8 +359,8 @@
 
         let CURRENT_LANG = localStorage.getItem('user_lang') || "ja";
         document.documentElement.lang = CURRENT_LANG;
-        let currentStatusData = null; // ステータスデータ保持
-        let lastFetchTime = null;     // データ取得時刻保持
+        let currentStatusData = null; 
+        let lastFetchTime = null;
 
         // 翻訳データ (UI用)
         const TRANSLATIONS = {
@@ -369,8 +370,9 @@
                 insta_title: "Instagram 問い合わせ", insta_sub: "Instagramで問い合わせするには<br>アカウント認証が必要です。",
                 insta_btn: "認証する", insta_btn_verifying: "確認中", insta_success_btn: "Instagramを開く", insta_error_user: "ユーザーが見つかりません",
                 btn_inquiry_insta: "問い合わせ", btn_inquiry_discord: "問い合わせ", btn_inquiry_xbox: "問い合わせ", btn_inquiry_ps: "問い合わせ",
-                status_loading: "確認中",
-                header_last_updated: "最終更新: " // ← ヘッダー用
+                status_loading: "読み込み中",
+                status_checking: "ステータス確認中", // ...を削除
+                header_last_updated: "最終更新: " 
             },
             en: {
                 support_page_title: "Support",
@@ -379,7 +381,8 @@
                 insta_btn: "Verify", insta_btn_verifying: "Checking", insta_success_btn: "Open Instagram", insta_error_user: "User not found",
                 btn_inquiry_insta: "Contact Us", btn_inquiry_discord: "Contact Us", btn_inquiry_xbox: "Contact Us", btn_inquiry_ps: "Contact Us",
                 status_loading: "Checking",
-                header_last_updated: "Last Updated: " // ← ヘッダー用
+                status_checking: "Checking Status", // ...を削除
+                header_last_updated: "Last Updated: "
             },
             zh: {
                 support_page_title: "支持",
@@ -388,7 +391,8 @@
                 insta_btn: "验证", insta_btn_verifying: "正在验证", insta_success_btn: "打开 Instagram", insta_error_user: "未找到用户",
                 btn_inquiry_insta: "联系我们", btn_inquiry_discord: "联系我们", btn_inquiry_xbox: "联系我们", btn_inquiry_ps: "联系我们",
                 status_loading: "正在检查",
-                header_last_updated: "最后检查: " // ← ヘッダー用
+                status_checking: "正在检查状态", // ...を削除
+                header_last_updated: "最后检查: "
             },
             ko: {
                 support_page_title: "기술협조",
@@ -396,8 +400,9 @@
                 insta_title: "Instagram 문의", insta_sub: "Instagram에서 문의하려면<br>계정 인증이 필요합니다.",
                 insta_btn: "확인", insta_btn_verifying: "검토중", insta_success_btn: "인스타그램 열기", insta_error_user: "사용자를 찾을 수 없습니다",
                 btn_inquiry_insta: "질문", btn_inquiry_discord: "질문", btn_inquiry_xbox: "질문", btn_inquiry_ps: "질문",
-                status_loading: "확인 중",
-                header_last_updated: "최종 확인: " // ← ヘッダー用
+                status_loading: "로딩 중",
+                status_checking: "상태 확인 중", // ...を削除
+                header_last_updated: "최종 확인: "
             },
             ru: {
                 support_page_title: "Поддержка",
@@ -406,17 +411,17 @@
                 insta_btn: "Проверить", insta_btn_verifying: "Проверка", insta_success_btn: "Открыть Instagram", insta_error_user: "Пользователь не найден",
                 btn_inquiry_insta: "Связаться", btn_inquiry_discord: "Связаться", btn_inquiry_xbox: "Связаться", btn_inquiry_ps: "Связаться",
                 status_loading: "Загрузка",
-                header_last_updated: "Обновлено: " // ← ヘッダー用
+                status_checking: "Проверка статуса", // ...を削除
+                header_last_updated: "Обновлено: "
             }
         };
 
-        // ★ ステータス翻訳辞書 ★
         const STATUS_TRANSLATIONS = {
-            "Operational": { ja: "稼働中", en: "Operational", zh: "运行中", ko: "운용상의", ru: "Работает" },
-            "Available":   { ja: "利用可能", en: "Available",   zh: "可用",   ko: "사용 가능", ru: "Доступно" },
-            "Busy":        { ja: "制限中",   en: "Restricted",        zh: "限制中",   ko: "제한됨",   ru: "Ограниченный" },
-            "Offline":     { ja: "停止中", en: "Stopped",     zh: "停止中",   ko: "정지 중", ru: "Вне эксплуатации" },
-            "Maintenance": { ja: "メンテナンス中", en: "Maintenance", zh: "维护中", ko: "점검 중", ru: "Обслуж." },
+            "Operational": { ja: "稼働中", en: "Operational", zh: "运行中", ko: "가동 중", ru: "Работает" },
+            "Available":   { ja: "利用可能", en: "Available",   zh: "可用",   ko: "접수 중", ru: "Доступно" },
+            "Busy":        { ja: "制限中",   en: "Restricted",        zh: "限制中",   ko: "제한됨",   ru: "ограничение" },
+            "Offline":     { ja: "停止中", en: "Stopped",     zh: "停止中",   ko: "오프라인", ru: "Не работает" },
+            "Maintenance": { ja: "メンテナンス中", en: "Maintenance", zh: "维护中", ko: "점검 중", ru: "Под контролем." },
             "Slow":        { ja: "遅延",   en: "Slow",        zh: "延迟",   ko: "지연",   ru: "Медленно" }
         };
 
@@ -428,7 +433,6 @@
             return statusKey; 
         }
 
-        // 日付フォーマット関数
         function getFormattedDate(date) {
             if (!date) return "";
             const y = date.getFullYear();
@@ -439,7 +443,6 @@
             return `${y}/${m}/${d} ${H}:${M}`;
         }
 
-        // 言語適用関数
         function applyLanguage() {
             const t = TRANSLATIONS[CURRENT_LANG] || TRANSLATIONS['en'];
             document.querySelectorAll('[data-translate]').forEach(el => {
@@ -456,7 +459,6 @@
 
         applyLanguage();
 
-        // 言語切り替えイベント
         const langSwitcher = document.getElementById('languageSwitcher');
         if (langSwitcher) {
             langSwitcher.addEventListener('change', (e) => {
@@ -468,7 +470,6 @@
             });
         }
 
-        // Instagram モーダル制御
         const modal = document.getElementById('instagramAuthModal');
         const btnOpen = document.getElementById('btnOpenInstagram');
         const btnClose = document.getElementById('instagramCloseBtn');
@@ -493,7 +494,6 @@
         btnClose.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
 
-        // Instagram 認証処理
         instaConfirm.addEventListener('click', async () => {
             const account = instaInput.value.trim();
             if(!account) return;
@@ -529,7 +529,6 @@
             }
         });
 
-        // ステータス描画関数
         function renderServiceStatus() {
             const badge = document.getElementById('serviceStatus');
             const text = badge.querySelector('.status-text');
@@ -542,14 +541,16 @@
             // 1. 全体ステータス (ヘッダー)
             const sysStatus = statuses["System"] || "Operational";
             
-            // 色判定
             if (sysStatus === "Operational" || sysStatus === "Available") {
                 badge.classList.remove('error');
             } else {
                 badge.classList.add('error');
             }
 
-            // テキスト判定（最終更新日時を表示）
+            // ★ここでローディングアニメーションのクラスを削除
+            text.classList.remove('loading-animate');
+            text.removeAttribute('data-translate');
+            
             if (lastFetchTime) {
                 text.textContent = t.header_last_updated + getFormattedDate(lastFetchTime);
             } else {
@@ -586,7 +587,6 @@
             updatePlatform('status-PlayStation', statuses["PlayStation"] || "Offline");
         }
 
-        // サービスステータスデータ取得
         async function fetchServiceStatus() {
             try {
                 const response = await fetch(`${GAS_API_URL}?type=service_status`);
@@ -594,7 +594,7 @@
 
                 if (data.success) {
                     currentStatusData = data;
-                    lastFetchTime = new Date(); // データ取得時刻を記録
+                    lastFetchTime = new Date();
                     renderServiceStatus();
                 }
             } catch (error) {
