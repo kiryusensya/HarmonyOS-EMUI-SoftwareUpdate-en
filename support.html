@@ -42,7 +42,6 @@
         }
 
         /* 言語ごとのフォント設定 */
-        /* 中文選択時に HarmonyOS Sans SC が適用されます */
         html[lang="ja"] body, html[lang="ja"] button { font-family: "HarmonyOS Sans", "Noto Sans JP", sans-serif; }
         html[lang="en"] body, html[lang="en"] button { font-family: "HarmonyOS Sans", sans-serif; }
         html[lang="zh"] body, html[lang="zh"] button { font-family: "HarmonyOS Sans", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif; }
@@ -295,7 +294,7 @@
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <button id="btnOpenInstagram" class="btn-inquiry-small" data-translate="btn_inquiry_insta">問い合わせ</button>
+                <button id="btnOpenInstagram" class="btn-inquiry-small disabled" data-translate="btn_inquiry_insta">問い合わせ</button>
             </div>
 
             <div class="support-item glass-panel">
@@ -306,7 +305,7 @@
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="https://discord.gg/rVAJp56V" class="btn-inquiry-small" data-translate="btn_inquiry_discord">問い合わせ</a>
+                <a href="https://discord.gg/rVAJp56V" class="btn-inquiry-small disabled" data-translate="btn_inquiry_discord">問い合わせ</a>
             </div>
 
             <div class="support-item glass-panel">
@@ -328,7 +327,7 @@
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="https://www.xbox.com/ja-JP/play/user/kiryusensya" class="btn-inquiry-small" data-translate="btn_inquiry_xbox">問い合わせ</a>
+                <a href="https://www.xbox.com/ja-JP/play/user/kiryusensya" class="btn-inquiry-small disabled" data-translate="btn_inquiry_xbox">問い合わせ</a>
             </div>
 
             <div class="support-item glass-panel">
@@ -339,7 +338,7 @@
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_ps">問い合わせ</a>
+                <a href="#" class="btn-inquiry-small disabled" data-translate="btn_inquiry_ps">問い合わせ</a>
             </div>
 
             <div class="support-item glass-panel">
@@ -350,7 +349,7 @@
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_weibo">問い合わせ</a>
+                <a href="#" class="btn-inquiry-small disabled" data-translate="btn_inquiry_weibo">問い合わせ</a>
             </div>
 
             <div class="support-item glass-panel">
@@ -361,7 +360,7 @@
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_wechat">問い合わせ</a>
+                <a href="#" class="btn-inquiry-small disabled" data-translate="btn_inquiry_wechat">問い合わせ</a>
             </div>
 
             <div class="support-item glass-panel">
@@ -372,7 +371,7 @@
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_rednote">問い合わせ</a>
+                <a href="#" class="btn-inquiry-small disabled" data-translate="btn_inquiry_rednote">問い合わせ</a>
             </div>
 
             <div class="support-item glass-panel">
@@ -383,7 +382,7 @@
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_douyin">問い合わせ</a>
+                <a href="#" class="btn-inquiry-small disabled" data-translate="btn_inquiry_douyin">問い合わせ</a>
             </div>
 
             <div class="support-item glass-panel">
@@ -394,7 +393,7 @@
                     <span class="status-dot-small"></span>
                     <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
                 </div>
-                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_bilibili">問い合わせ</a>
+                <a href="#" class="btn-inquiry-small disabled" data-translate="btn_inquiry_bilibili">問い合わせ</a>
             </div>
 
         </div>
@@ -443,7 +442,7 @@
         let currentStatusData = null; 
         let lastFetchTime = null;
 
-        // 翻訳データ (UI用) - SNS名称を翻訳対象に追加
+        // 翻訳データ (UI用)
         const TRANSLATIONS = {
             ja: {
                 support_page_title: "サポート",
@@ -574,6 +573,9 @@
 
         if(btnOpen) {
             btnOpen.addEventListener('click', () => {
+                // ボタンが無効化(disabled)されている場合はクリックを無視
+                if(btnOpen.classList.contains('disabled')) return;
+                
                 modal.classList.add('active');
                 inputPhase.style.display = 'block';
                 successPhase.style.display = 'none';
@@ -679,9 +681,13 @@
                 }
 
                 if (btn) {
-                    if (isSystemOffline || s === 'offline' || s === 'stopped') {
+                    // ★ 修正箇所: ここでステータスに応じてボタンの有効/無効を切り替えます
+                    // SystemがOffline、または個別のステータスがOffline/Maintenance/Stoppedの場合
+                    if (isSystemOffline || s === 'offline' || s === 'stopped' || s === 'maintenance') {
+                        // 無効化のまま（disabledクラスを維持）
                         btn.classList.add('disabled');
                     } else {
+                        // それ以外（Operational, Available, Busy等）なら無効化を解除
                         btn.classList.remove('disabled');
                     }
                 }
@@ -701,6 +707,10 @@
         }
 
         async function fetchServiceStatus() {
+            // Fetch開始時に再度すべてのボタンを無効化（念のため）
+            const allButtons = document.querySelectorAll('.btn-inquiry-small');
+            allButtons.forEach(btn => btn.classList.add('disabled'));
+
             try {
                 const response = await fetch(`${GAS_API_URL}?type=service_status`);
                 const data = await response.json();
@@ -719,8 +729,7 @@
                 badge.classList.add('error');
                 text.textContent = "Status Check Failed";
                 
-                const allButtons = document.querySelectorAll('.btn-inquiry-small');
-                allButtons.forEach(btn => btn.classList.add('disabled'));
+                // エラー時は全てのボタンを無効のままにする（クラスは削除しない）
             }
         }
 
