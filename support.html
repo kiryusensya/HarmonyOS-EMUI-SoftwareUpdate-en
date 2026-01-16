@@ -111,17 +111,18 @@
         /* サポートグリッド */
         .support-grid {
             display: grid; gap: 15px; margin-bottom: 20px; width: 100%;
+            /* 常に同じサイズになるように設定 */
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
         .support-item {
             display: flex; flex-direction: column; align-items: center; 
-            /* space-betweenからflex-startに変更し、上詰めで配置 */
             justify-content: flex-start;
             padding: 20px 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
             border-radius: 20px; color: white; transition: 0.3s;
-            height: 260px;
+            height: 260px; /* すべてのボックスの高さを固定 */
             text-align: center;
             min-width: 150px; scroll-snap-align: center;
+            position: relative;
         }
         .support-item:hover {
             background: rgba(255,255,255,0.15); transform: translateY(-5px);
@@ -131,6 +132,7 @@
         .support-item i, .support-item img { 
             font-size: 40px; margin-bottom: 8px; 
             width: 40px; height: 40px; object-fit: contain; 
+            display: inline-flex; justify-content: center; align-items: center;
         }
         .support-item span { font-size: 15px; font-weight: bold; margin-bottom: 4px; }
 
@@ -141,6 +143,7 @@
             font-weight: 500;
             margin-bottom: 15px; 
             letter-spacing: 0.5px;
+            word-break: break-all;
         }
 
         /* 個別ステータス表示 */
@@ -189,6 +192,15 @@
         .btn-inquiry-small:hover {
             background: var(--primary-color); border-color: var(--primary-color);
             box-shadow: 0 0 10px rgba(132, 7, 222, 0.5);
+        }
+        /* 無効化時のスタイル */
+        .btn-inquiry-small.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            background: #333;
+            border-color: #555;
+            cursor: not-allowed;
+            box-shadow: none;
         }
         
         /* ボタンなし用スペーサー */
@@ -246,14 +258,12 @@
             .status-text { display: none; }
             .status-badge { padding: 8px; border-radius: 50%; }
             
-            /* ★変更箇所: フッターの並び順を逆転 */
             footer { 
-                flex-direction: column-reverse; /* 下にある要素(メニュー)を上に、上にある要素(コピーライト)を下に */
+                flex-direction: column-reverse; 
                 justify-content: center; 
                 gap: 15px; 
                 padding-bottom: 30px; 
             }
-            /* ★変更箇所: 中央揃えに変更 */
             .lang-select { 
                 position: static; 
                 align-self: center; 
@@ -335,6 +345,61 @@
                 <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_ps">問い合わせ</a>
             </div>
 
+            <div class="support-item glass-panel">
+                <i class="fa-brands fa-weibo" style="color: #E6162D;"></i>
+                <span>Weibo</span>
+                <div class="user-id">kiryu_sensya</div>
+                <div class="platform-status" id="status-Weibo">
+                    <span class="status-dot-small"></span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
+                </div>
+                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_weibo">問い合わせ</a>
+            </div>
+
+            <div class="support-item glass-panel">
+                <i class="fa-brands fa-weixin" style="color: #7BB32E;"></i>
+                <span>WeChat</span>
+                <div class="user-id">kiryu_sensya</div>
+                <div class="platform-status" id="status-WeChat">
+                    <span class="status-dot-small"></span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
+                </div>
+                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_wechat">問い合わせ</a>
+            </div>
+
+            <div class="support-item glass-panel">
+                <i class="fa-solid fa-book" style="color: #FF2442;"></i>
+                <span>RedNote</span>
+                <div class="user-id">kiryu_sensya</div>
+                <div class="platform-status" id="status-RedNote">
+                    <span class="status-dot-small"></span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
+                </div>
+                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_rednote">問い合わせ</a>
+            </div>
+
+            <div class="support-item glass-panel">
+                <i class="fa-brands fa-tiktok" style="color: #ffffff;"></i>
+                <span>Douyin</span>
+                <div class="user-id">kiryu_sensya</div>
+                <div class="platform-status" id="status-Douyin">
+                    <span class="status-dot-small"></span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
+                </div>
+                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_douyin">問い合わせ</a>
+            </div>
+
+            <div class="support-item glass-panel">
+                <i class="fa-brands fa-bilibili" style="color: #23ADE5;"></i>
+                <span>Bilibili</span>
+                <div class="user-id">kiryu_sensya</div>
+                <div class="platform-status" id="status-Bilibili">
+                    <span class="status-dot-small"></span>
+                    <span class="status-val loading-animate" data-translate="status_loading">Loading</span>
+                </div>
+                <a href="#" class="btn-inquiry-small" data-translate="btn_inquiry_bilibili">問い合わせ</a>
+            </div>
+
         </div>
     </div>
 
@@ -374,14 +439,14 @@
         lucide.createIcons();
         
         // ★★★ ここにご自身のGASウェブアプリのURLを入力してください ★★★
-        const GAS_API_URL = "api/proxy"; 
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz..."; // <- 実際のURLに置き換えてください
 
         let CURRENT_LANG = localStorage.getItem('user_lang') || "ja";
         document.documentElement.lang = CURRENT_LANG;
         let currentStatusData = null; 
         let lastFetchTime = null;
 
-        // 翻訳データ (UI用)
+        // 翻訳データ (UI用) - 新しいボタンを追加
         const TRANSLATIONS = {
             ja: {
                 support_page_title: "サポート",
@@ -389,8 +454,9 @@
                 insta_title: "Instagram 問い合わせ", insta_sub: "Instagramで問い合わせするには<br>アカウント認証が必要です。",
                 insta_btn: "認証する", insta_btn_verifying: "確認中", insta_success_btn: "Instagramを開く", insta_error_user: "ユーザーが見つかりません",
                 btn_inquiry_insta: "問い合わせ", btn_inquiry_discord: "問い合わせ", btn_inquiry_xbox: "問い合わせ", btn_inquiry_ps: "問い合わせ",
+                btn_inquiry_weibo: "問い合わせ", btn_inquiry_wechat: "問い合わせ", btn_inquiry_rednote: "問い合わせ", btn_inquiry_douyin: "問い合わせ", btn_inquiry_bilibili: "問い合わせ",
                 status_loading: "確認中",
-                status_checking: "ステータス確認中", // ...を削除
+                status_checking: "ステータス確認中",
                 header_last_updated: "最終更新: " 
             },
             en: {
@@ -399,8 +465,9 @@
                 insta_title: "Instagram Inquiry", insta_sub: "Account verification is required<br>to contact via Instagram.",
                 insta_btn: "Verify", insta_btn_verifying: "Checking", insta_success_btn: "Open Instagram", insta_error_user: "User not found",
                 btn_inquiry_insta: "Contact Us", btn_inquiry_discord: "Contact Us", btn_inquiry_xbox: "Contact Us", btn_inquiry_ps: "Contact Us",
+                btn_inquiry_weibo: "Contact Us", btn_inquiry_wechat: "Contact Us", btn_inquiry_rednote: "Contact Us", btn_inquiry_douyin: "Contact Us", btn_inquiry_bilibili: "Contact Us",
                 status_loading: "Checking",
-                status_checking: "Checking Status", // ...を削除
+                status_checking: "Checking Status",
                 header_last_updated: "Last Updated: "
             },
             zh: {
@@ -409,8 +476,9 @@
                 insta_title: "Instagram 咨询", insta_sub: "在Instagram上进行咨询时，<br>需要进行账号认证。",
                 insta_btn: "验证", insta_btn_verifying: "正在验证", insta_success_btn: "打开 Instagram", insta_error_user: "未找到用户",
                 btn_inquiry_insta: "联系我们", btn_inquiry_discord: "联系我们", btn_inquiry_xbox: "联系我们", btn_inquiry_ps: "联系我们",
+                btn_inquiry_weibo: "联系我们", btn_inquiry_wechat: "联系我们", btn_inquiry_rednote: "联系我们", btn_inquiry_douyin: "联系我们", btn_inquiry_bilibili: "联系我们",
                 status_loading: "正在检查",
-                status_checking: "正在检查状态", // ...を削除
+                status_checking: "正在检查状态",
                 header_last_updated: "最后检查: "
             },
             ko: {
@@ -419,8 +487,9 @@
                 insta_title: "Instagram 문의", insta_sub: "Instagram에서 문의하려면<br>계정 인증이 필요합니다.",
                 insta_btn: "확인", insta_btn_verifying: "검토중", insta_success_btn: "인스타그램 열기", insta_error_user: "사용자를 찾을 수 없습니다",
                 btn_inquiry_insta: "질문", btn_inquiry_discord: "질문", btn_inquiry_xbox: "질문", btn_inquiry_ps: "질문",
+                btn_inquiry_weibo: "질문", btn_inquiry_wechat: "질문", btn_inquiry_rednote: "질문", btn_inquiry_douyin: "질문", btn_inquiry_bilibili: "질문",
                 status_loading: "확인 중",
-                status_checking: "상태 확인 중", // ...을 삭제
+                status_checking: "상태 확인 중",
                 header_last_updated: "최종 확인: "
             },
             ru: {
@@ -429,8 +498,9 @@
                 insta_title: "Instagram Запрос", insta_sub: "Для связи через Instagram<br>требуется проверка аккаунта.",
                 insta_btn: "Проверить", insta_btn_verifying: "Проверка", insta_success_btn: "Открыть Instagram", insta_error_user: "Пользователь не найден",
                 btn_inquiry_insta: "Связаться", btn_inquiry_discord: "Связаться", btn_inquiry_xbox: "Связаться", btn_inquiry_ps: "Связаться",
+                btn_inquiry_weibo: "Связаться", btn_inquiry_wechat: "Связаться", btn_inquiry_rednote: "Связаться", btn_inquiry_douyin: "Связаться", btn_inquiry_bilibili: "Связаться",
                 status_loading: "На рассмотрении",
-                status_checking: "Проверка статуса", // ...을 삭제
+                status_checking: "Проверка статуса",
                 header_last_updated: "Обновлено: "
             }
         };
@@ -439,7 +509,7 @@
             "Operational": { ja: "稼働中", en: "Operational", zh: "运行中", ko: "가동 중", ru: "Работает" },
             "Available":   { ja: "利用可能", en: "Available",   zh: "可用",   ko: "접수 중", ru: "Доступно" },
             "Busy":        { ja: "制限中",   en: "Restricted",       zh: "限制中",   ko: "제한됨",   ru: "ограничение" },
-            "Offline":     { ja: "停止中", en: "Stopped",      zh: "停止中",   ko: "오프라인", ru: "Не работает" },
+            "Offline":     { ja: "停止中", en: "Stopped",       zh: "停止中",   ko: "오프라인", ru: "Не работает" },
             "Maintenance": { ja: "メンテナンス中", en: "Maintenance", zh: "维护中", ko: "점검 중", ru: "Под контролем." },
             "Slow":        { ja: "遅延",   en: "Slow",         zh: "延迟",   ko: "지연",   ru: "Медленно" }
         };
@@ -500,53 +570,57 @@
         const successMsg = document.getElementById('instaSuccessMessage');
         const successBtn = document.getElementById('instaSuccessButton');
 
-        btnOpen.addEventListener('click', () => {
-            modal.classList.add('active');
-            inputPhase.style.display = 'block';
-            successPhase.style.display = 'none';
-            instaInput.value = '';
-            statusContainer.innerHTML = '';
-            instaInput.focus();
-        });
+        if(btnOpen) {
+            btnOpen.addEventListener('click', () => {
+                modal.classList.add('active');
+                inputPhase.style.display = 'block';
+                successPhase.style.display = 'none';
+                instaInput.value = '';
+                statusContainer.innerHTML = '';
+                instaInput.focus();
+            });
+        }
 
         const closeModal = () => modal.classList.remove('active');
-        btnClose.addEventListener('click', closeModal);
+        if(btnClose) btnClose.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
 
-        instaConfirm.addEventListener('click', async () => {
-            const account = instaInput.value.trim();
-            if(!account) return;
+        if(instaConfirm) {
+            instaConfirm.addEventListener('click', async () => {
+                const account = instaInput.value.trim();
+                if(!account) return;
 
-            instaInput.disabled = true;
-            instaConfirm.disabled = true;
-            instaConfirm.innerHTML = `<span class="cyber-spinner"></span> Checking...`;
-            
-            try {
-                const requestUrl = `${GAS_API_URL}?type=instagram_auth&account=${encodeURIComponent(account)}&lang=${CURRENT_LANG}`;
-                const response = await fetch(requestUrl);
-                const data = await response.json();
+                instaInput.disabled = true;
+                instaConfirm.disabled = true;
+                instaConfirm.innerHTML = `<span class="cyber-spinner"></span> Checking...`;
+                
+                try {
+                    const requestUrl = `${GAS_API_URL}?type=instagram_auth&account=${encodeURIComponent(account)}&lang=${CURRENT_LANG}`;
+                    const response = await fetch(requestUrl);
+                    const data = await response.json();
 
-                if(data.success && data.statusType === 'OK') {
-                    inputPhase.style.display = 'none';
-                    successPhase.style.display = 'block';
-                    successMsg.textContent = data.message;
-                    successBtn.textContent = data.buttonLabel;
-                } else {
-                    statusContainer.innerHTML = `<div class="error-msg"><i data-lucide="alert-circle" size="16"></i> ${data.message || "Error"}</div>`;
-                    lucide.createIcons();
+                    if(data.success && data.statusType === 'OK') {
+                        inputPhase.style.display = 'none';
+                        successPhase.style.display = 'block';
+                        successMsg.textContent = data.message;
+                        successBtn.textContent = data.buttonLabel;
+                    } else {
+                        statusContainer.innerHTML = `<div class="error-msg"><i data-lucide="alert-circle" size="16"></i> ${data.message || "Error"}</div>`;
+                        lucide.createIcons();
+                        instaInput.disabled = false;
+                        instaConfirm.disabled = false;
+                        const t = TRANSLATIONS[CURRENT_LANG] || TRANSLATIONS['en'];
+                        instaConfirm.textContent = t.insta_btn;
+                    }
+                } catch(e) {
+                    console.error(e);
+                    statusContainer.innerHTML = `<div class="error-msg">Connection Error</div>`;
                     instaInput.disabled = false;
                     instaConfirm.disabled = false;
-                    const t = TRANSLATIONS[CURRENT_LANG] || TRANSLATIONS['en'];
-                    instaConfirm.textContent = t.insta_btn;
+                    instaConfirm.textContent = "Verify";
                 }
-            } catch(e) {
-                console.error(e);
-                statusContainer.innerHTML = `<div class="error-msg">Connection Error</div>`;
-                instaInput.disabled = false;
-                instaConfirm.disabled = false;
-                instaConfirm.textContent = "Verify";
-            }
-        });
+            });
+        }
 
         function renderServiceStatus() {
             const badge = document.getElementById('serviceStatus');
@@ -556,9 +630,11 @@
             if (!currentStatusData || !currentStatusData.statuses) return;
 
             const statuses = currentStatusData.statuses;
-
             const sysStatus = statuses["System"] || "Operational";
             
+            // システム全体のステータス確認
+            const isSystemOffline = (sysStatus === "Offline" || sysStatus === "Maintenance");
+
             if (sysStatus === "Operational" || sysStatus === "Available") {
                 badge.classList.remove('error');
             } else {
@@ -580,6 +656,11 @@
                 const dot = el.querySelector('.status-dot-small');
                 const val = el.querySelector('.status-val');
                 
+                // ボタンの制御
+                // 親要素(.support-item)を探し、その中のボタンを取得
+                const parentItem = el.closest('.support-item');
+                const btn = parentItem ? parentItem.querySelector('.btn-inquiry-small') : null;
+
                 val.classList.remove('loading-animate');
                 val.removeAttribute('data-translate'); 
 
@@ -587,6 +668,8 @@
                 
                 dot.className = 'status-dot-small';
                 const s = String(rawStatus).toLowerCase();
+                
+                // 色分け
                 if (s === 'available' || s === 'online' || s === 'operational') {
                     dot.classList.add('status-green');
                 } else if (s === 'busy' || s === 'slow') {
@@ -594,13 +677,32 @@
                 } else {
                     dot.classList.add('status-red'); 
                 }
+
+                // ボタンの無効化ロジック
+                // 1. システム全体がOfflineなら無効
+                // 2. 個別のステータスがOfflineなら無効
+                if (btn) {
+                    if (isSystemOffline || s === 'offline' || s === 'stopped') {
+                        btn.classList.add('disabled');
+                        // 任意: テキストを変更する場合
+                        // btn.textContent = "停止中";
+                    } else {
+                        btn.classList.remove('disabled');
+                    }
+                }
             };
 
+            // 各サービスのステータス更新
             updatePlatform('status-System', statuses["System"] || "Unknown");
             updatePlatform('status-Instagram', statuses["Instagram"] || "Offline");
             updatePlatform('status-Discord', statuses["Discord"] || "Offline");
             updatePlatform('status-Xbox', statuses["Xbox"] || "Offline");
             updatePlatform('status-PlayStation', statuses["PlayStation"] || "Offline");
+            updatePlatform('status-Weibo', statuses["Weibo"] || "Offline");
+            updatePlatform('status-WeChat', statuses["WeChat"] || "Offline");
+            updatePlatform('status-RedNote', statuses["RedNote"] || "Offline");
+            updatePlatform('status-Douyin', statuses["Douyin"] || "Offline");
+            updatePlatform('status-Bilibili', statuses["Bilibili"] || "Offline");
         }
 
         async function fetchServiceStatus() {
@@ -612,6 +714,8 @@
                     currentStatusData = data;
                     lastFetchTime = new Date();
                     renderServiceStatus();
+                } else {
+                    throw new Error("API Error");
                 }
             } catch (error) {
                 console.error("Status check failed:", error);
@@ -619,6 +723,10 @@
                 const text = badge.querySelector('.status-text');
                 badge.classList.add('error');
                 text.textContent = "Status Check Failed";
+                
+                // 取得失敗時は、すべてのボタンを無効化する
+                const allButtons = document.querySelectorAll('.btn-inquiry-small');
+                allButtons.forEach(btn => btn.classList.add('disabled'));
             }
         }
 
