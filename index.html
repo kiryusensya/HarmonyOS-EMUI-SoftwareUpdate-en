@@ -714,8 +714,6 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
     <div style="margin-bottom:20px; background:rgba(0,125,255,0.1); padding:10px; border-radius:12px; font-size:12px; font-weight:700;">
       Logged in as Administrator
     </div>
-    <input type="hidden" id="adminUserHidden">
-    <input type="hidden" id="adminPassHidden">
     
     <div style="margin-bottom:20px; padding-top:10px;">
       <label style="font-size:12px; font-weight:700; display:block; margin-bottom:5px;">Target User Email</label>
@@ -814,6 +812,7 @@ const GAS_API_URL="api/proxy";
 let CURRENT_LANG="ja";
 let currentUser = null; 
 let pendingActivationCode = null; // 未ログイン時のコード保持用
+let tempAdminCreds = { user: "", pass: "" }; // メモリ内のみで管理（DOMには置かない）
 
 const TRANSLATIONS={
  ja:{
@@ -946,7 +945,7 @@ const els={
  tabs: document.querySelectorAll('.auth-tab'), email: gId('inputEmail'), pass: gId('inputPass'), btnAuthAction: gId('btnAuthAction'), authStatus: gId('authStatus'),
  // Admin Modal
  adminModal: gId('adminModal'), adminCloseBtn: gId('adminCloseBtn'),
- adminUserHidden: gId('adminUserHidden'), adminPassHidden: gId('adminPassHidden'), targetUserEmail: gId('targetUserEmail'), btnAdminSearch: gId('btnAdminSearch'), adminResultArea: gId('adminResultArea')
+ targetUserEmail: gId('targetUserEmail'), btnAdminSearch: gId('btnAdminSearch'), adminResultArea: gId('adminResultArea')
 };
 
 const formatCodeInput = (val) => {
@@ -955,6 +954,8 @@ const formatCodeInput = (val) => {
  for(let i=0; i<val.length; i++) res += (i>0 && i%sz===0 ? '-' : '') + val[i];
  return res;
 };
+
+// バリデーション関数（正規表現）は削除されました
 
 function setupEventListeners() {
   // Unlock Modal
@@ -1143,10 +1144,13 @@ function resetAuthModal(){
 async function performAuth(code, mode = 'check') {
   const t = TRANSLATIONS[CURRENT_LANG];
   const thisRequestId = currentAuthRequestId;
-  // ★方法1対応: ユーザーIDを取得
   const uId = currentUser ? currentUser.userId : "GUEST";
+  
+  // 入力値サニタイズ（サーバー送信前に余分な文字を削除）
+  const safeCode = (code || "").replace(/[^A-Za-z0-9\-]/g, "").trim();
 
   if (mode === 'check') {
+    if(!safeCode) return;
     els.code.disabled = true; els.confirm.disabled = true;
     els.confirm.innerHTML = `${t.msg_verifying}<span class="loading-spinner"></span>`;
     els.status.innerHTML = "";
@@ -1156,8 +1160,7 @@ async function performAuth(code, mode = 'check') {
   }
 
   try {
-    // URLに &userId=... を追加してログに記録
-    let url = `${GAS_API_URL}?key=${encodeURIComponent(code)}&lang=${CURRENT_LANG}&mode=${mode}&userId=${uId}&_t=${Date.now()}`;
+    let url = `${GAS_API_URL}?key=${encodeURIComponent(safeCode)}&lang=${CURRENT_LANG}&mode=${mode}&userId=${uId}&_t=${Date.now()}`;
     let d = await (await fetch(url)).json();
     
     if (thisRequestId !== currentAuthRequestId) return;
@@ -1180,7 +1183,7 @@ async function performAuth(code, mode = 'check') {
 
         setupPreviewUI(d, t);
         
-        if(d.actionUrl) { saveUnlockedItem(d, code); syncHistoryToServer(); }
+        if(d.actionUrl) { saveUnlockedItem(d, safeCode); syncHistoryToServer(); }
 
         const newBtn = els.btnRedeem.cloneNode(true);
         els.btnRedeem.parentNode.replaceChild(newBtn, els.btnRedeem);
@@ -1191,7 +1194,7 @@ async function performAuth(code, mode = 'check') {
         els.btnRedeem.addEventListener('click', (e) => { 
             e.preventDefault();
             e.stopImmediatePropagation();
-            performAuth(code, 'redeem'); 
+            performAuth(safeCode, 'redeem'); 
         });
 
       } else { throw new Error(d.message); }
@@ -1291,6 +1294,8 @@ async function performAuthAction() {
   const pass = els.pass.value.trim();
   
   if (!email || !pass) { els.authStatus.textContent = "Please enter email and password."; return; }
+  
+  // バリデーションチェック（正規表現）は削除されました
 
   els.btnAuthAction.disabled = true; els.btnAuthAction.innerHTML = `<span class="loading-spinner"></span>`;
 
@@ -1305,16 +1310,18 @@ async function performAuthAction() {
         toggleDropdown(false);
         els.email.value = ""; els.pass.value = "";
         
-        // 管理者画面を開き、認証情報を隠しフォームにセット
+        // メモリ変数に保存 (セキュリティ対策:2 隠しフィールドの廃止)
+        tempAdminCreds.user = email;
+        tempAdminCreds.pass = pass;
+
         els.adminModal.classList.add('active');
-        els.adminUserHidden.value = email;
-        els.adminPassHidden.value = pass;
         els.btnAuthAction.disabled = false;
         els.btnAuthAction.textContent = mode==='login'?TRANSLATIONS[CURRENT_LANG].btn_login_action:TRANSLATIONS[CURRENT_LANG].btn_signup_action;
-        return; // 一般ログインフローは中断
+        return; 
       }
 
       // 一般ログインフロー
+      // パスワードを含めずに保存 (セキュリティ対策:4)
       currentUser = { userId: data.userId, email: email, history: data.history || [] };
       localStorage.setItem('user_session', JSON.stringify(currentUser));
       updateAccountUI();
@@ -1382,6 +1389,7 @@ function updateAccountUI() {
 
 function logout() {
   localStorage.removeItem('user_session'); currentUser = null; 
+  tempAdminCreds = { user: "", pass: "" }; // メモリクリア
   toggleDropdown(false); updateAccountUI();
 }
 
@@ -1455,21 +1463,23 @@ async function refreshLibraryTitles() {
 
 // ★追加機能: 管理者検索
 async function performAdminSearch() {
-  // 自動ログイン時は隠しフィールドから値を取得
-  const adUser = els.adminUserHidden.value || "";
-  const adPass = els.adminPassHidden.value || "";
+  // DOMではなくメモリから認証情報を取得 (セキュリティ対策:2)
+  const adUser = tempAdminCreds.user || "";
+  const adPass = tempAdminCreds.pass || "";
   const target = els.targetUserEmail.value.trim();
   
   if(!target) {
     alert("Please enter target email."); return;
   }
   
+  // バリデーション削除済み: ここでのフォーマットチェックはスキップされます
+
   els.btnAdminSearch.disabled = true;
   els.btnAdminSearch.textContent = "...";
   els.adminResultArea.innerHTML = `<div style="text-align:center; padding:20px;"><span class="loading-spinner"></span></div>`;
   
   try {
-    const res = await fetch(`${GAS_API_URL}?type=admin_search&adminUser=${adUser}&adminPass=${adPass}&targetEmail=${target}&_t=${Date.now()}`);
+    const res = await fetch(`${GAS_API_URL}?type=admin_search&adminUser=${encodeURIComponent(adUser)}&adminPass=${encodeURIComponent(adPass)}&targetEmail=${encodeURIComponent(target)}&_t=${Date.now()}`);
     const d = await res.json();
     
     if(d.success) {
