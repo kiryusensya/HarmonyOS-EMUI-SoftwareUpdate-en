@@ -702,40 +702,22 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
     </a>
   </div>
   <footer>
-    <div><span data-translate="footer_admin" id="btnOpenAdmin" style="cursor:pointer;">Enforcement Administrator</span>: <a href="https://developer-kiryu10.vercel.app/" target="_blank" style="color:inherit;text-decoration:none;font-weight:700;">kiryu-sensya</a></div>
+    <div><span data-translate="footer_admin">Enforcement Administrator</span>: <a href="https://developer-kiryu10.vercel.app/" target="_blank" style="color:inherit;text-decoration:none;font-weight:700;">kiryu-sensya</a></div>
     <div style="opacity:0.5; margin-top:5px;">© 2019-2026 kiryu-sensya All Rights Reserved</div>
   </footer>
-</div>
-
-<div id="libraryModal" class="modal-overlay">
-  <div class="modal-sheet">
-    <div style="position:absolute; top:24px; right:24px; cursor:pointer; opacity:0.6;" id="libCloseBtn"><i data-lucide="x" size="24"></i></div>
-    
-    <div class="lib-modal-header">
-      <div class="lib-header-left">
-        <div class="lib-header-icon"><i data-lucide="package-open" size="28"></i></div>
-        <div class="lib-header-title" data-translate="label_library">Library</div>
-      </div>
-    </div>
-    
-    <ul id="libraryList" class="lib-list-scroll">
-      </ul>
-  </div>
 </div>
 
 <div id="adminModal" class="modal-overlay">
   <div class="modal-sheet">
     <div style="position:absolute; top:24px; right:24px; cursor:pointer; opacity:0.6;" id="adminCloseBtn"><i data-lucide="x" size="24"></i></div>
     <h2 style="font-size:24px; font-weight:800; margin-bottom:20px;">Admin Console</h2>
-    <div style="margin-bottom:20px;">
-      <label style="font-size:12px; font-weight:700; display:block; margin-bottom:5px;">Admin ID</label>
-      <input type="text" id="adminUser" class="form-input" placeholder="111">
+    <div style="margin-bottom:20px; background:rgba(0,125,255,0.1); padding:10px; border-radius:12px; font-size:12px; font-weight:700;">
+      Logged in as Administrator
     </div>
-    <div style="margin-bottom:20px;">
-      <label style="font-size:12px; font-weight:700; display:block; margin-bottom:5px;">Admin Pass</label>
-      <input type="password" id="adminPass" class="form-input" placeholder="42A">
-    </div>
-    <div style="margin-bottom:20px; border-top:1px solid rgba(128,128,128,0.2); padding-top:20px;">
+    <input type="hidden" id="adminUserHidden">
+    <input type="hidden" id="adminPassHidden">
+    
+    <div style="margin-bottom:20px; padding-top:10px;">
       <label style="font-size:12px; font-weight:700; display:block; margin-bottom:5px;">Target User Email</label>
       <div style="display:flex; gap:10px;">
         <input type="email" id="targetUserEmail" class="form-input" placeholder="user@example.com">
@@ -745,6 +727,19 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
     <div id="adminResultArea" style="max-height:300px; overflow-y:auto; border:1px solid rgba(128,128,128,0.1); border-radius:12px; padding:10px;">
       <p style="text-align:center; opacity:0.5; font-size:12px;">Results will appear here...</p>
     </div>
+  </div>
+</div>
+
+<div id="libraryModal" class="modal-overlay">
+  <div class="modal-sheet">
+    <div style="position:absolute; top:24px; right:24px; cursor:pointer; opacity:0.6;" id="libCloseBtn"><i data-lucide="x" size="24"></i></div>
+    <div class="lib-modal-header">
+      <div class="lib-header-left">
+        <div class="lib-header-icon"><i data-lucide="package-open" size="28"></i></div>
+        <div class="lib-header-title" data-translate="label_library">Library</div>
+      </div>
+    </div>
+    <ul id="libraryList" class="lib-list-scroll"></ul>
   </div>
 </div>
 
@@ -795,7 +790,7 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
     <div style="position:absolute; top:20px; right:20px; cursor:pointer;" id="newsCloseX"><i data-lucide="x" size="24"></i></div>
     <h2 data-translate="news_title" style="margin:0 0 20px 0; color:var(--modal-text-main);">News Feed</h2>
     <ul id="newsList" style="list-style:none; padding:0; max-height:400px; overflow-y:auto;">
-      <li style="text-align:center; opacity:0.6;"><span data-translate="news_loading">Loading</span><span class="loading-dots"></span></li>
+      <li style="text-align:center; opacity:0.6;"><span data-translate="news_loading">Loading</span><span class="loading-spinner"></span></li>
     </ul>
   </div>
 </div>
@@ -950,8 +945,8 @@ const els={
  libraryModal: gId('libraryModal'), libCloseBtn: gId('libCloseBtn'), libraryList: gId('libraryList'),
  tabs: document.querySelectorAll('.auth-tab'), email: gId('inputEmail'), pass: gId('inputPass'), btnAuthAction: gId('btnAuthAction'), authStatus: gId('authStatus'),
  // Admin Modal
- btnOpenAdmin: gId('btnOpenAdmin'), adminModal: gId('adminModal'), adminCloseBtn: gId('adminCloseBtn'),
- adminUser: gId('adminUser'), adminPass: gId('adminPass'), targetUserEmail: gId('targetUserEmail'), btnAdminSearch: gId('btnAdminSearch'), adminResultArea: gId('adminResultArea')
+ adminModal: gId('adminModal'), adminCloseBtn: gId('adminCloseBtn'),
+ adminUserHidden: gId('adminUserHidden'), adminPassHidden: gId('adminPassHidden'), targetUserEmail: gId('targetUserEmail'), btnAdminSearch: gId('btnAdminSearch'), adminResultArea: gId('adminResultArea')
 };
 
 const formatCodeInput = (val) => {
@@ -977,7 +972,6 @@ function setupEventListeners() {
   setListener(els.newsModal, 'click', (e) => { if(e.target === els.newsModal) els.newsModal.classList.remove('active'); });
 
   // Admin Modal
-  setListener(els.btnOpenAdmin, 'click', () => els.adminModal.classList.add('active'));
   setListener(els.adminCloseBtn, 'click', () => els.adminModal.classList.remove('active'));
   setListener(els.adminModal, 'click', (e) => { if(e.target === els.adminModal) els.adminModal.classList.remove('active'); });
   setListener(els.btnAdminSearch, 'click', performAdminSearch);
@@ -1306,23 +1300,33 @@ async function performAuthAction() {
     const data = await res.json();
 
     if (data.success) {
-      // Save email to session
+      // ★管理者判定
+      if (data.isAdmin) {
+        toggleDropdown(false);
+        els.email.value = ""; els.pass.value = "";
+        
+        // 管理者画面を開き、認証情報を隠しフォームにセット
+        els.adminModal.classList.add('active');
+        els.adminUserHidden.value = email;
+        els.adminPassHidden.value = pass;
+        els.btnAuthAction.disabled = false;
+        els.btnAuthAction.textContent = mode==='login'?TRANSLATIONS[CURRENT_LANG].btn_login_action:TRANSLATIONS[CURRENT_LANG].btn_signup_action;
+        return; // 一般ログインフローは中断
+      }
+
+      // 一般ログインフロー
       currentUser = { userId: data.userId, email: email, history: data.history || [] };
       localStorage.setItem('user_session', JSON.stringify(currentUser));
       updateAccountUI();
       els.email.value = ""; els.pass.value = "";
       
-      // 未ログイン状態でのコード入力があった場合、ログイン成功後に自動実行
       if (pendingActivationCode) {
          setTimeout(() => {
-             toggleDropdown(false); // メニューを閉じる
-             openAuthModal(); // 認証画面を開く(ここでresetAuthModalが呼ばれる)
-             
-             // resetAuthModalの後で値をセットしないと消えてしまうため、ここでセット
+             toggleDropdown(false); 
+             openAuthModal(); 
              const codeToUse = formatCodeInput(pendingActivationCode);
              els.code.value = codeToUse;
-             
-             performAuth(codeToUse); // 自動実行
+             performAuth(codeToUse); 
              pendingActivationCode = null;
          }, 500);
       }
@@ -1395,23 +1399,18 @@ async function saveUnlockedItem(data, code) {
     imageUrl: data.imageUrl 
   };
 
-  // 重複チェックなどは既存のまま
   const existingIndex = currentUser.history.findIndex(h => h.code === code);
   if (existingIndex > -1) { currentUser.history[existingIndex] = newItem; } 
   else { currentUser.history.unshift(newItem); }
   
-  // 1. まずローカル保存（UIの即時反映のため）
   localStorage.setItem('user_session', JSON.stringify(currentUser));
-  
-  // 2. サーバーへ同期（awaitはしないが、裏で走らせる）
   syncHistoryToServer();
 }
-// ★ 履歴をサーバーに送信（保存）
+
 async function syncHistoryToServer() {
   if (!currentUser) return;
   try {
     const jsonHistory = JSON.stringify(currentUser.history);
-    // 送信して完了を待つ
     await fetch(`${GAS_API_URL}?type=sync&userId=${currentUser.userId}&history=${encodeURIComponent(jsonHistory)}`);
     console.log("History synced to server.");
   } catch(e) {
@@ -1419,66 +1418,50 @@ async function syncHistoryToServer() {
   }
 }
 
-// ★ サーバーから最新の履歴を取得（新規追加）
 async function fetchUserHistory() {
   if (!currentUser) return;
-  
-  // ライブラリリストを一時的にローディング表示に
   els.libraryList.innerHTML = `<li style="text-align:center;padding:20px;opacity:0.5;"><span class="loading-spinner"></span> Updating...</li>`;
-
   try {
     const res = await fetch(`${GAS_API_URL}?type=get_history&userId=${currentUser.userId}&_t=${Date.now()}`);
     const data = await res.json();
-
     if (data.success && Array.isArray(data.history)) {
-      // サーバーのデータを正としてローカルを更新
       currentUser.history = data.history;
       localStorage.setItem('user_session', JSON.stringify(currentUser));
-      updateAccountUI(); // UI再描画
+      updateAccountUI();
     }
   } catch (e) {
-    console.error("Failed to fetch history:", e);
-    // 失敗してもローカルデータでUIは復旧させる
     updateAccountUI();
   }
 }
 
 async function refreshLibraryTitles() {
     if (!currentUser || !currentUser.history || currentUser.history.length === 0) return;
-
     const promises = currentUser.history.map(async (item) => {
         try {
-            // 現在の言語設定(CURRENT_LANG)で再問い合わせ
             const res = await fetch(`${GAS_API_URL}?key=${encodeURIComponent(item.code)}&lang=${CURRENT_LANG}&mode=check&_t=${Date.now()}`);
             const data = await res.json();
-            
             if (data.success) {
-                // タイトルと画像を更新 (bundleLabel優先)
                 item.title = data.bundleLabel || data.message;
                 if(data.imageUrl) item.imageUrl = data.imageUrl;
                 item.lang = CURRENT_LANG;
             }
-        } catch (e) {
-            // エラー時は何もしない
-        }
+        } catch (e) {}
     });
-
     await Promise.all(promises);
-
     localStorage.setItem('user_session', JSON.stringify(currentUser));
     updateAccountUI();
-    // サーバーにも最新状態(タイトル等更新済み)を同期
     syncHistoryToServer();
 }
 
 // ★追加機能: 管理者検索
 async function performAdminSearch() {
-  const adUser = els.adminUser.value.trim();
-  const adPass = els.adminPass.value.trim();
+  // 自動ログイン時は隠しフィールドから値を取得
+  const adUser = els.adminUserHidden.value || "";
+  const adPass = els.adminPassHidden.value || "";
   const target = els.targetUserEmail.value.trim();
   
-  if(!adUser || !adPass || !target) {
-    alert("Please fill all admin fields."); return;
+  if(!target) {
+    alert("Please enter target email."); return;
   }
   
   els.btnAdminSearch.disabled = true;
