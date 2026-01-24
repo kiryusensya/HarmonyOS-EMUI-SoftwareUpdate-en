@@ -1,10 +1,9 @@
 {
+  "name": "my-project",
+  "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    @upstash/ratelimit
-    @upstash/redis
+    "@upstash/ratelimit": "latest",
+    "@upstash/redis": "latest"
   }
 }
