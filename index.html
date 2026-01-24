@@ -617,7 +617,7 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
 <div class="wrapper" id="mainContainer" style="opacity:0;">
   <header>
     <div class="brand"><i data-lucide="graduation-cap"></i> <span data-translate="header_brand">kiryu-sensya</span></div>
-    
+     
     <div style="display:flex; gap:10px; position:relative;">
       <div class="theme-pill" id="btnOpenAccount">
         <i data-lucide="user-round"></i> 
@@ -714,11 +714,11 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
     <div style="margin-bottom:20px; background:rgba(0,125,255,0.1); padding:10px; border-radius:12px; font-size:12px; font-weight:700;">
       Logged in as Administrator
     </div>
-    
+     
     <div style="margin-bottom:20px; padding-top:10px;">
-      <label style="font-size:12px; font-weight:700; display:block; margin-bottom:5px;">Target User Email</label>
+      <label style="font-size:12px; font-weight:700; display:block; margin-bottom:5px;">Target Username</label>
       <div style="display:flex; gap:10px;">
-        <input type="email" id="targetUserEmail" class="form-input" placeholder="user@example.com">
+        <input type="email" id="targetUserEmail" class="form-input" placeholder="Username">
         <button id="btnAdminSearch" class="btn-primary" style="width:100px; margin-top:0;">Search</button>
       </div>
     </div>
@@ -788,7 +788,7 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
     <div style="position:absolute; top:20px; right:20px; cursor:pointer;" id="newsCloseX"><i data-lucide="x" size="24"></i></div>
     <h2 data-translate="news_title" style="margin:0 0 20px 0; color:var(--modal-text-main);">News Feed</h2>
     <ul id="newsList" style="list-style:none; padding:0; max-height:400px; overflow-y:auto;">
-      <li style="text-align:center; opacity:0.6;"><span data-translate="news_loading">Loading</span><span class="loading-spinner"></span></li>
+      <li style="text-align:center; opacity:0.6;"><span data-translate="news_loading" class="loading-dots">Loading</span></li>
     </ul>
   </div>
 </div>
@@ -827,11 +827,12 @@ const TRANSLATIONS={
   success_title_preview:"コンテンツの確認", success_title_final:"認証成功",
   btn_close:"閉じる",btn_continue:"認証する",btn_download:"ダウンロード",news_title:"最新情報",news_label:"履歴",news_loading:"更新を確認中",
   footer_admin:"システム管理者",
-  menu_login: "ログイン", menu_account: "アカウント",
+  menu_login: "ログイン", menu_account: "アカウント", lib_updating: "読み込み中"
   label_logged_in: "ユーザーID", label_library: "ライブラリ", label_welcome: "ようこそ", label_sync_desc: "ログインして同期を開始",
   tab_login: "ログイン", tab_signup: "新規登録", form_email: "ユーザー名", form_pass: "パスワード",
   btn_login_action: "ログイン", btn_signup_action: "登録する", btn_logout: "ログアウト",
-  btn_open: "開く", msg_empty_lib: "コンテンツがありません"
+  btn_open: "開く", msg_empty_lib: "コンテンツがありません",
+  msg_logging_in: "ログイン中", msg_signing_up: "新規作成中"
  },
  en:{
   header_brand:"kr_Dev E", hero_title:"Activation", hero_sub:"Manage your access and resources.",
@@ -845,11 +846,12 @@ const TRANSLATIONS={
   success_title_preview:"Confirm Content", success_title_final:"Activation Successful",
   btn_close:"Close",btn_continue:"Confirm",btn_download:"Download",news_title:"News",news_label:"Log",news_loading:"Checking for updates",
   footer_admin:"Enforcement Administrator",
-  menu_login: "Login", menu_account: "Account",
+  menu_login: "Login", menu_account: "Account", lib_updating: "loading"
   label_logged_in: "USER ID", label_library: "Library", label_welcome: "Welcome", label_sync_desc: "Login to sync content.",
   tab_login: "Login", tab_signup: "Sign Up", form_email: "User Number", form_pass: "Password",
   btn_login_action: "Login", btn_signup_action: "Sign Up", btn_logout: "Log Out",
-  btn_open: "Open", msg_empty_lib: "No content yet"
+  btn_open: "Open", msg_empty_lib: "No content yet",
+  msg_logging_in: "Logging in", msg_signing_up: "Creating account"
  },
  zh:{ 
   header_brand:"kr_开发者版", hero_title:"个人代码检查中心", hero_sub:"管理您的访问权限和资源。", 
@@ -863,11 +865,12 @@ const TRANSLATIONS={
   success_title_preview:"确认内容", success_title_final:"激活完成",
   btn_close:"关闭",btn_continue:"确认",btn_download:"下载",news_title:"最新消息",news_label:"日志",news_loading:"正在检查更新", 
   footer_admin:"系统管理长",
-  menu_login: "登录", menu_account: "账户",
+  menu_login: "登录", menu_account: "账户", lib_updating: "正在加载"
   label_logged_in: "用户ID", label_library: "我的库", label_welcome: "欢迎", label_sync_desc: "登录以同步内容",
   tab_login: "登录", tab_signup: "注册", form_email: "账户名", form_pass: "密码",
   btn_login_action: "登录", btn_signup_action: "注册", btn_logout: "登出",
-  btn_open: "打开", msg_empty_lib: "暂无内容"
+  btn_open: "打开", msg_empty_lib: "暂无内容",
+  msg_logging_in: "登录中", msg_signing_up: "注册中"
  },
  "zh-TW":{ 
   header_brand:"kr_開發者版", hero_title:"個人代碼檢查中心", hero_sub:"管理您的存取權限與資源。", 
@@ -881,11 +884,12 @@ const TRANSLATIONS={
   success_title_preview:"確認內容", success_title_final:"激活完成",
   btn_close:"關閉",btn_continue:"確認",btn_download:"下載",news_title:"最新消息",news_label:"日誌",news_loading:"正在檢查更新", 
   footer_admin:"系統管理長",
-  menu_login: "登入", menu_account: "帳戶",
+  menu_login: "登入", menu_account: "帳戶", lib_updating: "載入中"
   label_logged_in: "用戶ID", label_library: "我的庫", label_welcome: "歡迎", label_sync_desc: "登入以同步內容",
   tab_login: "登入", tab_signup: "註冊", form_email: "帳號名稱", form_pass: "密碼",
   btn_login_action: "登入", btn_signup_action: "註冊", btn_logout: "登出",
-  btn_open: "開啟", msg_empty_lib: "暫無內容"
+  btn_open: "開啟", msg_empty_lib: "暫無內容",
+  msg_logging_in: "登入中", msg_signing_up: "註冊中"
  },
  ko:{ 
   header_brand:"kr_개발자용", hero_title:"시스템 인증 포털", hero_sub:"액세스 권한 및 리소스 관리", 
@@ -897,13 +901,14 @@ const TRANSLATIONS={
   msg_invalid:"잘못된 코드",msg_used:"사용된 코드",msg_error:"오류", 
   success_badge:"코드 인증됨",
   success_title_preview:"콘텐츠 확인", success_title_final:"활성화 완료",
-  btn_close:"닫기",btn_continue:"확인",btn_download:"다운로드",news_title:"뉴스",news_label:"로그",news_loading:"로딩 중", 
+  btn_close:"닫기",btn_continue:"확인",btn_download:"다운로드",news_title:"뉴스",news_label:"로그",news_loading:"업데이트 확인 중", 
   footer_admin:"시스템 관리자",
-  menu_login: "로그인", menu_account: "계정",
+  menu_login: "로그인", menu_account: "계정", lib_updating: "로딩 중"
   label_logged_in: "사용자 ID", label_library: "라이브러리", label_welcome: "환영합니다", label_sync_desc: "동기화하려면 로그인",
   tab_login: "로그인", tab_signup: "가입", form_email: "계정 이름", form_pass: "비밀번호",
   btn_login_action: "로그인", btn_signup_action: "가입", btn_logout: "로그아웃",
-  btn_open: "열기", msg_empty_lib: "콘텐츠 없음"
+  btn_open: "열기", msg_empty_lib: "콘텐츠 없음",
+  msg_logging_in: "로그인 중", msg_signing_up: "계정 생성 중"
  },
  ru:{ 
   header_brand:"kr_Разработчик", hero_title:"Активация", hero_sub:"Управление доступом и ресурсами", 
@@ -915,13 +920,14 @@ const TRANSLATIONS={
       msg_invalid:"Неверный код",msg_used:"Использован",msg_error:"Ошибка", 
       success_badge:"Подтверждено", 
       success_title_preview:"Проверка контента", success_title_final:"Успешно",
-      btn_close:"Закрыть",btn_continue:"обмен",btn_download:"Скачать",news_title:"Новости",news_label:"Лог",news_loading:"Загрузка", 
+      btn_close:"Закрыть",btn_continue:"обмен",btn_download:"Скачать",news_title:"Новости",news_label:"Лог",news_loading:"Проверка обновлений", 
       footer_admin:"Администратор",
-      menu_login: "Вход", menu_account: "Аккаунт",
+      menu_login: "Вход", menu_account: "Аккаунт", lib_updating: "Загрузка"
       label_logged_in: "ID пользователя", label_library: "Библиотека", label_welcome: "Привет", label_sync_desc: "Войдите для синхронизации",
       tab_login: "Вход", tab_signup: "Регистрация", form_email: "Название счета", form_pass: "Пароль",
       btn_login_action: "Войти", btn_signup_action: "Создать", btn_logout: "Выйти",
-      btn_open: "Открыть", msg_empty_lib: "Нет контента"
+      btn_open: "Открыть", msg_empty_lib: "Нет контента",
+      msg_logging_in: "Вход", msg_signing_up: "Создание"
  }
 };
 
@@ -1108,7 +1114,8 @@ function updateLanguage(lang){
 async function fetchNews(){
  if(!els.newsList)return;
  const t=TRANSLATIONS[CURRENT_LANG];
- els.newsList.innerHTML=`<li style="text-align:center;opacity:0.6;padding:20px;">${t.news_loading||"Loading"}<span class="loading-spinner"></span></li>`;
+ // ここを変更: スピナーをloading-dotsに変更
+ els.newsList.innerHTML=`<li style="text-align:center;opacity:0.6;padding:20px;"><span class="loading-dots">${t.news_loading||"Loading"}</span></li>`;
  try{
  const d = await(await fetch(`${GAS_API_URL}?type=news&lang=${CURRENT_LANG}&_t=${Date.now()}`)).json();
  els.newsList.innerHTML='';
@@ -1152,7 +1159,8 @@ async function performAuth(code, mode = 'check') {
   if (mode === 'check') {
     if(!safeCode) return;
     els.code.disabled = true; els.confirm.disabled = true;
-    els.confirm.innerHTML = `${t.msg_verifying}<span class="loading-spinner"></span>`;
+    // ここを変更: スピナーをloading-dotsに変更
+    els.confirm.innerHTML = `<span class="loading-dots">${t.msg_verifying}</span>`;
     els.status.innerHTML = "";
   } else if (mode === 'redeem') {
     els.btnRedeem.disabled = true;
@@ -1227,7 +1235,7 @@ async function performAuth(code, mode = 'check') {
 
 function setupPreviewUI(d, t) {
  els.sBadge.classList.remove('visible'); els.btnRedeem.style.display = 'flex'; els.btnDownload.style.display = 'none'; 
- els.sProdDisplay.style.display = 'none'; els.sInfoSec.style.display = 'block'; els.sTitle.style.display = '';                
+ els.sProdDisplay.style.display = 'none'; els.sInfoSec.style.display = 'block'; els.sTitle.style.display = '';                 
  els.sTitle.textContent = t.success_title_preview; 
  els.sProdName.textContent = d.bundleLabel; els.sNameDisp.textContent = d.message;        
  els.sExtra.innerHTML = d.extraInfo ? d.extraInfo.replace(/\n/g, '<br>') : ""; 
@@ -1292,12 +1300,15 @@ async function performAuthAction() {
   const mode = document.querySelector('.auth-tab.active').dataset.tab; 
   const email = els.email.value.trim();
   const pass = els.pass.value.trim();
+  const t = TRANSLATIONS[CURRENT_LANG];
   
   if (!email || !pass) { els.authStatus.textContent = "Please enter email and password."; return; }
   
   // バリデーションチェック（正規表現）は削除されました
 
-  els.btnAuthAction.disabled = true; els.btnAuthAction.innerHTML = `<span class="loading-spinner"></span>`;
+  els.btnAuthAction.disabled = true;
+  // ここを変更: スピナーをloading-dotsに変更し、翻訳されたメッセージを表示
+  els.btnAuthAction.innerHTML = `<span class="loading-dots">${mode === 'login' ? t.msg_logging_in : t.msg_signing_up}</span>`;
 
   try {
     const actionType = mode === 'login' ? 'user_login' : 'register';
@@ -1428,7 +1439,12 @@ async function syncHistoryToServer() {
 
 async function fetchUserHistory() {
   if (!currentUser) return;
-  els.libraryList.innerHTML = `<li style="text-align:center;padding:20px;opacity:0.5;"><span class="loading-spinner"></span> Updating...</li>`;
+
+  　const t = TRANSLATIONS[CURRENT_LANG];
+  // ここを変更: スピナーをloading-dotsに変更
+  els.libraryList.innerHTML = `<li style="text-align:center;padding:20px;opacity:0.5;">
+    <span class="loading-dots">${t.lib_updating}</span>
+  </li>`;
   try {
     const res = await fetch(`${GAS_API_URL}?type=get_history&userId=${currentUser.userId}&_t=${Date.now()}`);
     const data = await res.json();
@@ -1476,7 +1492,8 @@ async function performAdminSearch() {
 
   els.btnAdminSearch.disabled = true;
   els.btnAdminSearch.textContent = "...";
-  els.adminResultArea.innerHTML = `<div style="text-align:center; padding:20px;"><span class="loading-spinner"></span></div>`;
+  // ここを変更: スピナーをloading-dotsに変更
+  els.adminResultArea.innerHTML = `<div style="text-align:center; padding:20px;"><span class="loading-dots">Searching</span></div>`;
   
   try {
     const res = await fetch(`${GAS_API_URL}?type=admin_search&adminUser=${encodeURIComponent(adUser)}&adminPass=${encodeURIComponent(adPass)}&targetEmail=${encodeURIComponent(target)}&_t=${Date.now()}`);
