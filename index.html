@@ -844,7 +844,7 @@ const TRANSLATIONS={
       modal_title:"Проверка",modal_sub:"Введите код",modal_placeholder:"Код активации",modal_btn_auth:"Подтверждение", 
       msg_verifying:"Подтверждение",msg_success_btn:"Успех", 
       msg_invalid:"Неверный код",msg_used:"Использован",msg_error:"Ошибка", 
-      success_badge:"Подтверждено",
+      success_badge:"Подтверждено", 
       success_title_preview:"Проверка контента", success_title_final:"Успешно",
       btn_close:"Закрыть",btn_continue:"обмен",btn_download:"Скачать",news_title:"Новости",news_label:"Лог",news_loading:"Загрузка", 
       footer_admin:"Администратор",
@@ -1105,7 +1105,12 @@ async function performAuth(code, mode = 'check') {
         lucide.createIcons();
         els.btnRedeem.disabled = false;
         // リスナー追加前にクローンしているので重複登録は防げている
-        els.btnRedeem.addEventListener('click', () => { performAuth(code, 'redeem'); });
+        // 自動認証後の「続行」ボタンでエラーにならないよう、正しいcode変数をクロージャに閉じ込める
+        els.btnRedeem.addEventListener('click', (e) => { 
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            performAuth(code, 'redeem'); 
+        });
 
       } else { throw new Error(d.message); }
     } else if (mode === 'redeem') {
@@ -1222,9 +1227,13 @@ async function performAuthAction() {
       if (pendingActivationCode) {
          setTimeout(() => {
              toggleDropdown(false); // メニューを閉じる
-             openAuthModal(); // 認証画面を開く
-             els.code.value = formatCodeInput(pendingActivationCode);
-             performAuth(els.code.value); // 自動実行
+             openAuthModal(); // 認証画面を開く(ここでresetAuthModalが呼ばれる)
+             
+             // resetAuthModalの後で値をセットしないと消えてしまうため、ここでセット
+             const codeToUse = formatCodeInput(pendingActivationCode);
+             els.code.value = codeToUse;
+             
+             performAuth(codeToUse); // 自動実行
              pendingActivationCode = null;
          }, 500);
       }
@@ -1240,7 +1249,6 @@ async function performAuthAction() {
 function updateAccountUI() {
   const t = TRANSLATIONS[CURRENT_LANG];
   if (currentUser) {
-    // els.accountLabel は削除済みのため、テキスト更新処理を削除
     els.loggedOutView.style.display = 'none';
     els.loggedInView.style.display = 'block';
     els.displayUserId.textContent = currentUser.userId;
@@ -1272,7 +1280,6 @@ function updateAccountUI() {
       lucide.createIcons();
     }
   } else {
-    // els.accountLabel は削除済みのため、テキスト更新処理を削除
     els.loggedOutView.style.display = 'block';
     els.loggedInView.style.display = 'none';
     const mode = document.querySelector('.auth-tab.active')?.dataset.tab || 'login';
@@ -1315,21 +1322,26 @@ async function refreshLibraryTitles() {
 
     const promises = currentUser.history.map(async (item) => {
         try {
+            // 現在の言語設定(CURRENT_LANG)で再問い合わせ
             const res = await fetch(`${GAS_API_URL}?key=${encodeURIComponent(item.code)}&lang=${CURRENT_LANG}&mode=check&_t=${Date.now()}`);
             const data = await res.json();
             
             if (data.success) {
+                // タイトルと画像を更新 (bundleLabel優先)
                 item.title = data.bundleLabel || data.message;
                 if(data.imageUrl) item.imageUrl = data.imageUrl;
                 item.lang = CURRENT_LANG;
             }
-        } catch (e) {}
+        } catch (e) {
+            // エラー時は何もしない
+        }
     });
 
     await Promise.all(promises);
 
     localStorage.setItem('user_session', JSON.stringify(currentUser));
     updateAccountUI();
+    // サーバーにも最新状態(タイトル等更新済み)を同期
     syncHistoryToServer();
 }
 
