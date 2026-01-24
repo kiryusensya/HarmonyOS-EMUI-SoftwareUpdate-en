@@ -1445,6 +1445,7 @@ async function fetchUserHistory() {
   els.libraryList.innerHTML = `<li style="text-align:center;padding:20px;opacity:0.5;">
     <span class="loading-dots">${t.lib_updating}</span>
   </li>`;
+}
   try {
     const res = await fetch(`${GAS_API_URL}?type=get_history&userId=${currentUser.userId}&_t=${Date.now()}`);
     const data = await res.json();
