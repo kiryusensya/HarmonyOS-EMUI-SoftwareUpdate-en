@@ -540,11 +540,37 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
 
 /* スマホ用ライブラリ表示調整 */
 @media (max-width: 480px) {
-  .lib-item-card { padding: 8px; }
-  .lib-card-thumb { width: 40px; height: 40px; }
-  .lib-card-btn { width: 36px; height: 36px; }
-  .lib-card-title { font-size: 11px; white-space: nowrap; }
-  .lib-card-meta { font-size: 9px; white-space: nowrap; }
+  /* Library Modal Width Adjustment */
+  #libraryModal .modal-sheet {
+    width: 96%; /* Increase modal width to give more space */
+    padding: 20px; /* Reduce modal padding */
+  }
+
+  /* Item Card Adjustments */
+  .lib-item-card {
+    padding: 8px;
+    /* Ensure the card takes full width available */
+  }
+  .lib-card-thumb {
+    width: 32px; /* Shrink image further */
+    height: 32px;
+  }
+  .lib-card-btn {
+    width: 32px; /* Shrink button further */
+    height: 32px;
+  }
+  .lib-card-left {
+    gap: 8px; /* Reduce gap */
+  }
+  .lib-card-title {
+    font-size: 9px; /* Very small to fit "Bundle Name" */
+    white-space: nowrap;
+  }
+  .lib-card-meta {
+    font-size: 8px; /* Very small for code */
+    white-space: nowrap;
+    letter-spacing: -0.5px; /* Tighten spacing */
+  }
 }
 
 /* --- Mobile Adjustment --- */
@@ -883,7 +909,7 @@ const els={
  langWrapper: gId('customLangWrapper'), langTrigger: gId('langTrigger'), langMenu: gId('langMenu'), currentLangLabel: gId('currentLangLabel'),
  // Account Dropdown
  accountDropdown: gId('accountDropdown'), openAccount: gId('btnOpenAccount'),
- loggedInView: gId('loggedInView'), loggedOutView: gId('loggedOutView'), displayUserEmail: gId('displayUserEmail'),
+ loggedInView: gId('loggedInView'), loggedOutView: gId('loggedOutView'), displayUserId: gId('displayUserId'), displayUserEmail: gId('displayUserEmail'),
  btnLogout: gId('btnLogout'), btnShowLibrary: gId('btnShowLibrary'), 
  // Library Modal
  libraryModal: gId('libraryModal'), libCloseBtn: gId('libCloseBtn'), libraryList: gId('libraryList'),
