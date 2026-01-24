@@ -617,7 +617,7 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
 <div class="wrapper" id="mainContainer" style="opacity:0;">
   <header>
     <div class="brand"><i data-lucide="graduation-cap"></i> <span data-translate="header_brand">kiryu-sensya</span></div>
-     
+      
     <div style="display:flex; gap:10px; position:relative;">
       <div class="theme-pill" id="btnOpenAccount">
         <i data-lucide="user-round"></i> 
@@ -713,7 +713,7 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
     <div style="margin-bottom:20px; background:rgba(0,125,255,0.1); padding:10px; border-radius:12px; font-size:12px; font-weight:700;">
       Logged in as Administrator
     </div>
-     
+      
     <div style="margin-bottom:20px; padding-top:10px;">
       <label style="font-size:12px; font-weight:700; display:block; margin-bottom:5px;">Target Username</label>
       <div style="display:flex; gap:10px;">
@@ -811,6 +811,7 @@ const GAS_API_URL="api/proxy";
 let CURRENT_LANG="ja";
 let currentUser = null; 
 let pendingActivationCode = null; // 未ログイン時のコード保持用
+let pendingAction = null; // ★追加: 未ログイン時の操作保持用
 let tempAdminCreds = { user: "", pass: "" }; // メモリ内のみで管理（DOMには置かない）
 
 const TRANSLATIONS={
@@ -965,7 +966,13 @@ const formatCodeInput = (val) => {
 function setupEventListeners() {
   // Unlock Modal
   setListener(els.openAuth, 'click', () => {
-    if(!currentUser) { toggleDropdown(true); return; }
+    if(!currentUser) { 
+      pendingAction = 'open_activation'; // ★フラグを立てる
+      toggleDropdown(true); 
+      // ユーザービリティ向上のため入力欄にフォーカス
+      setTimeout(() => els.email.focus(), 300);
+      return; 
+    }
     openAuthModal();
   });
   setListener(els.closeAuth, 'click', closeAuthModal);
@@ -1003,7 +1010,7 @@ function setupEventListeners() {
   setListener(els.btnShowLibrary, 'click', () => {
     toggleDropdown(false);
     els.libraryModal.classList.add('active');
-    
+     
     // ライブラリを開いたときにサーバーから最新の履歴を取得
     if (typeof fetchUserHistory === 'function') {
         fetchUserHistory();
@@ -1234,7 +1241,7 @@ async function performAuth(code, mode = 'check') {
 
 function setupPreviewUI(d, t) {
  els.sBadge.classList.remove('visible'); els.btnRedeem.style.display = 'flex'; els.btnDownload.style.display = 'none'; 
- els.sProdDisplay.style.display = 'none'; els.sInfoSec.style.display = 'block'; els.sTitle.style.display = '';                 
+ els.sProdDisplay.style.display = 'none'; els.sInfoSec.style.display = 'block'; els.sTitle.style.display = '';                  
  els.sTitle.textContent = t.success_title_preview; 
  els.sProdName.textContent = d.bundleLabel; els.sNameDisp.textContent = d.message;        
  els.sExtra.innerHTML = d.extraInfo ? d.extraInfo.replace(/\n/g, '<br>') : ""; 
@@ -1337,15 +1344,24 @@ async function performAuthAction() {
       updateAccountUI();
       els.email.value = ""; els.pass.value = "";
       
+      // 1. URLパラメータからのコードがある場合の処理
       if (pendingActivationCode) {
-         setTimeout(() => {
-             toggleDropdown(false); 
-             openAuthModal(); 
-             const codeToUse = formatCodeInput(pendingActivationCode);
-             els.code.value = codeToUse;
-             performAuth(codeToUse); 
-             pendingActivationCode = null;
-         }, 500);
+          setTimeout(() => {
+              toggleDropdown(false); 
+              openAuthModal(); 
+              const codeToUse = formatCodeInput(pendingActivationCode);
+              els.code.value = codeToUse;
+              performAuth(codeToUse); 
+              pendingActivationCode = null;
+          }, 500);
+      }
+      // 2. アクティベーションカードをクリックしてログインした場合の処理 (新規追加)
+      else if (pendingAction === 'open_activation') {
+          setTimeout(() => {
+              toggleDropdown(false);
+              openAuthModal();
+              pendingAction = null;
+          }, 500);
       }
 
     } else { els.authStatus.textContent = data.message || "Error occurred."; }
