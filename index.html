@@ -1389,6 +1389,10 @@ function updateAccountUI() {
       currentUser.history.forEach(item => {
         const li = document.createElement('li');
         li.className = 'lib-item-card';
+
+        // ★修正: アイコン名をアイテムから取得（なければ download）
+        const iconName = item.icon || 'download';
+
         const img = item.imageUrl && item.imageUrl.startsWith('http') 
           ? `<img src="${item.imageUrl}" class="lib-card-thumb">` 
           : `<div class="lib-card-thumb" style="display:flex;align-items:center;justify-content:center;color:#999;"><i data-lucide="image"></i></div>`;
@@ -1401,12 +1405,21 @@ function updateAccountUI() {
               <div class="lib-card-title">${item.title}</div>
             </div>
           </div>
-          <a href="${item.url}" target="_blank" class="lib-card-btn"><i data-lucide="download" size="20"></i></a>
+          <a href="${item.url}" target="_blank" class="lib-card-btn">
+            <i data-lucide="${iconName}" size="20"></i>
+          </a>
         `;
         els.libraryList.appendChild(li);
       });
       lucide.createIcons();
     }
+  } else {
+    els.loggedOutView.style.display = 'block';
+    els.loggedInView.style.display = 'none';
+    const mode = document.querySelector('.auth-tab.active')?.dataset.tab || 'login';
+    els.btnAuthAction.textContent = mode === 'login' ? t.btn_login_action : t.btn_signup_action;
+  }
+}
   } else {
     els.loggedOutView.style.display = 'block';
     els.loggedInView.style.display = 'none';
@@ -1485,6 +1498,7 @@ async function refreshLibraryTitles() {
             if (data.success) {
                 item.title = data.bundleLabel || data.message;
                 if(data.imageUrl) item.imageUrl = data.imageUrl;
+                if(data.btnIcon) item.icon = data.btnIcon;
                 item.lang = CURRENT_LANG;
             }
         } catch (e) {}
