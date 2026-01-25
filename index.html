@@ -822,7 +822,7 @@ const TRANSLATIONS={
   msg_verifying:"確認中",msg_success_btn:"成功",
   msg_invalid:"このコードは無効です",msg_used:"このコードは使用済みです",msg_error:"エラーが発生しました",
   success_badge:"コードが認証されました。",
-  success_title_preview:"コンテンツの確認", success_title_final:"認証成功",
+  success_title_preview:"コンテンツの確認", success_title_final:"認証成功!!",
   btn_close:"閉じる",btn_continue:"認証する",btn_download:"ダウンロード",news_title:"最新情報",news_label:"履歴",news_loading:"更新を確認中",
   footer_admin:"システム管理者",
   menu_login: "ログイン", menu_account: "アカウント", lib_updating: "読み込み中",
@@ -841,7 +841,7 @@ const TRANSLATIONS={
   msg_verifying:"Checking",msg_success_btn:"Success",
   msg_invalid:"This code is invalid.",msg_used:"This code has already been used.",msg_error:"Error occurred",
   success_badge:"Code Verified",
-  success_title_preview:"Confirm Content", success_title_final:"Activation Successful",
+  success_title_preview:"Confirm Content", success_title_final:"Activation Successful!!",
   btn_close:"Close",btn_continue:"Confirm",btn_download:"Download",news_title:"News",news_label:"Log",news_loading:"Checking for updates",
   footer_admin:"Enforcement Administrator",
   menu_login: "Login", menu_account: "Account", lib_updating: "loading",
@@ -860,7 +860,7 @@ const TRANSLATIONS={
   msg_verifying:"正在检查",msg_success_btn:"成功", 
   msg_invalid:"该代码无效。",msg_used:"该代码已被使用。",msg_error:"错误", 
   success_badge:"代码已检查",
-  success_title_preview:"确认内容", success_title_final:"激活完成",
+  success_title_preview:"确认内容", success_title_final:"激活成功!!",
   btn_close:"关闭",btn_continue:"确认",btn_download:"下载",news_title:"最新消息",news_label:"日志",news_loading:"正在检查更新", 
   footer_admin:"系统管理长",
   menu_login: "登录", menu_account: "账户", lib_updating: "正在加载",
@@ -879,7 +879,7 @@ const TRANSLATIONS={
   msg_verifying:"正在檢查",msg_success_btn:"成功", 
   msg_invalid:"該代碼無效",msg_used:"該代碼已被使用",msg_error:"錯誤", 
   success_badge:"代碼已檢查",
-  success_title_preview:"確認內容", success_title_final:"激活完成",
+  success_title_preview:"確認內容", success_title_final:"激活成功!!",
   btn_close:"關閉",btn_continue:"確認",btn_download:"下載",news_title:"最新消息",news_label:"日誌",news_loading:"正在檢查更新", 
   footer_admin:"系統管理長",
   menu_login: "登入", menu_account: "帳戶", lib_updating: "載入中",
@@ -898,7 +898,7 @@ const TRANSLATIONS={
   msg_verifying:"확인 중",msg_success_btn:"성공", 
   msg_invalid:"유효하지 않은 코드입니다.",msg_used:"이미 사용된 코드입니다.",msg_error:"오류", 
   success_badge:"코드 인증됨",
-  success_title_preview:"콘텐츠 확인", success_title_final:"활성화 완료",
+  success_title_preview:"콘텐츠 확인", success_title_final:"활성화 완료!!",
   btn_close:"닫기",btn_continue:"확인",btn_download:"다운로드",news_title:"뉴스",news_label:"로그",news_loading:"업데이트 확인 중", 
   footer_admin:"시스템 관리자",
   menu_login: "로그인", menu_account: "계정", lib_updating: "로딩 중",
@@ -917,7 +917,7 @@ const TRANSLATIONS={
       msg_verifying:"Подтверждение",msg_success_btn:"Успех", 
       msg_invalid:"Неверный код",msg_used:"Этот код уже был использован.",msg_error:"Ошибка", 
       success_badge:"Подтверждено", 
-      success_title_preview:"Проверка контента", success_title_final:"Успешно",
+      success_title_preview:"Проверка контента", success_title_final:"Успешно!!",
       btn_close:"Закрыть",btn_continue:"обмен",btn_download:"Скачать",news_title:"Новости",news_label:"Лог",news_loading:"Проверка обновлений", 
       footer_admin:"Администратор",
       menu_login: "Вход", menu_account: "Аккаунт", lib_updating: "Загрузка",
@@ -1010,7 +1010,7 @@ function setupEventListeners() {
   setListener(els.btnShowLibrary, 'click', () => {
     toggleDropdown(false);
     els.libraryModal.classList.add('active');
-     
+      
     // ライブラリを開いたときにサーバーから最新の履歴を取得
     if (typeof fetchUserHistory === 'function') {
         fetchUserHistory();
@@ -1103,9 +1103,7 @@ function initCustomDropdown() {
     document.addEventListener('click', (e) => { if (!els.langWrapper.contains(e.target)) els.langMenu.classList.remove('open'); });
 }
 
-/* ▼▼▼ ここからコピーして貼り付け ▼▼▼ */
-
-// ★言語切り替え時に呼ばれる関数（これが抜けていたため動作しませんでした）
+// ★言語切り替え時に呼ばれる関数
 function updateLanguage(lang){
   CURRENT_LANG = lang; 
   document.documentElement.lang = lang; 
@@ -1123,10 +1121,10 @@ function updateLanguage(lang){
   if(els.currentLangLabel) els.currentLangLabel.textContent = langMap[lang] || 'Language';
   if(t.modal_placeholder && els.code) els.code.placeholder = t.modal_placeholder;
   
-  // UIの更新（まずは現状のデータで描画）
+  // UIの更新
   updateAccountUI();
  
-  // ★ここが重要：言語切り替え時にライブラリの情報をサーバーから再取得する
+  // ライブラリの情報をサーバーから再取得
   if(currentUser && currentUser.history && currentUser.history.length > 0) {
     refreshLibraryTitles();
   }
@@ -1134,32 +1132,26 @@ function updateLanguage(lang){
 
 // ★ライブラリ情報を更新する関数（完全修正版）
 async function refreshLibraryTitles() {
-    // 履歴がない場合は何もしない
     if (!currentUser || !currentUser.history || currentUser.history.length === 0) return;
 
-    // 非同期通信の配列を作成
-    const promises = currentUser.history.map(async (item) => {
-        // 現在の言語と同じなら通信しない（負荷対策）
-        if (item.lang === CURRENT_LANG) return;
+    const t = TRANSLATIONS[CURRENT_LANG];
+    if (els.libraryList) {
+        els.libraryList.innerHTML = `<li style="text-align:center; padding:40px 0; opacity:0.6;">
+            <span class="loading-dots" style="font-size:14px; font-weight:700;">${t.lib_updating || "Updating"}</span>
+        </li>`;
+    }
 
+    const promises = currentUser.history.map(async (item) => {
         try {
-            // 現在の言語(CURRENT_LANG)を指定してAPIを叩く
             const res = await fetch(`${GAS_API_URL}?key=${encodeURIComponent(item.code)}&lang=${CURRENT_LANG}&mode=check&_t=${Date.now()}`);
             const data = await res.json();
 
             if (data.success) {
-                // 1. タイトルと言語情報を更新
                 item.title = data.bundleLabel || data.message;
                 item.lang = CURRENT_LANG;
-
-                // 2. 画像やアイコンがあれば更新
                 if(data.imageUrl) item.imageUrl = data.imageUrl;
                 if(data.btnIcon) item.icon = data.btnIcon;
-                
-                // 3. 解禁時間も最新に更新
                 if(data.releaseDateIso) item.releaseDateIso = data.releaseDateIso;
-
-                // 4. もしロックが解除されていたらURLも更新する
                 if(data.actionUrl) item.url = data.actionUrl;
             }
         } catch (e) {
@@ -1167,19 +1159,12 @@ async function refreshLibraryTitles() {
         }
     });
 
-    // 全ての通信が終わるのを待つ
     await Promise.all(promises);
-
-    // データが更新されたのでローカルストレージに保存
     localStorage.setItem('user_session', JSON.stringify(currentUser));
-
-    // ★最重要: 画面をもう一度更新して、新しいタイトルや状態（ロック解除など）を反映
     updateAccountUI();
-
-    // サーバー側の履歴も同期しておく
     syncHistoryToServer();
 }
-/* ▲▲▲ ここまでコピー ▲▲▲ */
+
 async function fetchNews(){
  if(!els.newsList)return;
  const t=TRANSLATIONS[CURRENT_LANG];
@@ -1256,8 +1241,8 @@ async function performAuth(code, mode = 'check') {
 
         setupPreviewUI(d, t);
         
-       saveUnlockedItem(d, safeCode); 
-　　　　syncHistoryToServer();
+        saveUnlockedItem(d, safeCode); 
+        syncHistoryToServer();
 
         const newBtn = els.btnRedeem.cloneNode(true);
         els.btnRedeem.parentNode.replaceChild(newBtn, els.btnRedeem);
@@ -1301,7 +1286,7 @@ async function performAuth(code, mode = 'check') {
 
 function setupPreviewUI(d, t) {
  els.sBadge.classList.remove('visible'); els.btnRedeem.style.display = 'flex'; els.btnDownload.style.display = 'none'; 
- els.sProdDisplay.style.display = 'none'; els.sInfoSec.style.display = 'block'; els.sTitle.style.display = '';                  
+ els.sProdDisplay.style.display = 'none'; els.sInfoSec.style.display = 'block'; els.sTitle.style.display = '';                   
  els.sTitle.textContent = t.success_title_preview; 
  els.sProdName.textContent = d.bundleLabel; els.sNameDisp.textContent = d.message;        
  els.sExtra.innerHTML = d.extraInfo ? d.extraInfo.replace(/\n/g, '<br>') : ""; 
@@ -1370,10 +1355,7 @@ async function performAuthAction() {
   
   if (!email || !pass) { els.authStatus.textContent = "Please enter email and password."; return; }
   
-  // バリデーションチェック（正規表現）は削除されました
-
   els.btnAuthAction.disabled = true;
-  // ここを変更: スピナーをloading-dotsに変更し、翻訳されたメッセージを表示
   els.btnAuthAction.innerHTML = `<span class="loading-dots">${mode === 'login' ? t.msg_logging_in : t.msg_signing_up}</span>`;
 
   try {
@@ -1382,12 +1364,10 @@ async function performAuthAction() {
     const data = await res.json();
 
     if (data.success) {
-      // ★管理者判定
       if (data.isAdmin) {
         toggleDropdown(false);
         els.email.value = ""; els.pass.value = "";
         
-        // メモリ変数に保存 (セキュリティ対策:2 隠しフィールドの廃止)
         tempAdminCreds.user = email;
         tempAdminCreds.pass = pass;
 
@@ -1397,14 +1377,11 @@ async function performAuthAction() {
         return; 
       }
 
-      // 一般ログインフロー
-      // パスワードを含めずに保存 (セキュリティ対策:4)
       currentUser = { userId: data.userId, email: email, history: data.history || [] };
       localStorage.setItem('user_session', JSON.stringify(currentUser));
       updateAccountUI();
       els.email.value = ""; els.pass.value = "";
       
-      // 1. URLパラメータからのコードがある場合の処理
       if (pendingActivationCode) {
           setTimeout(() => {
               toggleDropdown(false); 
@@ -1415,7 +1392,6 @@ async function performAuthAction() {
               pendingActivationCode = null;
           }, 500);
       }
-      // 2. アクティベーションカードをクリックしてログインした場合の処理 (新規追加)
       else if (pendingAction === 'open_activation') {
           setTimeout(() => {
               toggleDropdown(false);
@@ -1472,8 +1448,6 @@ function updateAccountUI() {
         let btnHtml = '';
         if (isLocked) {
           hasLockedItems = true;
-          // ロック時は href なしの div で表示し、ロックアイコンを表示
-          // data-release 属性に時間を埋め込んでおく
           btnHtml = `
             <div class="lib-card-btn lib-locked-btn" 
                  data-url="${item.url}" 
@@ -1483,7 +1457,6 @@ function updateAccountUI() {
                <i data-lucide="lock" size="20"></i>
             </div>`;
         } else {
-          // 解禁済みなら通常のリンク
           btnHtml = `
             <a href="${item.url}" target="_blank" class="lib-card-btn">
               <i data-lucide="${iconName}" size="20"></i>
@@ -1504,7 +1477,6 @@ function updateAccountUI() {
       });
       lucide.createIcons();
 
-      // ロックされているアイテムがある場合のみタイマーを始動
       if (hasLockedItems) {
         startLibraryTimer();
       }
@@ -1522,7 +1494,7 @@ function startLibraryTimer() {
   libraryTimerId = setInterval(() => {
     const lockedBtns = document.querySelectorAll('.lib-locked-btn');
     if (lockedBtns.length === 0) {
-      clearInterval(libraryTimerId); // 全て解禁されたら停止
+      clearInterval(libraryTimerId); 
       return;
     }
 
@@ -1530,33 +1502,29 @@ function startLibraryTimer() {
     lockedBtns.forEach(btn => {
       const targetTime = parseInt(btn.getAttribute('data-release'), 10);
       
-      // 時間が来たら要素を書き換える
       if (now >= targetTime) {
         const url = btn.getAttribute('data-url');
         const icon = btn.getAttribute('data-icon') || 'download';
         
-        // 新しい <a> タグを作成
         const aTag = document.createElement('a');
         aTag.href = url;
         aTag.target = "_blank";
         aTag.className = "lib-card-btn";
         aTag.innerHTML = `<i data-lucide="${icon}" size="20"></i>`;
         
-        // div を a タグに置換
         btn.parentNode.replaceChild(aTag, btn);
         lucide.createIcons();
       }
     });
-  }, 1000); // 1秒ごとにチェック
+  }, 1000); 
 }
 
 function logout() {
   localStorage.removeItem('user_session'); currentUser = null; 
-  tempAdminCreds = { user: "", pass: "" }; // メモリクリア
+  tempAdminCreds = { user: "", pass: "" }; 
   toggleDropdown(false); updateAccountUI();
 }
 
-// saveUnlockedItem 関数全体をこれに置き換えてください
 async function saveUnlockedItem(data, code) {
     if (!currentUser) return;
   
@@ -1568,7 +1536,6 @@ async function saveUnlockedItem(data, code) {
     icon: data.btnIcon || 'download',
     lang: CURRENT_LANG,
     imageUrl: data.imageUrl,
-    // ★ここを追加：解禁時間を保存する
     releaseDateIso: data.releaseDateIso || null 
   };
 
@@ -1593,14 +1560,12 @@ async function syncHistoryToServer() {
 
 async function fetchUserHistory() {
   if (!currentUser) return;
-  const t = TRANSLATIONS[CURRENT_LANG]; // 行頭の全角スペースを削除
-  // ロード中表示
+  const t = TRANSLATIONS[CURRENT_LANG]; 
   els.libraryList.innerHTML = `<li style="text-align:center;padding:20px;opacity:0.5;">
     <span class="loading-dots">${t.lib_updating}</span>
   </li>`;
 
   try { 
-    // tryブロックを関数の中に入れる
     const res = await fetch(`${GAS_API_URL}?type=get_history&userId=${currentUser.userId}&_t=${Date.now()}`);
     const data = await res.json();
     if (data.success && Array.isArray(data.history)) {
@@ -1611,75 +1576,9 @@ async function fetchUserHistory() {
   } catch (e) {
     updateAccountUI();
   }
-} // ← ★ここで関数を閉じる
-
-// ★読み込み中アニメーション追加版
-async function refreshLibraryTitles() {
-    // 履歴がない場合は何もしない
-    if (!currentUser || !currentUser.history || currentUser.history.length === 0) return;
-
-    // ▼▼▼ 追加部分: ここで一旦「読み込み中...」を表示します ▼▼▼
-    const t = TRANSLATIONS[CURRENT_LANG];
-    els.libraryList.innerHTML = `<li style="text-align:center; padding:40px 0; opacity:0.6;">
-        <span class="loading-dots" style="font-size:14px; font-weight:700;">${t.lib_updating || "Updating"}</span>
-    </li>`;
-    // ▲▲▲ ここまで ▲▲▲
-
-    // 非同期通信の配列を作成
-    const promises = currentUser.history.map(async (item) => {
-        try {
-            // 現在の言語(CURRENT_LANG)を指定してAPIを叩く
-            const res = await fetch(`${GAS_API_URL}?key=${encodeURIComponent(item.code)}&lang=${CURRENT_LANG}&mode=check&_t=${Date.now()}`);
-            const data = await res.json();
-
-            if (data.success) {
-                // 1. タイトルと言語情報を更新
-                item.title = data.bundleLabel || data.message;
-                item.lang = CURRENT_LANG;
-
-                // 2. 画像やアイコンがあれば更新
-                if(data.imageUrl) item.imageUrl = data.imageUrl;
-                if(data.btnIcon) item.icon = data.btnIcon;
-                
-                // 3. 解禁時間も最新に更新
-                if(data.releaseDateIso) item.releaseDateIso = data.releaseDateIso;
-
-                // 4. ロック解除URLの更新
-                if(data.actionUrl) item.url = data.actionUrl;
-            }
-        } catch (e) {
-            console.error("Translation update failed for:", item.code);
-        }
-    });
-
-    // 全ての通信が終わるのを待つ
-    await Promise.all(promises);
-
-    // データが更新されたので保存
-    localStorage.setItem('user_session', JSON.stringify(currentUser));
-
-    // 画面を再描画（ここで読み込み中表示が消え、新しいリストが出ます）
-    updateAccountUI();
-
-    // サーバー同期
-    syncHistoryToServer();
 }
 
-    // 全ての通信が終わるのを待つ
-    await Promise.all(promises);
-
-    // データが更新されたので保存
-    localStorage.setItem('user_session', JSON.stringify(currentUser));
-
-    // ★画面を再描画（これで強制的にタイトルが変わります）
-    updateAccountUI();
-
-    // サーバー同期
-    syncHistoryToServer();
-}
-// ★追加機能: 管理者検索
 async function performAdminSearch() {
-  // DOMではなくメモリから認証情報を取得 (セキュリティ対策:2)
   const adUser = tempAdminCreds.user || "";
   const adPass = tempAdminCreds.pass || "";
   const target = els.targetUserEmail.value.trim();
@@ -1688,11 +1587,8 @@ async function performAdminSearch() {
     alert("Please enter target email."); return;
   }
   
-  // バリデーション削除済み: ここでのフォーマットチェックはスキップされます
-
   els.btnAdminSearch.disabled = true;
   els.btnAdminSearch.textContent = "...";
-  // ここを変更: スピナーをloading-dotsに変更
   els.adminResultArea.innerHTML = `<div style="text-align:center; padding:20px;"><span class="loading-dots">Searching</span></div>`;
   
   try {
