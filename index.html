@@ -1199,7 +1199,8 @@ async function performAuth(code, mode = 'check') {
 
         setupPreviewUI(d, t);
         
-        if(d.actionUrl) { saveUnlockedItem(d, safeCode); syncHistoryToServer(); }
+       saveUnlockedItem(d, safeCode); 
+　　　　syncHistoryToServer();
 
         const newBtn = els.btnRedeem.cloneNode(true);
         els.btnRedeem.parentNode.replaceChild(newBtn, els.btnRedeem);
@@ -1247,7 +1248,7 @@ function setupPreviewUI(d, t) {
  els.sTitle.textContent = t.success_title_preview; 
  els.sProdName.textContent = d.bundleLabel; els.sNameDisp.textContent = d.message;        
  els.sExtra.innerHTML = d.extraInfo ? d.extraInfo.replace(/\n/g, '<br>') : ""; 
- if(d.imageUrl && d.imageUrl.startsWith("http")){ els.sImg.src=d.imageUrl; } else { els.sImg.src="https://placehold.co/600x400/000000/00E050?text=Protected"; } 
+ if(d.imageUrl && d.imageUrl.startsWith("http")){ els.sImg.src=d.imageUrl; } else { els.sImg.src="https://static.wixstatic.com/media/2f0694_a82787a4837b40a9be0c361cfe71ff95~mv2.png/v1/fill/w_1200,h_1200,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Polish_20260125_100959885.png"; } 
  lucide.createIcons();
 }
 
@@ -1500,7 +1501,7 @@ function logout() {
 
 // saveUnlockedItem 関数全体をこれに置き換えてください
 async function saveUnlockedItem(data, code) {
-  if (!data.actionUrl || !currentUser) return; 
+    if (!currentUser) return;
   
   const newItem = {
     code: code,
