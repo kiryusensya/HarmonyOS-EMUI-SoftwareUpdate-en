@@ -950,6 +950,26 @@ const els={
  targetUserEmail: gId('targetUserEmail'), btnAdminSearch: gId('btnAdminSearch'), adminResultArea: gId('adminResultArea')
 };
 
+const gId=i=>document.getElementById(i);
+const setListener=(el,ev,fn)=>{if(el)el.addEventListener(ev,fn)};
+const els={
+ overlay: gId('langSelectionOverlay'), main: gId('mainContainer'), 
+ authModal: gId('authModal'), modalCon: gId('modalContainer'), openAuth: gId('btnOpenModal'), closeAuth: gId('modalCloseBtn'), closeSub: gId('modalCloseSub'),
+ inputPh: gId('inputPhase'), successPh: gId('successPhase'), code: gId('activationCode'), confirm: gId('btnConfirm'), status: gId('statusContainer'),
+ sImg: gId('successImage'), sTitle: gId('successTitle'), sProdName: gId('productName'), sProdDisplay: gId('productDisplay'), 
+ sInfoSec: gId('infoSection'), sNameDisp: gId('successNameDisplay'), sExtra: gId('successExtraInfo'), sBadge: gId('successBadge'), 
+ btnRedeem: gId('btnRedeem'), btnDownload: gId('btnDownload'),
+ newsList: gId('newsList'), newsModal: gId('newsModal'), openNews: gId('btnOpenNews'), closeNews: gId('newsCloseX'),
+ langWrapper: gId('customLangWrapper'), langTrigger: gId('langTrigger'), langMenu: gId('langMenu'), currentLangLabel: gId('currentLangLabel'),
+ accountDropdown: gId('accountDropdown'), openAccount: gId('btnOpenAccount'),
+ loggedInView: gId('loggedInView'), loggedOutView: gId('loggedOutView'), displayUserId: gId('displayUserId'), displayUserEmail: gId('displayUserEmail'),
+ btnLogout: gId('btnLogout'), btnShowLibrary: gId('btnShowLibrary'), 
+ libraryModal: gId('libraryModal'), libCloseBtn: gId('libCloseBtn'), libraryList: gId('libraryList'),
+ tabs: document.querySelectorAll('.auth-tab'), email: gId('inputEmail'), pass: gId('inputPass'), btnAuthAction: gId('btnAuthAction'), authStatus: gId('authStatus'),
+ adminModal: gId('adminModal'), adminCloseBtn: gId('adminCloseBtn'),
+ targetUserEmail: gId('targetUserEmail'), btnAdminSearch: gId('btnAdminSearch'), adminResultArea: gId('adminResultArea')
+};
+
 const formatCodeInput = (val) => {
  val = val.toUpperCase().replace(/[^A-Z0-9]/g, '');
  let sz = val.length >= 25 ? 5 : 4, res = '';
@@ -1115,23 +1135,17 @@ function updateLanguage(lang){
     const k = el.getAttribute('data-translate'); 
     if(k !== 'news_content' && t[k]) el.innerHTML = t[k]; 
   });
- 
+  
   const langMap = { ja: '日本語', en: 'English', zh: '简体中文', 'zh-TW': '繁體中文', ko: '한국어', ru: 'Русский' };
   if(els.currentLangLabel) els.currentLangLabel.textContent = langMap[lang] || 'Language';
   if(t.modal_placeholder && els.code) els.code.placeholder = t.modal_placeholder;
-  
+   
   updateAccountUI();
- 
+  
+  // ★言語切り替え時にサーバーからその言語の履歴タイトルを取得し直す
   if(currentUser) {
     fetchUserHistory();
   }
-}
-
-// ライブラリタイトルのリフレッシュ（サーバーから最新取得）
-async function refreshLibraryTitles() {
-    // サーバーから再取得するだけ
-    if (!currentUser) return;
-    fetchUserHistory();
 }
 
 async function fetchNews(){
