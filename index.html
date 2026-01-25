@@ -845,7 +845,7 @@ const TRANSLATIONS={
   success_title_preview:"Confirm Content", success_title_final:"Activation Successful!!",
   btn_close:"Close",btn_continue:"Confirm",btn_download:"Download",news_title:"News",news_label:"Log",news_loading:"Checking for updates",
   footer_admin:"Enforcement Administrator",
-  menu_login: "Login", menu_account: "Account", lib_updating: "Updating",
+  menu_login: "Login", menu_account: "Account", lib_updating: "Loading",
   label_logged_in: "USER ID", label_library: "Library", label_welcome: "Welcome", label_sync_desc: "Login to sync content.",
   tab_login: "Login", tab_signup: "Sign Up", form_email: "User Number", form_pass: "Password",
   btn_login_action: "Login", btn_signup_action: "Sign Up", btn_logout: "Log Out",
@@ -893,7 +893,7 @@ const TRANSLATIONS={
  ko:{ 
   header_brand:"kr_개발자용", hero_title:"시스템 인증 포털", hero_sub:"액세스 권한 및 리소스 관리", 
   card1_title:"활성화",card1_desc:"콘텐츠 잠금 해제",card1_btn:"코드 교환", 
-  card2_title:"뉴스",card2_desc:"최신 정보",card2_btn:"보기", 
+  card2_title:"ニュース",card2_desc:"최신 정보",card2_btn:"보기", 
   card3_title:"지원",card3_desc:"문의하기",card3_btn:"연결", 
   modal_title:"활성화",modal_sub:"코드 입력",modal_placeholder:"활성화 코드",modal_btn_auth:"확인", 
   msg_verifying:"확인 중",msg_success_btn:"성공", 
@@ -921,7 +921,7 @@ const TRANSLATIONS={
       success_title_preview:"Проверка контента", success_title_final:"Успешно!!",
       btn_close:"Закрыть",btn_continue:"обмен",btn_download:"Скачать",news_title:"Новости",news_label:"Лог",news_loading:"Проверка обновлений", 
       footer_admin:"Администратор",
-      menu_login: "Вход", menu_account: "Аккаунт", lib_updating: "Загрузка",
+      menu_login: "Вход", menu_account: "Аккауント", lib_updating: "Загрузка",
       label_logged_in: "ID пользователя", label_library: "Библиотека", label_welcome: "Привет", label_sync_desc: "Войдите для синхронизации",
       tab_login: "Вход", tab_signup: "Регистрация", form_email: "Название счета", form_pass: "Пароль",
       btn_login_action: "Войти", btn_signup_action: "Создать", btn_logout: "Выйти",
@@ -950,26 +950,7 @@ const els={
  targetUserEmail: gId('targetUserEmail'), btnAdminSearch: gId('btnAdminSearch'), adminResultArea: gId('adminResultArea')
 };
 
-const gId=i=>document.getElementById(i);
-const setListener=(el,ev,fn)=>{if(el)el.addEventListener(ev,fn)};
-const els={
- overlay: gId('langSelectionOverlay'), main: gId('mainContainer'), 
- authModal: gId('authModal'), modalCon: gId('modalContainer'), openAuth: gId('btnOpenModal'), closeAuth: gId('modalCloseBtn'), closeSub: gId('modalCloseSub'),
- inputPh: gId('inputPhase'), successPh: gId('successPhase'), code: gId('activationCode'), confirm: gId('btnConfirm'), status: gId('statusContainer'),
- sImg: gId('successImage'), sTitle: gId('successTitle'), sProdName: gId('productName'), sProdDisplay: gId('productDisplay'), 
- sInfoSec: gId('infoSection'), sNameDisp: gId('successNameDisplay'), sExtra: gId('successExtraInfo'), sBadge: gId('successBadge'), 
- btnRedeem: gId('btnRedeem'), btnDownload: gId('btnDownload'),
- newsList: gId('newsList'), newsModal: gId('newsModal'), openNews: gId('btnOpenNews'), closeNews: gId('newsCloseX'),
- langWrapper: gId('customLangWrapper'), langTrigger: gId('langTrigger'), langMenu: gId('langMenu'), currentLangLabel: gId('currentLangLabel'),
- accountDropdown: gId('accountDropdown'), openAccount: gId('btnOpenAccount'),
- loggedInView: gId('loggedInView'), loggedOutView: gId('loggedOutView'), displayUserId: gId('displayUserId'), displayUserEmail: gId('displayUserEmail'),
- btnLogout: gId('btnLogout'), btnShowLibrary: gId('btnShowLibrary'), 
- libraryModal: gId('libraryModal'), libCloseBtn: gId('libCloseBtn'), libraryList: gId('libraryList'),
- tabs: document.querySelectorAll('.auth-tab'), email: gId('inputEmail'), pass: gId('inputPass'), btnAuthAction: gId('btnAuthAction'), authStatus: gId('authStatus'),
- adminModal: gId('adminModal'), adminCloseBtn: gId('adminCloseBtn'),
- targetUserEmail: gId('targetUserEmail'), btnAdminSearch: gId('btnAdminSearch'), adminResultArea: gId('adminResultArea')
-};
-
+// コード入力時にハイフンを入れるフォーマット（入力用）
 const formatCodeInput = (val) => {
  val = val.toUpperCase().replace(/[^A-Z0-9]/g, '');
  let sz = val.length >= 25 ? 5 : 4, res = '';
@@ -977,26 +958,34 @@ const formatCodeInput = (val) => {
  return res;
 };
 
+// 【新規追加】ライブラリ表示用にコードにハイフンを入れる関数
+const formatDisplayCode = (code) => {
+  if (!code) return "";
+  const clean = code.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  // 5文字または4文字ごとにハイフンを入れる（入力時のロジックに合わせる）
+  const sz = clean.length >= 25 ? 5 : 4;
+  let res = '';
+  for(let i=0; i<clean.length; i++) {
+    res += (i > 0 && i % sz === 0 ? '-' : '') + clean[i];
+  }
+  return res;
+};
+
 /* ==========================================================================
    初期化処理 (EventListeners & Init)
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
-  // 言語設定
   const sLang = localStorage.getItem('user_lang');
   if (sLang) setInitialLanguage(sLang, true); else fetchNews();
 
-  // ★重要: セッション復元 (ID/EmailのみlocalStorageから、履歴はサーバーから)
-  // 以前の user_session は使わず user_session_identity を使用
   const sUser = localStorage.getItem('user_session_identity');
   if (sUser) {
     try {
         const identity = JSON.parse(sUser);
         currentUser = { userId: identity.userId, email: identity.email, history: [] };
         updateAccountUI();
-        fetchUserHistory(); // サーバーから履歴取得
-    } catch(e) {
-        console.error(e);
-    }
+        fetchUserHistory();
+    } catch(e) { console.error(e); }
   }
 
   initThemeAndParticles();
@@ -1045,7 +1034,7 @@ function setupEventListeners() {
   setListener(els.btnShowLibrary, 'click', () => {
     toggleDropdown(false);
     els.libraryModal.classList.add('active');
-    fetchUserHistory(); // ★サーバーから最新履歴を取得
+    fetchUserHistory();
   });
   setListener(els.libCloseBtn, 'click', () => els.libraryModal.classList.remove('active'));
   setListener(els.libraryModal, 'click', (e) => { if(e.target === els.libraryModal) els.libraryModal.classList.remove('active'); });
@@ -1068,10 +1057,6 @@ function setupEventListeners() {
 
   setListener(els.btnAuthAction, 'click', performAuthAction);
 }
-
-/* ==========================================================================
-   データ取得・更新機能
-   ========================================================================== */
 
 function toggleDropdown(forceState) {
     if (forceState === undefined) {
@@ -1141,11 +1126,7 @@ function updateLanguage(lang){
   if(t.modal_placeholder && els.code) els.code.placeholder = t.modal_placeholder;
    
   updateAccountUI();
-  
-  // ★言語切り替え時にサーバーからその言語の履歴タイトルを取得し直す
-  if(currentUser) {
-    fetchUserHistory();
-  }
+  if(currentUser) { fetchUserHistory(); }
 }
 
 async function fetchNews(){
@@ -1203,7 +1184,6 @@ async function performAuth(code, mode = 'check') {
   try {
     let url = `${GAS_API_URL}?key=${encodeURIComponent(safeCode)}&lang=${CURRENT_LANG}&mode=${mode}&userId=${uId}&_t=${Date.now()}`;
     let d = await (await fetch(url)).json();
-    
     if (thisRequestId !== currentAuthRequestId) return;
 
     if (mode === 'check') {
@@ -1223,8 +1203,6 @@ async function performAuth(code, mode = 'check') {
         }, 400);
 
         setupPreviewUI(d, t);
-        
-        // ★UI即時反映のためメモリのみ更新（localStorage保存なし、Syncなし）
         saveUnlockedItem(d, safeCode); 
 
         const newBtn = els.btnRedeem.cloneNode(true);
@@ -1235,7 +1213,6 @@ async function performAuth(code, mode = 'check') {
         els.btnRedeem.disabled = false;
         els.btnRedeem.addEventListener('click', (e) => { 
             e.preventDefault();
-            e.stopImmediatePropagation();
             performAuth(safeCode, 'redeem'); 
         });
 
@@ -1243,10 +1220,8 @@ async function performAuth(code, mode = 'check') {
     } else if (mode === 'redeem') {
       if (d.success) { 
         transitionToFinal(d); 
-        // 念のため再更新
         saveUnlockedItem(d, safeCode);
-      } 
-      else {
+      } else {
         els.btnRedeem.disabled = false;
         els.btnRedeem.innerHTML = `<span data-translate="btn_continue">${t.btn_continue}</span> <i data-lucide="arrow-right" size="18"></i>`;
         lucide.createIcons();
@@ -1291,14 +1266,28 @@ function transitionToFinal(d) {
   checkDownloadUrl(d);
 }
 
+// 【重要修正】解禁時間を厳守するロジック
 function checkDownloadUrl(initialData) {
  let isFetching = false;
  let currentData = initialData; 
+ 
  const updateUI = async () => {
    const now = Date.now();
    const targetTime = currentData.releaseDateIso ? new Date(currentData.releaseDateIso).getTime() : 0;
    const diff = targetTime - now;
 
+   // 1. まず解禁時間をチェック（時間が来てなければ、URLがあっても無視してカウントダウン）
+   if (diff > 0) {
+     const m = Math.floor(diff / (1000 * 60));
+     const s = Math.floor((diff % (1000 * 60)) / 1000);
+     els.btnDownload.innerHTML = `<span style="font-feature-settings:'tnum';">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</span>`;
+     // ポインターイベント無効化
+     els.btnDownload.style.pointerEvents = 'none';
+     els.btnDownload.style.opacity = '0.6';
+     return;
+   }
+
+   // 2. 解禁時間を過ぎている場合、URLがあればダウンロードボタンを表示
    if (currentData.actionUrl) {
      clearInterval(timerId); 
      els.btnDownload.href = currentData.actionUrl;
@@ -1312,23 +1301,19 @@ function checkDownloadUrl(initialData) {
      return; 
    } 
 
-   if (diff <= 0) {
-     els.btnDownload.innerHTML = `<div class="loading-spinner" style="width:20px;height:20px;border-width:2px;border-color:rgba(0,0,0,0.2);border-top-color:#000;"></div>`;
-     if (!isFetching) {
-       isFetching = true;
-       try {
-         const code = els.code.value.trim();
-         const res = await fetch(`${GAS_API_URL}?key=${encodeURIComponent(code)}&lang=${CURRENT_LANG}&mode=poll&_t=${Date.now()}`);
-         const retryD = await res.json();
-         if (retryD.success && retryD.actionUrl) { currentData = retryD; }
-       } catch(e) {} finally { isFetching = false; }
-     }
-   } else {
-     const m = Math.floor(diff / (1000 * 60));
-     const s = Math.floor((diff % (1000 * 60)) / 1000);
-     els.btnDownload.innerHTML = `<span style="font-feature-settings:'tnum';">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</span>`;
+   // 3. 解禁時間を過ぎているがURLがまだない（ポーリング中）
+   els.btnDownload.innerHTML = `<div class="loading-spinner" style="width:20px;height:20px;border-width:2px;border-color:rgba(0,0,0,0.2);border-top-color:#000;"></div>`;
+   if (!isFetching) {
+     isFetching = true;
+     try {
+       const code = els.code.value.trim();
+       const res = await fetch(`${GAS_API_URL}?key=${encodeURIComponent(code)}&lang=${CURRENT_LANG}&mode=poll&_t=${Date.now()}`);
+       const retryD = await res.json();
+       if (retryD.success && retryD.actionUrl) { currentData = retryD; }
+     } catch(e) {} finally { isFetching = false; }
    }
  };
+ 
  const timerId = setInterval(updateUI, 1000);
  updateUI();
 }
@@ -1338,17 +1323,13 @@ async function performAuthAction() {
   const email = els.email.value.trim();
   const pass = els.pass.value.trim();
   const t = TRANSLATIONS[CURRENT_LANG];
-  
   if (!email || !pass) { els.authStatus.textContent = "Please enter email and password."; return; }
-  
   els.btnAuthAction.disabled = true;
   els.btnAuthAction.innerHTML = `<span class="loading-dots">${mode === 'login' ? t.msg_logging_in : t.msg_signing_up}</span>`;
-
   try {
     const actionType = mode === 'login' ? 'user_login' : 'register';
     const res = await fetch(`${GAS_API_URL}?type=${actionType}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}`);
     const data = await res.json();
-
     if (data.success) {
       if (data.isAdmin) {
         toggleDropdown(false);
@@ -1360,19 +1341,11 @@ async function performAuthAction() {
         els.btnAuthAction.textContent = mode==='login'?TRANSLATIONS[CURRENT_LANG].btn_login_action:TRANSLATIONS[CURRENT_LANG].btn_signup_action;
         return; 
       }
-
-      // ログイン成功: メモリ上には履歴を持たせる
       currentUser = { userId: data.userId, email: email, history: data.history || [] };
-      
-      // ★localStorageにはID情報のみ保存
       localStorage.setItem('user_session_identity', JSON.stringify({ userId: data.userId, email: email }));
-      
       updateAccountUI();
-      // サーバーから最新情報を取得
       fetchUserHistory();
-      
       els.email.value = ""; els.pass.value = "";
-      
       if (pendingActivationCode) {
           setTimeout(() => {
               toggleDropdown(false); 
@@ -1382,15 +1355,13 @@ async function performAuthAction() {
               performAuth(codeToUse); 
               pendingActivationCode = null;
           }, 500);
-      }
-      else if (pendingAction === 'open_activation') {
+      } else if (pendingAction === 'open_activation') {
           setTimeout(() => {
               toggleDropdown(false);
               openAuthModal();
               pendingAction = null;
           }, 500);
       }
-
     } else { els.authStatus.textContent = data.message || "Error occurred."; }
   } catch (e) { els.authStatus.textContent = "Network Error."; } 
   finally { 
@@ -1399,217 +1370,121 @@ async function performAuthAction() {
   }
 }
 
+// 【重要修正】ライブラリのコード表示にハイフンを追加
 function updateAccountUI() {
   const t = TRANSLATIONS[CURRENT_LANG];
   if (libraryTimerId) { clearInterval(libraryTimerId); libraryTimerId = null; }
-
   if (currentUser) {
     els.loggedOutView.style.display = 'none';
     els.loggedInView.style.display = 'block';
     if(els.displayUserEmail) els.displayUserEmail.textContent = currentUser.email || '-';
-    
     els.libraryList.innerHTML = "";
     if (!currentUser.history || currentUser.history.length === 0) {
       els.libraryList.innerHTML = `<li style='text-align:center; opacity:0.5; padding:20px; font-size:13px;'>${t.msg_empty_lib}</li>`;
     } else {
       const now = Date.now();
       let hasLockedItems = false;
-
       currentUser.history.forEach(item => {
         const li = document.createElement('li');
         li.className = 'lib-item-card';
         const iconName = item.icon || 'download';
+        // ハイフン付きコードに変換
+        const displayCode = formatDisplayCode(item.code);
+        
         const img = item.imageUrl && item.imageUrl.startsWith('http') 
           ? `<img src="${item.imageUrl}" class="lib-card-thumb">` 
           : `<div class="lib-card-thumb" style="display:flex;align-items:center;justify-content:center;color:#999;"><i data-lucide="image"></i></div>`;
-        
         const releaseTime = item.releaseDateIso ? new Date(item.releaseDateIso).getTime() : 0;
         const isLocked = releaseTime > now;
         
-        let btnHtml = '';
-        if (isLocked) {
-          hasLockedItems = true;
-          btnHtml = `
-            <div class="lib-card-btn lib-locked-btn" 
-                 data-url="${item.url}" 
-                 data-release="${releaseTime}"
-                 data-icon="${iconName}"
-                 style="background:rgba(128,128,128,0.2); cursor:not-allowed; opacity:0.6;">
-               <i data-lucide="lock" size="20"></i>
-            </div>`;
-        } else {
-          btnHtml = `
-            <a href="${item.url}" target="_blank" class="lib-card-btn">
-              <i data-lucide="${iconName}" size="20"></i>
-            </a>`;
-        }
+        let btnHtml = isLocked 
+          ? `<div class="lib-card-btn lib-locked-btn" data-url="${item.url}" data-release="${releaseTime}" data-icon="${iconName}" style="background:rgba(128,128,128,0.2); cursor:not-allowed; opacity:0.6;"><i data-lucide="lock" size="20"></i></div>` 
+          : `<a href="${item.url}" target="_blank" class="lib-card-btn"><i data-lucide="${iconName}" size="20"></i></a>`;
         
-        li.innerHTML = `
-          <div class="lib-card-left">
-            ${img}
-            <div class="lib-card-info">
-              <div class="lib-card-meta">${item.date} • ${item.code}</div>
-              <div class="lib-card-title">${item.title}</div>
-            </div>
-          </div>
-          ${btnHtml}
-        `;
+        li.innerHTML = `<div class="lib-card-left">${img}<div class="lib-card-info"><div class="lib-card-meta">${item.date} • ${displayCode}</div><div class="lib-card-title">${item.title}</div></div></div>${btnHtml}`;
         els.libraryList.appendChild(li);
+        if (isLocked) hasLockedItems = true;
       });
       lucide.createIcons();
-
-      if (hasLockedItems) {
-        startLibraryTimer();
-      }
+      if (hasLockedItems) startLibraryTimer();
     }
   } else {
     els.loggedOutView.style.display = 'block';
     els.loggedInView.style.display = 'none';
-    const mode = document.querySelector('.auth-tab.active')?.dataset.tab || 'login';
-    els.btnAuthAction.textContent = mode === 'login' ? t.btn_login_action : t.btn_signup_action;
   }
 }
 
 function startLibraryTimer() {
     if (libraryTimerId) clearInterval(libraryTimerId);
-    
-    // ロックされたアイテムがあるか確認
-    const lockedBtns = document.querySelectorAll('.lib-locked-btn');
-    if (lockedBtns.length === 0) return;
-
     libraryTimerId = setInterval(() => {
         const now = Date.now();
         let stillHasLocked = false;
-        
-        lockedBtns.forEach(btn => {
-            const releaseTime = parseInt(btn.dataset.release);
-            if (releaseTime <= now) {
-                // 時間経過でアンロック: ボタンを書き換える
-                const url = btn.dataset.url;
-                const icon = btn.dataset.icon;
-                
-                // 親要素を取得してボタンを置換
-                const parentLi = btn.parentElement; 
-                if (parentLi) {
+        document.querySelectorAll('.lib-locked-btn').forEach(btn => {
+            if (parseInt(btn.dataset.release) <= now) {
+                const parent = btn.parentElement; 
+                if (parent) {
                     const newBtn = document.createElement('a');
-                    newBtn.href = url;
-                    newBtn.target = "_blank";
-                    newBtn.className = "lib-card-btn";
-                    newBtn.innerHTML = `<i data-lucide="${icon}" size="20"></i>`;
-                    
-                    // 古いボタンを削除して新しいボタンを追加
-                    btn.remove();
-                    parentLi.appendChild(newBtn);
-                    lucide.createIcons();
+                    newBtn.href = btn.dataset.url; newBtn.target = "_blank"; newBtn.className = "lib-card-btn";
+                    newBtn.innerHTML = `<i data-lucide="${btn.dataset.icon}" size="20"></i>`;
+                    btn.remove(); parent.appendChild(newBtn); lucide.createIcons();
                 }
-            } else {
-                stillHasLocked = true;
-            }
+            } else { stillHasLocked = true; }
         });
-
-        if (!stillHasLocked) {
-            clearInterval(libraryTimerId);
-            libraryTimerId = null;
-        }
+        if (!stillHasLocked) { clearInterval(libraryTimerId); libraryTimerId = null; }
     }, 1000);
 }
 
 function logout() {
-  localStorage.removeItem('user_session_identity'); // ★ID情報のみ削除
-  currentUser = null; 
-  tempAdminCreds = { user: "", pass: "" }; 
+  localStorage.removeItem('user_session_identity');
+  currentUser = null; tempAdminCreds = { user: "", pass: "" }; 
   toggleDropdown(false); updateAccountUI();
 }
 
-// メモリ上の履歴のみ更新する（ローカルストレージには保存しない）
 async function saveUnlockedItem(data, code) {
   if (!currentUser) return;
   const newItem = {
-    code: code,
-    title: data.bundleLabel || data.message || "Unknown Content",
-    url: data.actionUrl || "", 
-    date: new Date().toLocaleDateString(),
-    icon: data.btnIcon || 'download',
-    lang: CURRENT_LANG,
-    imageUrl: data.imageUrl,
-    releaseDateIso: data.releaseDateIso || null 
+    code: code, title: data.bundleLabel || data.message || "Unknown Content", url: data.actionUrl || "", 
+    date: new Date().toLocaleDateString(), icon: data.btnIcon || 'download', lang: CURRENT_LANG,
+    imageUrl: data.imageUrl, releaseDateIso: data.releaseDateIso || null 
   };
-  const existingIndex = currentUser.history.findIndex(h => h.code === code);
-  if (existingIndex > -1) { currentUser.history.splice(existingIndex, 1); } 
+  const idx = currentUser.history.findIndex(h => h.code === code);
+  if (idx > -1) currentUser.history.splice(idx, 1);
   currentUser.history.unshift(newItem);
-  
-  // ★localStorage.setItem はしない
-  // ★syncHistoryToServer も呼ばない (サーバー側で完了済み)
   updateAccountUI();
-}
-
-async function syncHistoryToServer() {
-  // ★この機能はサーバー側実装により不要になったため、空処理にする
-  return;
 }
 
 async function fetchUserHistory() {
   if (!currentUser) return;
-  const t = TRANSLATIONS[CURRENT_LANG]; 
-  // ライブラリ表示中の場合のみローディング表示
   if(els.libraryList.offsetParent !== null) {
-      els.libraryList.innerHTML = `<li style="text-align:center;padding:20px;opacity:0.5;">
-        <span class="loading-dots">${t.lib_updating}</span>
-      </li>`;
+      els.libraryList.innerHTML = `<li style="text-align:center;padding:20px;opacity:0.5;"><span class="loading-dots">${TRANSLATIONS[CURRENT_LANG].lib_updating}</span></li>`;
   }
-
   try { 
     const res = await fetch(`${GAS_API_URL}?type=get_history&userId=${currentUser.userId}&lang=${CURRENT_LANG}&_t=${Date.now()}`);
     const data = await res.json();
     if (data.success && Array.isArray(data.history)) {
-      // サーバーの履歴を正としてメモリ反映
-      currentUser.history = data.history;
-      // ★localStorageには保存しない
-      updateAccountUI();
+      currentUser.history = data.history; updateAccountUI();
     }
-  } catch (e) {
-    updateAccountUI();
-  }
+  } catch (e) { updateAccountUI(); }
 }
 
 async function performAdminSearch() {
-  const adUser = tempAdminCreds.user || "";
-  const adPass = tempAdminCreds.pass || "";
   const target = els.targetUserEmail.value.trim();
-  
   if(!target) { alert("Please enter target email."); return; }
-  
-  els.btnAdminSearch.disabled = true;
-  els.btnAdminSearch.textContent = "...";
-  els.adminResultArea.innerHTML = `<div style="text-align:center; padding:20px;"><span class="loading-dots">Searching</span></div>`;
-  
+  els.btnAdminSearch.disabled = true; els.adminResultArea.innerHTML = `<div style="text-align:center; padding:20px;"><span class="loading-dots">Searching</span></div>`;
   try {
-    const res = await fetch(`${GAS_API_URL}?type=admin_search&adminUser=${encodeURIComponent(adUser)}&adminPass=${encodeURIComponent(adPass)}&targetEmail=${encodeURIComponent(target)}&_t=${Date.now()}`);
+    const res = await fetch(`${GAS_API_URL}?type=admin_search&adminUser=${encodeURIComponent(tempAdminCreds.user)}&adminPass=${encodeURIComponent(tempAdminCreds.pass)}&targetEmail=${encodeURIComponent(target)}&_t=${Date.now()}`);
     const d = await res.json();
     if(d.success) {
       if(!d.history || d.history.length === 0) {
-        els.adminResultArea.innerHTML = `<p style="text-align:center; opacity:0.6;">No history found for this user.</p>`;
+        els.adminResultArea.innerHTML = `<p style="text-align:center; opacity:0.6;">No history found.</p>`;
       } else {
-        let html = `<div style="margin-bottom:10px; font-weight:700; font-size:12px;">User ID: ${d.userId}</div>`;
-        html += `<ul style="list-style:none; padding:0;">`;
-        d.history.forEach(h => {
-          html += `<li style="background:rgba(128,128,128,0.05); padding:10px; border-radius:8px; margin-bottom:5px; font-size:13px;">
-              <div style="font-weight:700;">${h.title}</div>
-              <div style="opacity:0.6; font-size:11px;">${h.code} / ${h.date}</div>
-            </li>`;
-        });
-        html += `</ul>`;
-        els.adminResultArea.innerHTML = html;
+        let h = `<div style="font-weight:700; font-size:12px;">User ID: ${d.userId}</div><ul style="list-style:none; padding:0;">`;
+        d.history.forEach(i => { h += `<li style="background:rgba(128,128,128,0.05); padding:10px; border-radius:8px; margin-bottom:5px; font-size:13px;"><b>${i.title}</b><br><small>${i.code} / ${i.date}</small></li>`; });
+        els.adminResultArea.innerHTML = h + `</ul>`;
       }
-    } else {
-      els.adminResultArea.innerHTML = `<p style="color:red; text-align:center;">${d.message}</p>`;
-    }
-  } catch(e) {
-    els.adminResultArea.innerHTML = `<p style="color:red; text-align:center;">Network Error</p>`;
-  } finally {
-    els.btnAdminSearch.disabled = false;
-    els.btnAdminSearch.textContent = "Search";
-  }
+    } else { els.adminResultArea.innerHTML = `<p style="color:red; text-align:center;">${d.message}</p>`; }
+  } catch(e) { els.adminResultArea.innerHTML = `<p style="color:red; text-align:center;">Network Error</p>`; }
+  finally { els.btnAdminSearch.disabled = false; els.btnAdminSearch.textContent = "Search"; }
 }
 
 function initThemeAndParticles() {
@@ -1617,45 +1492,26 @@ function initThemeAndParticles() {
   const toggleBtns = [gId('themeToggle'), gId('introThemeToggle')];
   const icons = [gId('themeIcon'), gId('introThemeIcon')];
   let particleHue = 210;
-
-  function updateParticleStyle(isLight) { particleHue = isLight ? 210 : 220; }
   function applyTheme(theme) {
-    if (theme === 'light') { htmlEl.setAttribute('data-theme', 'light'); icons.forEach(ic => { if(ic) ic.setAttribute('data-lucide', 'sun'); }); updateParticleStyle(true); } 
-    else { htmlEl.setAttribute('data-theme', 'dark'); icons.forEach(ic => { if(ic) ic.setAttribute('data-lucide', 'moon'); }); updateParticleStyle(false); }
-    lucide.createIcons();
+    htmlEl.setAttribute('data-theme', theme);
+    icons.forEach(ic => { if(ic) ic.setAttribute('data-lucide', theme === 'light' ? 'sun' : 'moon'); });
+    particleHue = theme === 'light' ? 210 : 220; lucide.createIcons();
   }
-
-  const savedTheme = localStorage.getItem('user_theme');
-  const systemQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  if (savedTheme) { applyTheme(savedTheme); } else { applyTheme(systemQuery.matches ? 'dark' : 'light'); }
-
-  systemQuery.addEventListener('change', (e) => {
-    const newTheme = e.matches ? 'dark' : 'light';
-    applyTheme(newTheme);
-    localStorage.setItem('user_theme', newTheme);
-  });
-
-  toggleBtns.forEach(btn => {
-    if(!btn) return;
-    btn.addEventListener('click', () => {
-        const current = htmlEl.getAttribute('data-theme');
-        const next = current === 'light' ? 'dark' : 'light';
-        applyTheme(next);
-        localStorage.setItem('user_theme', next);
-    });
-  });
-
-  const canvas = gId('particleCanvas'); const ctx = canvas.getContext('2d'); let particlesArray;
-  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const saved = localStorage.getItem('user_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  applyTheme(saved);
+  toggleBtns.forEach(btn => btn && btn.addEventListener('click', () => {
+    const next = htmlEl.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    applyTheme(next); localStorage.setItem('user_theme', next);
+  }));
+  const canvas = gId('particleCanvas'); const ctx = canvas.getContext('2d'); canvas.width = innerWidth; canvas.height = innerHeight;
   class Particle {
     constructor() { this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.size=Math.random()*150+50; this.speedX=Math.random()*0.2-0.1; this.speedY=Math.random()*0.2-0.1; this.opacity=Math.random()*0.3+0.1; }
-    update() { this.x+=this.speedX; this.y+=this.speedY; if(this.x<-100||this.x>canvas.width+100)this.speedX*=-1; if(this.y<-100||this.y>canvas.height+100)this.speedY*=-1; }
+    update() { this.x+=this.speedX; this.y+=this.speedY; if(this.x<0||this.x>canvas.width)this.speedX*=-1; if(this.y<0||this.y>canvas.height)this.speedY*=-1; }
     draw() { ctx.fillStyle=`hsla(${particleHue}, 100%, 50%, ${this.opacity*0.2})`; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); }
   }
-  function initParticles() { particlesArray=[]; for(let i=0;i<8;i++)particlesArray.push(new Particle()); }
-  function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); for(let i=0;i<particlesArray.length;i++){ particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animateParticles); }
-  window.addEventListener('resize', () => { canvas.width=innerWidth; canvas.height=innerHeight; initParticles(); });
-  initParticles(); animateParticles();
+  let p = []; for(let i=0;i<8;i++) p.push(new Particle());
+  function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); p.forEach(i=>{i.update();i.draw();}); requestAnimationFrame(animate); }
+  window.addEventListener('resize', () => { canvas.width=innerWidth; canvas.height=innerHeight; }); animate();
 }
 </script>
 </body>
