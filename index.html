@@ -805,12 +805,12 @@ footer { padding: 40px 0; text-align: center; color: var(--modal-text-sub); font
 <script>
 lucide.createIcons();
 // ★★★ ここにデプロイしたGASのURLを貼り付けてください ★★★
-const GAS_API_URL="api/proxy"; 
+const GAS_API_URL="https://script.google.com/macros/s/AKfycbzGwoI0ZTRricl4tzqKVpztx0q9-bra9FsWJbHt_Jw_BRaJ75Gcxw09eyhN3m07YzUPhQ/exec"; 
 let CURRENT_LANG="ja";
 let currentUser = null; 
-let pendingActivationCode = null; // 未ログイン時のコード保持用
-let pendingAction = null; // ★追加: 未ログイン時の操作保持用
-let tempAdminCreds = { user: "", pass: "" }; // メモリ内のみで管理（DOMには置かない）
+let pendingActivationCode = null;
+let pendingAction = null;
+let tempAdminCreds = { user: "", pass: "" };
 
 const TRANSLATIONS={
  ja:{
@@ -844,7 +844,7 @@ const TRANSLATIONS={
   success_title_preview:"Confirm Content", success_title_final:"Activation Successful!!",
   btn_close:"Close",btn_continue:"Confirm",btn_download:"Download",news_title:"News",news_label:"Log",news_loading:"Checking for updates",
   footer_admin:"Enforcement Administrator",
-  menu_login: "Login", menu_account: "Account", lib_updating: "loading",
+  menu_login: "Login", menu_account: "Account", lib_updating: "Updating",
   label_logged_in: "USER ID", label_library: "Library", label_welcome: "Welcome", label_sync_desc: "Login to sync content.",
   tab_login: "Login", tab_signup: "Sign Up", form_email: "User Number", form_pass: "Password",
   btn_login_action: "Login", btn_signup_action: "Sign Up", btn_logout: "Log Out",
@@ -868,7 +868,7 @@ const TRANSLATIONS={
   tab_login: "登录", tab_signup: "注册", form_email: "账户名", form_pass: "密码",
   btn_login_action: "登录", btn_signup_action: "注册", btn_logout: "登出",
   btn_open: "打开", msg_empty_lib: "此处无内容。",
-  msg_logging_in: "登录中", msg_signing_up: "注册中"
+  msg_logging_in: "正在登录", msg_signing_up: "正在注册"
  },
  "zh-TW":{ 
   header_brand:"kr_開發者版", hero_title:"個人代碼檢查中心", hero_sub:"管理您的存取權限與資源。", 
@@ -887,7 +887,7 @@ const TRANSLATIONS={
   tab_login: "登入", tab_signup: "註冊", form_email: "帳號名稱", form_pass: "密碼",
   btn_login_action: "登入", btn_signup_action: "註冊", btn_logout: "登出",
   btn_open: "開啟", msg_empty_lib: "沒有內容。",
-  msg_logging_in: "登入中", msg_signing_up: "註冊中"
+  msg_logging_in: "正在登入中...", msg_signing_up: "正在註冊中"
  },
  ko:{ 
   header_brand:"kr_개발자용", hero_title:"시스템 인증 포털", hero_sub:"액세스 권한 및 리소스 관리", 
@@ -940,14 +940,11 @@ const els={
  btnRedeem: gId('btnRedeem'), btnDownload: gId('btnDownload'),
  newsList: gId('newsList'), newsModal: gId('newsModal'), openNews: gId('btnOpenNews'), closeNews: gId('newsCloseX'),
  langWrapper: gId('customLangWrapper'), langTrigger: gId('langTrigger'), langMenu: gId('langMenu'), currentLangLabel: gId('currentLangLabel'),
- // Account Dropdown
  accountDropdown: gId('accountDropdown'), openAccount: gId('btnOpenAccount'),
  loggedInView: gId('loggedInView'), loggedOutView: gId('loggedOutView'), displayUserId: gId('displayUserId'), displayUserEmail: gId('displayUserEmail'),
  btnLogout: gId('btnLogout'), btnShowLibrary: gId('btnShowLibrary'), 
- // Library Modal
  libraryModal: gId('libraryModal'), libCloseBtn: gId('libCloseBtn'), libraryList: gId('libraryList'),
  tabs: document.querySelectorAll('.auth-tab'), email: gId('inputEmail'), pass: gId('inputPass'), btnAuthAction: gId('btnAuthAction'), authStatus: gId('authStatus'),
- // Admin Modal
  adminModal: gId('adminModal'), adminCloseBtn: gId('adminCloseBtn'),
  targetUserEmail: gId('targetUserEmail'), btnAdminSearch: gId('btnAdminSearch'), adminResultArea: gId('adminResultArea')
 };
@@ -959,15 +956,10 @@ const formatCodeInput = (val) => {
  return res;
 };
 
-// バリデーション関数（正規表現）は削除されました
-
 function setupEventListeners() {
- // Unlock Modal (Activation Card)
-  setListener(els.openAuth, 'click', (e) => { // ★引数 (e) を追加
+  setListener(els.openAuth, 'click', (e) => {
     if(!currentUser) { 
-      // ★ここが重要：クリックイベントが document まで伝わらないように止める
       e.stopPropagation(); 
-      
       pendingAction = 'open_activation'; 
       toggleDropdown(true); 
       setTimeout(() => els.email.focus(), 300);
@@ -979,22 +971,18 @@ function setupEventListeners() {
   setListener(els.closeSub, 'click', closeAuthModal);
   setListener(els.authModal, 'click', (e) => { if(e.target === els.authModal) closeAuthModal(); });
 
-  // News Modal
   setListener(els.openNews, 'click', () => els.newsModal.classList.add('active'));
   setListener(els.closeNews, 'click', () => els.newsModal.classList.remove('active'));
   setListener(els.newsModal, 'click', (e) => { if(e.target === els.newsModal) els.newsModal.classList.remove('active'); });
 
-  // Admin Modal
   setListener(els.adminCloseBtn, 'click', () => els.adminModal.classList.remove('active'));
   setListener(els.adminModal, 'click', (e) => { if(e.target === els.adminModal) els.adminModal.classList.remove('active'); });
   setListener(els.btnAdminSearch, 'click', performAdminSearch);
 
-  // Auth Confirm
   setListener(els.confirm, 'click', () => performAuth(els.code.value));
   setListener(els.code, 'keydown', (e) => { if(e.key === 'Enter') els.confirm.click(); });
   setListener(els.code, 'input', (e) => { els.code.value = formatCodeInput(els.code.value); });
 
-  // Account Dropdown Toggle
   setListener(els.openAccount, 'click', (e) => {
     e.stopPropagation();
     updateAccountUI();
@@ -1006,12 +994,9 @@ function setupEventListeners() {
     }
   });
 
-  // Library Modal
   setListener(els.btnShowLibrary, 'click', () => {
     toggleDropdown(false);
     els.libraryModal.classList.add('active');
-      
-    // ライブラリを開いたときにサーバーから最新の履歴を取得
     if (typeof fetchUserHistory === 'function') {
         fetchUserHistory();
     }
@@ -1019,9 +1004,11 @@ function setupEventListeners() {
   setListener(els.libCloseBtn, 'click', () => els.libraryModal.classList.remove('active'));
   setListener(els.libraryModal, 'click', (e) => { if(e.target === els.libraryModal) els.libraryModal.classList.remove('active'); });
 
-  setListener(els.btnLogout, 'click', logout);
+  setListener(els.btnLogout, 'click', (e) => {
+    if(e) e.preventDefault();
+    logout();
+  });
 
-  // Tabs
   els.tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       els.tabs.forEach(t => t.classList.remove('active'));
@@ -1033,7 +1020,6 @@ function setupEventListeners() {
     });
   });
 
-  // Auth Action
   setListener(els.btnAuthAction, 'click', performAuthAction);
 }
 
@@ -1071,12 +1057,10 @@ function showMainContent(){
  if(urlCode) {
    setTimeout(()=>{ 
      if(!currentUser) { 
-       // 未ログイン時：コードを保存してログイン画面を表示
        pendingActivationCode = urlCode;
        toggleDropdown(true); 
      }
      else { 
-       // ログイン済み：直接認証を実行
        openAuthModal(); 
        els.code.value = formatCodeInput(urlCode); 
        performAuth(els.code.value); 
@@ -1103,34 +1087,28 @@ function initCustomDropdown() {
     document.addEventListener('click', (e) => { if (!els.langWrapper.contains(e.target)) els.langMenu.classList.remove('open'); });
 }
 
-// ★言語切り替え時に呼ばれる関数
 function updateLanguage(lang){
   CURRENT_LANG = lang; 
   document.documentElement.lang = lang; 
   const t = TRANSLATIONS[lang]; 
   if(!t) return;
 
-  // 静的テキストの翻訳適用
   document.querySelectorAll('[data-translate]').forEach(el => { 
     const k = el.getAttribute('data-translate'); 
     if(k !== 'news_content' && t[k]) el.innerHTML = t[k]; 
   });
  
-  // 言語ラベルの更新
   const langMap = { ja: '日本語', en: 'English', zh: '简体中文', 'zh-TW': '繁體中文', ko: '한국어', ru: 'Русский' };
   if(els.currentLangLabel) els.currentLangLabel.textContent = langMap[lang] || 'Language';
   if(t.modal_placeholder && els.code) els.code.placeholder = t.modal_placeholder;
   
-  // UIの更新
   updateAccountUI();
  
-  // ライブラリの情報をサーバーから再取得
   if(currentUser && currentUser.history && currentUser.history.length > 0) {
     refreshLibraryTitles();
   }
 }
 
-// ★ライブラリ情報を更新する関数（完全修正版）
 async function refreshLibraryTitles() {
     if (!currentUser || !currentUser.history || currentUser.history.length === 0) return;
 
@@ -1367,10 +1345,8 @@ async function performAuthAction() {
       if (data.isAdmin) {
         toggleDropdown(false);
         els.email.value = ""; els.pass.value = "";
-        
         tempAdminCreds.user = email;
         tempAdminCreds.pass = pass;
-
         els.adminModal.classList.add('active');
         els.btnAuthAction.disabled = false;
         els.btnAuthAction.textContent = mode==='login'?TRANSLATIONS[CURRENT_LANG].btn_login_action:TRANSLATIONS[CURRENT_LANG].btn_signup_action;
@@ -1408,13 +1384,11 @@ async function performAuthAction() {
   }
 }
 
-// updateAccountUI 関数をこれに置き換えてください
-let libraryTimerId = null; // タイマー管理用の変数を追加
+// updateAccountUI 関数
+let libraryTimerId = null;
 
 function updateAccountUI() {
   const t = TRANSLATIONS[CURRENT_LANG];
-  
-  // 既存のタイマーがあればクリア
   if (libraryTimerId) { clearInterval(libraryTimerId); libraryTimerId = null; }
 
   if (currentUser) {
@@ -1422,7 +1396,6 @@ function updateAccountUI() {
     els.loggedInView.style.display = 'block';
     if(els.displayUserEmail) els.displayUserEmail.textContent = currentUser.email || '-';
     
-    // Generate Library List
     els.libraryList.innerHTML = "";
     if (currentUser.history.length === 0) {
       els.libraryList.innerHTML = `<li style='text-align:center; opacity:0.5; padding:20px; font-size:13px;'>${t.msg_empty_lib}</li>`;
@@ -1433,15 +1406,11 @@ function updateAccountUI() {
       currentUser.history.forEach(item => {
         const li = document.createElement('li');
         li.className = 'lib-item-card';
-
         const iconName = item.icon || 'download';
-        
-        // 画像の生成
         const img = item.imageUrl && item.imageUrl.startsWith('http') 
           ? `<img src="${item.imageUrl}" class="lib-card-thumb">` 
           : `<div class="lib-card-thumb" style="display:flex;align-items:center;justify-content:center;color:#999;"><i data-lucide="image"></i></div>`;
         
-        // ★解禁判定ロジック
         const releaseTime = item.releaseDateIso ? new Date(item.releaseDateIso).getTime() : 0;
         const isLocked = releaseTime > now;
         
@@ -1489,36 +1458,6 @@ function updateAccountUI() {
   }
 }
 
-// ★新規追加: ライブラリ用のリアルタイム監視タイマー
-function startLibraryTimer() {
-  libraryTimerId = setInterval(() => {
-    const lockedBtns = document.querySelectorAll('.lib-locked-btn');
-    if (lockedBtns.length === 0) {
-      clearInterval(libraryTimerId); 
-      return;
-    }
-
-    const now = Date.now();
-    lockedBtns.forEach(btn => {
-      const targetTime = parseInt(btn.getAttribute('data-release'), 10);
-      
-      if (now >= targetTime) {
-        const url = btn.getAttribute('data-url');
-        const icon = btn.getAttribute('data-icon') || 'download';
-        
-        const aTag = document.createElement('a');
-        aTag.href = url;
-        aTag.target = "_blank";
-        aTag.className = "lib-card-btn";
-        aTag.innerHTML = `<i data-lucide="${icon}" size="20"></i>`;
-        
-        btn.parentNode.replaceChild(aTag, btn);
-        lucide.createIcons();
-      }
-    });
-  }, 1000); 
-}
-
 function logout() {
   localStorage.removeItem('user_session'); currentUser = null; 
   tempAdminCreds = { user: "", pass: "" }; 
@@ -1526,19 +1465,17 @@ function logout() {
 }
 
 async function saveUnlockedItem(data, code) {
-    if (!currentUser) return;
-  
+  if (!currentUser) return;
   const newItem = {
     code: code,
     title: data.bundleLabel || data.message || "Unknown Content",
-    url: data.actionUrl,
+    url: data.actionUrl || "", 
     date: new Date().toLocaleDateString(),
     icon: data.btnIcon || 'download',
     lang: CURRENT_LANG,
     imageUrl: data.imageUrl,
     releaseDateIso: data.releaseDateIso || null 
   };
-
   const existingIndex = currentUser.history.findIndex(h => h.code === code);
   if (existingIndex > -1) { currentUser.history[existingIndex] = newItem; } 
   else { currentUser.history.unshift(newItem); }
@@ -1552,10 +1489,7 @@ async function syncHistoryToServer() {
   try {
     const jsonHistory = JSON.stringify(currentUser.history);
     await fetch(`${GAS_API_URL}?type=sync&userId=${currentUser.userId}&history=${encodeURIComponent(jsonHistory)}`);
-    console.log("History synced to server.");
-  } catch(e) {
-    console.error("Sync failed:", e);
-  }
+  } catch(e) {}
 }
 
 async function fetchUserHistory() {
@@ -1564,7 +1498,6 @@ async function fetchUserHistory() {
   els.libraryList.innerHTML = `<li style="text-align:center;padding:20px;opacity:0.5;">
     <span class="loading-dots">${t.lib_updating}</span>
   </li>`;
-
   try { 
     const res = await fetch(`${GAS_API_URL}?type=get_history&userId=${currentUser.userId}&_t=${Date.now()}`);
     const data = await res.json();
@@ -1583,9 +1516,7 @@ async function performAdminSearch() {
   const adPass = tempAdminCreds.pass || "";
   const target = els.targetUserEmail.value.trim();
   
-  if(!target) {
-    alert("Please enter target email."); return;
-  }
+  if(!target) { alert("Please enter target email."); return; }
   
   els.btnAdminSearch.disabled = true;
   els.btnAdminSearch.textContent = "...";
@@ -1594,7 +1525,6 @@ async function performAdminSearch() {
   try {
     const res = await fetch(`${GAS_API_URL}?type=admin_search&adminUser=${encodeURIComponent(adUser)}&adminPass=${encodeURIComponent(adPass)}&targetEmail=${encodeURIComponent(target)}&_t=${Date.now()}`);
     const d = await res.json();
-    
     if(d.success) {
       if(!d.history || d.history.length === 0) {
         els.adminResultArea.innerHTML = `<p style="text-align:center; opacity:0.6;">No history found for this user.</p>`;
@@ -1602,12 +1532,10 @@ async function performAdminSearch() {
         let html = `<div style="margin-bottom:10px; font-weight:700; font-size:12px;">User ID: ${d.userId}</div>`;
         html += `<ul style="list-style:none; padding:0;">`;
         d.history.forEach(h => {
-          html += `
-            <li style="background:rgba(128,128,128,0.05); padding:10px; border-radius:8px; margin-bottom:5px; font-size:13px;">
+          html += `<li style="background:rgba(128,128,128,0.05); padding:10px; border-radius:8px; margin-bottom:5px; font-size:13px;">
               <div style="font-weight:700;">${h.title}</div>
               <div style="opacity:0.6; font-size:11px;">${h.code} / ${h.date}</div>
-            </li>
-          `;
+            </li>`;
         });
         html += `</ul>`;
         els.adminResultArea.innerHTML = html;
