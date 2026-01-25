@@ -1613,45 +1613,51 @@ async function fetchUserHistory() {
   }
 } // ← ★ここで関数を閉じる
 
-// この関数を丸ごと置き換えてください
+// ★強制翻訳版（判定ロジックを削除）
 async function refreshLibraryTitles() {
+    // 履歴がない場合は何もしない
     if (!currentUser || !currentUser.history || currentUser.history.length === 0) return;
 
-    // 更新処理
+    // 非同期通信の配列を作成
     const promises = currentUser.history.map(async (item) => {
-        // ★重要: すでに現在の言語で保存されている場合は通信をスキップ（負荷軽減）
-        // もし強制的に全更新したい場合はこのif文を削除してください
-        if (item.lang === CURRENT_LANG) return;
+        // 【削除】ここにあった「if (item.lang === CURRENT_LANG) return;」を消しました。
+        // これにより、どんな状態でも必ず最新の翻訳を取りに行きます。
 
         try {
-            // 現在の言語設定 (CURRENT_LANG) を渡して最新情報を取得
+            // 現在の言語(CURRENT_LANG)を指定してAPIを叩く
             const res = await fetch(`${GAS_API_URL}?key=${encodeURIComponent(item.code)}&lang=${CURRENT_LANG}&mode=check&_t=${Date.now()}`);
             const data = await res.json();
 
             if (data.success) {
-                // ★ここでタイトルと言語情報を新しいものに上書き
+                // 1. タイトルと言語情報を更新
                 item.title = data.bundleLabel || data.message;
-                item.lang = CURRENT_LANG; // 言語タグを更新
+                item.lang = CURRENT_LANG;
+
+                // 2. 画像やアイコンがあれば更新
+                if(data.imageUrl) item.imageUrl = data.imageUrl;
+                if(data.btnIcon) item.icon = data.btnIcon;
                 
-                // ついでに画像なども最新があれば更新
-                if (data.imageUrl) item.imageUrl = data.imageUrl;
-                if (data.btnIcon) item.icon = data.btnIcon;
+                // 3. 解禁時間も最新に更新
+                if(data.releaseDateIso) item.releaseDateIso = data.releaseDateIso;
+
+                // 4. ロック解除URLの更新
+                if(data.actionUrl) item.url = data.actionUrl;
             }
         } catch (e) {
-            console.log("Failed to refresh title for:", item.code);
+            console.error("Translation update failed for:", item.code);
         }
     });
 
-    // すべての通信が終わるのを待つ
+    // 全ての通信が終わるのを待つ
     await Promise.all(promises);
 
-    // ★更新されたデータをローカルストレージに保存
+    // データが更新されたので保存
     localStorage.setItem('user_session', JSON.stringify(currentUser));
-    
-    // UIを再描画（これで画面上の文字が変わります）
+
+    // ★画面を再描画（これで強制的にタイトルが変わります）
     updateAccountUI();
-    
-    // サーバー側の履歴も同期
+
+    // サーバー同期
     syncHistoryToServer();
 }
 // ★追加機能: 管理者検索
